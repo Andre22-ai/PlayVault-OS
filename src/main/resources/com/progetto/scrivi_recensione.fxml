@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #1a0524; -fx-border-color: #39ff14; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.ScriviRecensioneController">
+   <children>
+      <VBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="80.0">
+         <children>
+            <Label text="WRITE A SYSTEM REVIEW" textFill="#39ff14">
+               <font><Font name="System Bold" size="36.0" /></font>
+               <effect><DropShadow color="#39ff14" radius="10.0" spread="0.3" /></effect>
+            </Label>
+            
+            <Label fx:id="titoloGiocoLabel" text="TARGET: GAME_TITLE" textFill="#00ffff">
+               <font><Font name="Consolas Bold" size="24.0" /></font>
+            </Label>
+
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Label text="RATING (1-5 STARS):" textFill="#ffea00">
+                     <font><Font name="Consolas Bold" size="18.0" /></font>
+                  </Label>
+                  <ComboBox fx:id="votoCombo" prefWidth="100.0" style="-fx-background-color: #ffea00; -fx-font-weight: bold; -fx-cursor: hand;" />
+               </children>
+            </HBox>
+
+            <TextArea fx:id="commentoArea" prefHeight="200.0" promptText="Enter your experience log here..." style="-fx-control-inner-background: #000000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14; -fx-font-family: Consolas; -fx-font-size: 16px;" wrapText="true">
+               <effect><DropShadow color="#39ff14" radius="5.0" spread="0.1" /></effect>
+            </TextArea>
+
+            <HBox alignment="CENTER" spacing="50.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#annulla" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #000000; -fx-border-color: #ff0000; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-cursor: hand;" text="CANCEL/ABORT">
+                     <font><Font name="Consolas Bold" size="18.0" /></font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#inviaRecensione" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #39ff14; -fx-text-fill: #000000; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand;" text="SUBMIT &amp; EARN">
+                     <font><Font name="Consolas Bold" size="18.0" /></font>
+                     <effect><DropShadow color="#39ff14" radius="10.0" spread="0.2" /></effect>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

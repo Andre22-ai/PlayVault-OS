@@ -1,0 +1,83 @@
+package com.progetto;
+
+import java.io.IOException;
+
+import com.progetto.Control.AutenticazioneControl;
+import com.progetto.DAO.UtenteDAOMySQL;
+import com.progetto.Entity.Sessione;
+import com.progetto.Entity.Utente; // Importante: aggiunto per leggere l'oggetto utente
+
+import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+
+/**
+ * Controller di Livello BOUNDARY (Presentazione).
+ * Gestisce l'interazione con l'utente ma NON contiene logica di business.
+ */
+public class LoginController {
+
+    // 1. Colleghiamo i campi di testo dell'interfaccia grafica
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
+
+    // 2. Riferimento al livello Control (Orchestratore)
+    private AutenticazioneControl authControl;
+
+    /**
+     * Costruttore. Qui facciamo la "Dependency Injection" manuale.
+     * Inizializziamo il Control passandogli il nostro Database.
+     */
+    public LoginController() {
+        this.authControl = new AutenticazioneControl(new UtenteDAOMySQL());
+    }
+
+    /**
+     * Metodo scatenato dal click sul bottone "INSERT COIN & START".
+     */
+    @FXML
+    private void accediAllaDashboard() throws IOException {
+        // A. Cattura dei dati (Responsabilità del Boundary)
+        String userInserito = usernameField.getText();
+        String passInserita = passwordField.getText();
+
+        System.out.println("[BOUNDARY] L'utente ha premuto Login. Delego al Control...");
+
+        // B. Esecuzione della Logica (Responsabilità del Control)
+        boolean accessoConsentito = authControl.eseguiLogin(userInserito, passInserita);
+
+        // C. Risposta visiva e Navigazione (Responsabilità del Boundary)
+        if (accessoConsentito) {
+            Utente utenteLoggato = Sessione.getIstanza().getUtenteCorrente();
+            System.out.println("[BOUNDARY] Accesso Consentito! Benvenuto " + utenteLoggato.getUsername());
+            
+            // ==================================================
+            // IL BIVIO RBAC (Role-Based Access Control)
+            // ==================================================
+            if ("ADMIN".equals(utenteLoggato.getRuolo())) {
+                System.out.println("[SISTEMA] Accesso Amministratore Rilevato. Inizializzazione Override...");
+                App.setRoot("admin_dashboard"); // Naviga al pannello di controllo
+            } else {
+                System.out.println("[SISTEMA] Accesso Giocatore Rilevato. Caricamento Libreria...");
+                App.setRoot("dashboard"); // Naviga alla dashboard standard
+            }
+            // ==================================================
+            
+        } else {
+            // Se le credenziali sono errate, puliamo i campi per fargli riprovare
+            System.out.println("[BOUNDARY] Accesso Negato. Riprova.");
+            usernameField.clear();
+            passwordField.clear();
+            usernameField.setPromptText("ERROR_INVALID_CODE");
+        }
+    }
+
+    /**
+     * Reindirizza l'utente alla schermata di registrazione.
+     */
+    @FXML
+    private void vaiAllaRegistrazione() throws IOException {
+        System.out.println("[BOUNDARY] Navigazione verso la schermata di Registrazione...");
+        App.setRoot("registrazione");
+    }
+}

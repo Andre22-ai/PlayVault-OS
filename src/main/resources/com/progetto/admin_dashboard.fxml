@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #0b0114; -fx-border-color: #ff00ff; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.AdminDashboardController">
+   <children>
+      <Label layoutX="30.0" layoutY="20.0" text="ADMIN TERMINAL // CATALOG" textFill="#ff00ff" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0">
+         <font><Font name="Consolas Bold" size="24.0" /></font>
+      </Label>
+      
+      <Button layoutX="680.0" layoutY="20.0" mnemonicParsing="false" onAction="#eseguiLogout" style="-fx-background-color: #ff0055; -fx-text-fill: white;" text="LOGOUT" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+         <font><Font name="Consolas Bold" size="14.0" /></font>
+      </Button>
+
+      <VBox layoutX="50.0" layoutY="80.0" prefWidth="700.0" spacing="15.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+         <children>
+            <Label fx:id="statusLabel" text="AWAITING INPUT..." textFill="#00ffff">
+               <font><Font name="Consolas" size="14.0" /></font>
+            </Label>
+            
+            <HBox spacing="20.0">
+               <VBox prefWidth="340.0" spacing="5.0">
+                  <Label text="GAME TITLE" textFill="#39ff14" />
+                  <TextField fx:id="titleField" style="-fx-background-color: #000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14;" />
+               </VBox>
+               <VBox prefWidth="340.0" spacing="5.0">
+                  <Label text="DEVELOPER" textFill="#39ff14" />
+                  <TextField fx:id="devField" style="-fx-background-color: #000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14;" />
+               </VBox>
+            </HBox>
+
+            <HBox spacing="20.0">
+               <VBox prefWidth="340.0" spacing="5.0">
+                  <Label text="GENRE" textFill="#39ff14" />
+                  <TextField fx:id="genreField" style="-fx-background-color: #000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14;" />
+               </VBox>
+               <VBox prefWidth="340.0" spacing="5.0">
+                  <Label text="RELEASE YEAR" textFill="#39ff14" />
+                  <TextField fx:id="yearField" style="-fx-background-color: #000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14;" />
+               </VBox>
+            </HBox>
+
+            <VBox spacing="5.0">
+               <Label text="DESCRIPTION" textFill="#39ff14" />
+               <TextArea fx:id="descArea" prefHeight="150.0" style="-fx-control-inner-background: #000; -fx-border-color: #39ff14; -fx-text-fill: #39ff14;" wrapText="true" />
+            </VBox>
+
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eseguiUpload" prefHeight="50.0" style="-fx-background-color: #ff00ff; -fx-text-fill: #000; -fx-font-weight: bold;" text="UPLOAD TO DATABASE">
+               <font><Font name="Consolas Bold" size="18.0" /></font>
+               <VBox.margin><Insets top="20.0" /></VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.RegistrazioneController">
+   <children>
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="500.0" spacing="20.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <Label text="NEW CHALLENGER" textFill="#ffea00">
+               <font><Font name="System Bold" size="64.0" /></font>
+               <effect><DropShadow color="#e60067" offsetX="5.0" offsetY="5.0" radius="0.0" spread="1.0" /></effect>
+            </Label>
+            
+            <Label text="CREATE YOUR PLAYER PROFILE" textFill="#00ffff">
+               <font><Font name="Consolas Bold" size="18.0" /></font>
+               <VBox.margin><Insets bottom="20.0" /></VBox.margin>
+            </Label>
+            
+            <TextField fx:id="regUsernameField" maxWidth="400.0" prefHeight="40.0" promptText="Choose_Player_Name" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+               <font><Font name="Consolas" size="16.0" /></font>
+            </TextField>
+            
+            <PasswordField fx:id="regPasswordField" maxWidth="400.0" prefHeight="40.0" promptText="Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+               <font><Font name="Consolas" size="16.0" /></font>
+            </PasswordField>
+            
+            <PasswordField fx:id="regConfirmField" maxWidth="400.0" prefHeight="40.0" promptText="Confirm_Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+               <font><Font name="Consolas" size="16.0" /></font>
+            </PasswordField>
+            
+            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#eseguiRegistrazione" prefHeight="50.0" style="-fx-background-color: #ff00ff; -fx-text-fill: #000000; -fx-font-weight: bold; -fx-cursor: hand;" text="REGISTER PROFILE">
+               <font><Font name="Consolas Bold" size="20.0" /></font>
+               <VBox.margin><Insets top="10.0" /></VBox.margin>
+               <effect><InnerShadow color="#550055" offsetX="3.0" offsetY="3.0" radius="0.0" /></effect>
+            </Button>
+
+            <Button mnemonicParsing="false" onAction="#tornaAlLogin" style="-fx-background-color: transparent; -fx-text-fill: #00ffff; -fx-underline: true; -fx-cursor: hand;" text="&lt;-- ABORT (BACK TO LOGIN)">
+               <font><Font name="Consolas" size="14.0" /></font>
+               <VBox.margin><Insets top="10.0" /></VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
