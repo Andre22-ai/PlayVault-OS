@@ -15,6 +15,7 @@ public class App extends Application {
 
     private static Scene scene;
 
+    @SuppressWarnings("java:s2696")
     @Override
     public void start(Stage stage) throws IOException {
         // All'avvio carichiamo la schermata di login

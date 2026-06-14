@@ -15,6 +15,9 @@ import javafx.scene.control.TextArea;
 
 public class ScriviRecensioneController {
 
+    // --- LA NOSTRA COSTANTE PER LA VISTA DASHBOARD ---
+    private static final String VIEW_DASHBOARD = "dashboard";
+
     @FXML private Label titoloGiocoLabel;
     @FXML private ComboBox<Integer> votoCombo;
     @FXML private TextArea commentoArea;
@@ -68,7 +71,7 @@ public class ScriviRecensioneController {
             boolean successo = recensioneControl.modificaRecensionePersonale(r);
             if (successo) {
                 mostraAlert("SYSTEM UPDATED", "Log modificato con successo. Nessun credito extra erogato.");
-                App.setRoot("dashboard");
+                App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
             } else {
                 mostraAlert("ERROR", "Impossibile modificare il log.");
             }
@@ -76,7 +79,7 @@ public class ScriviRecensioneController {
             String esito = recensioneControl.elaboraRecensione(r);
             if (esito.equals("SUCCESS")) {
                 mostraAlert("REWARD UNLOCKED", "Recensione acquisita nei server. Hai guadagnato +15 CREDITS!");
-                App.setRoot("dashboard");
+                App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
             } else if (esito.equals("ALREADY_REVIEWED")) {
                 mostraAlert("ACCESS DENIED", "Hai già lasciato un log per questo gioco.");
             }
@@ -84,7 +87,9 @@ public class ScriviRecensioneController {
     }
 
     @FXML
-    private void annulla() throws IOException { App.setRoot("dashboard"); }
+    private void annulla() throws IOException { 
+        App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
+    }
 
     private void mostraAlert(String titolo, String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

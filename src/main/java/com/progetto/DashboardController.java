@@ -32,6 +32,9 @@ import javafx.scene.text.FontWeight;
 
 public class DashboardController implements Initializable {
 
+    // --- LA NOSTRA NUOVA COSTANTE PER IL FONT ---
+    private static final String FONT_FAMILY = "Consolas";
+
     @FXML private FlowPane catalogoPane;
     @FXML private Label creditsLabel; 
     @FXML private Label playerLabel;   
@@ -41,7 +44,7 @@ public class DashboardController implements Initializable {
 
     public DashboardController() {
         this.libreriaControl = new LibreriaControl(new VideogiocoDAOMySQL());
-        this.recensioneControl = new RecensioneControl(); // Inizializzato il nuovo controller!
+        this.recensioneControl = new RecensioneControl(); 
     }
 
     @Override
@@ -67,7 +70,7 @@ public class DashboardController implements Initializable {
         if (mieiGiochi.isEmpty()) {
             Label vuotoLbl = new Label("IL TUO VAULT E' VUOTO.\nCLICCA SU 'ADD GAME' PER RISCATTARE TITOLI.");
             vuotoLbl.setTextFill(Color.web("#ff00ff"));
-            vuotoLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
+            vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
@@ -103,7 +106,7 @@ public class DashboardController implements Initializable {
         if (mieRecensioni.isEmpty()) {
             Label vuotoLbl = new Label("NESSUN LOG DI SISTEMA PRESENTE.\nGIOCA E RECENSISCI PER GUADAGNARE CREDITI.");
             vuotoLbl.setTextFill(Color.web("#ffea00"));
-            vuotoLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
+            vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
@@ -118,19 +121,18 @@ public class DashboardController implements Initializable {
             
             Label gameLbl = new Label("TARGET: " + r.getNomeGioco());
             gameLbl.setTextFill(Color.web("#00ffff"));
-            gameLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 16));
+            gameLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             
             String stelle = "★".repeat(r.getVoto()) + "☆".repeat(5 - r.getVoto());
             Label ratingLbl = new Label("RATING: " + stelle);
             ratingLbl.setTextFill(Color.web("#ffea00"));
-            ratingLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 14));
+            ratingLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
             
             Label logLbl = new Label("LOG: " + r.getCommento());
             logLbl.setTextFill(Color.web("#39ff14"));
-            logLbl.setFont(Font.font("Consolas", 14));
+            logLbl.setFont(Font.font(FONT_FAMILY, 14));
             logLbl.setWrapText(true);
             
-            // --- BOTTONI EDIT E DELETE ---
             HBox buttonBox = new HBox(15.0);
             buttonBox.setAlignment(Pos.CENTER_RIGHT);
             buttonBox.setPadding(new Insets(10, 0, 0, 0));
@@ -142,7 +144,7 @@ public class DashboardController implements Initializable {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("scrivi_recensione.fxml"));
                     Parent root = loader.load();
                     ScriviRecensioneController controller = loader.getController();
-                    controller.setRecensioneDaModificare(r); // Attiviamo l'Edit Mode
+                    controller.setRecensioneDaModificare(r); 
                     editBtn.getScene().setRoot(root);
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -154,7 +156,7 @@ public class DashboardController implements Initializable {
             delBtn.setOnAction(e -> {
                 boolean eliminata = recensioneControl.eliminaRecensionePersonale(username, r.getIdGioco());
                 if(eliminata) {
-                    apriMieRecensioni(); // Ricarica la pagina automaticamente per far sparire la card!
+                    apriMieRecensioni(); 
                 }
             });
 
@@ -183,7 +185,7 @@ public class DashboardController implements Initializable {
 
         Label titoloLbl = new Label(gioco.getTitolo());
         titoloLbl.setTextFill(Color.web(neonColor));
-        titoloLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 16.0));
+        titoloLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16.0));
 
         VBox coverBox = new VBox();
         coverBox.setAlignment(Pos.CENTER);
