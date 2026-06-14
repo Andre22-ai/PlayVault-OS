@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.Control.LibreriaControl;
 import com.progetto.Control.RecensioneControl;
@@ -32,7 +34,10 @@ import javafx.scene.text.FontWeight;
 
 public class DashboardController implements Initializable {
 
-    // --- LA NOSTRA NUOVA COSTANTE PER IL FONT ---
+    // --- INIZIALIZZAZIONE DEL LOGGER ---
+    private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
+
+    // --- LA NOSTRA COSTANTE PER IL FONT ---
     private static final String FONT_FAMILY = "Consolas";
 
     @FXML private FlowPane catalogoPane;
@@ -49,7 +54,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("[BOUNDARY] Sincronizzazione Sessione Utente...");
+        LOGGER.info("[BOUNDARY] Sincronizzazione Sessione Utente...");
         
         if (Sessione.getIstanza().getUtenteCorrente() != null) {
             playerLabel.setText(Sessione.getIstanza().getUtenteCorrente().getUsername().toUpperCase());
@@ -61,7 +66,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void apriLibreria() {
-        System.out.println("[BOUNDARY] Switch -> MY LIBRARY (Owned Games)");
+        LOGGER.info("[BOUNDARY] Switch -> MY LIBRARY (Owned Games)");
         catalogoPane.getChildren().clear();
         
         String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
@@ -84,7 +89,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void apriCatalogoAcquisti() {
-        System.out.println("[BOUNDARY] Switch -> ADD GAME (Store / Global Catalogue)");
+        LOGGER.info("[BOUNDARY] Switch -> ADD GAME (Store / Global Catalogue)");
         catalogoPane.getChildren().clear();
         
         List<Videogioco> catalogoModello = libreriaControl.ottieniCatalogoCompleto();
@@ -97,7 +102,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void apriMieRecensioni() {
-        System.out.println("[BOUNDARY] Switch -> MY REVIEWS (Personal Logs)");
+        LOGGER.info("[BOUNDARY] Switch -> MY REVIEWS (Personal Logs)");
         catalogoPane.getChildren().clear();
         
         String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
@@ -147,7 +152,7 @@ public class DashboardController implements Initializable {
                     controller.setRecensioneDaModificare(r); 
                     editBtn.getScene().setRoot(root);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Errore caricamento scrivi_recensione.fxml", ex);
                 }
             });
 
@@ -218,7 +223,7 @@ public class DashboardController implements Initializable {
                     controller.setGioco(gioco);
                     buyBtn.getScene().setRoot(root);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Errore caricamento dettagli_gioco.fxml", ex);
                 }
             });
             card.getChildren().addAll(titoloLbl, coverBox, spacer, buyBtn);
@@ -233,7 +238,7 @@ public class DashboardController implements Initializable {
             launchBtn.setPrefWidth(90.0);
             launchBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #39ff14; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #39ff14; -fx-font-weight: bold; -fx-cursor: hand;");
             launchBtn.setOnAction(e -> {
-                System.out.println("[SYSTEM RUNTIME] Esecuzione binaria di: " + gioco.getTitolo() + " avviata su PlayVault OS.");
+                LOGGER.info("[SYSTEM RUNTIME] Esecuzione binaria di: " + gioco.getTitolo() + " avviata su PlayVault OS.");
             });
 
             Button reviewBtn = new Button("REVIEW");
@@ -243,7 +248,7 @@ public class DashboardController implements Initializable {
             
             reviewBtn.setOnAction(e -> {
                 try {
-                    System.out.println("[BOUNDARY] Apertura terminale di recensione per: " + gioco.getTitolo());
+                    LOGGER.info("[BOUNDARY] Apertura terminale di recensione per: " + gioco.getTitolo());
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("scrivi_recensione.fxml"));
                     Parent root = loader.load();
                     
@@ -252,8 +257,7 @@ public class DashboardController implements Initializable {
                     
                     reviewBtn.getScene().setRoot(root);
                 } catch (IOException ex) {
-                    System.err.println("Errore caricamento scrivi_recensione.fxml");
-                    ex.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Errore caricamento scrivi_recensione.fxml", ex);
                 }
             });
 

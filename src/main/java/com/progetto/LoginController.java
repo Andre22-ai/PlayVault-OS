@@ -1,6 +1,7 @@
 package com.progetto;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.progetto.Control.AutenticazioneControl;
 import com.progetto.DAO.UtenteDAOMySQL;
@@ -16,6 +17,9 @@ import javafx.scene.control.TextField;
  * Gestisce l'interazione con l'utente ma NON contiene logica di business.
  */
 public class LoginController {
+
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
 
     // 1. Colleghiamo i campi di testo dell'interfaccia grafica
     @FXML private TextField usernameField;
@@ -41,7 +45,7 @@ public class LoginController {
         String userInserito = usernameField.getText();
         String passInserita = passwordField.getText();
 
-        System.out.println("[BOUNDARY] L'utente ha premuto Login. Delego al Control...");
+        LOGGER.info("[BOUNDARY] L'utente ha premuto Login. Delego al Control...");
 
         // B. Esecuzione della Logica (Responsabilità del Control)
         boolean accessoConsentito = authControl.eseguiLogin(userInserito, passInserita);
@@ -49,23 +53,23 @@ public class LoginController {
         // C. Risposta visiva e Navigazione (Responsabilità del Boundary)
         if (accessoConsentito) {
             Utente utenteLoggato = Sessione.getIstanza().getUtenteCorrente();
-            System.out.println("[BOUNDARY] Accesso Consentito! Benvenuto " + utenteLoggato.getUsername());
+            LOGGER.info("[BOUNDARY] Accesso Consentito! Benvenuto " + utenteLoggato.getUsername());
             
             // ==================================================
             // IL BIVIO RBAC (Role-Based Access Control)
             // ==================================================
             if ("ADMIN".equals(utenteLoggato.getRuolo())) {
-                System.out.println("[SISTEMA] Accesso Amministratore Rilevato. Inizializzazione Override...");
+                LOGGER.info("[SISTEMA] Accesso Amministratore Rilevato. Inizializzazione Override...");
                 App.setRoot("admin_dashboard"); // Naviga al pannello di controllo
             } else {
-                System.out.println("[SISTEMA] Accesso Giocatore Rilevato. Caricamento Libreria...");
+                LOGGER.info("[SISTEMA] Accesso Giocatore Rilevato. Caricamento Libreria...");
                 App.setRoot("dashboard"); // Naviga alla dashboard standard
             }
             // ==================================================
             
         } else {
             // Se le credenziali sono errate, puliamo i campi per fargli riprovare
-            System.out.println("[BOUNDARY] Accesso Negato. Riprova.");
+            LOGGER.warning("[BOUNDARY] Accesso Negato. Riprova.");
             usernameField.clear();
             passwordField.clear();
             usernameField.setPromptText("ERROR_INVALID_CODE");
@@ -77,7 +81,7 @@ public class LoginController {
      */
     @FXML
     private void vaiAllaRegistrazione() throws IOException {
-        System.out.println("[BOUNDARY] Navigazione verso la schermata di Registrazione...");
+        LOGGER.info("[BOUNDARY] Navigazione verso la schermata di Registrazione...");
         App.setRoot("registrazione");
     }
 }
