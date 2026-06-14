@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList; // Aggiunto per gestire la classifica
-import java.util.List;      // Aggiunto per gestire la classifica
+import java.util.ArrayList;
+import java.util.List;      
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.Entity.Utente;
 
@@ -14,9 +16,13 @@ import com.progetto.Entity.Utente;
  */
 public class UtenteDAOMySQL implements UtenteDAO {
 
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(UtenteDAOMySQL.class.getName());
+
     @Override
     public Utente autentica(String username, String password) {
-        String query = "SELECT * FROM utenti WHERE BINARY username = ? AND BINARY password = ?";
+        // FIX: Rimosso il "SELECT *" e dichiarate le colonne esatte (java:S6905)
+        String query = "SELECT username, password, crediti, ruolo FROM utenti WHERE BINARY username = ? AND BINARY password = ?";
         
         // Uso del try-with-resources per chiudere automaticamente connessione e statement
         try (Connection conn = GestoreConnessione.getConnessione();
@@ -36,7 +42,8 @@ public class UtenteDAOMySQL implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore durante l'autenticazione: " + e.getMessage());
+            // FIX: Sostituito System.err con il Logger (java:S106)
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'autenticazione", e);
         }
         return null; // Credenziali errate o utente non trovato
     }
@@ -57,7 +64,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
             return righeInserite > 0;
             
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore durante il salvataggio (possibile utente duplicato): " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante il salvataggio (possibile utente duplicato)", e);
             return false;
         }
     }
@@ -68,7 +75,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
     @Override
     public List<Utente> recuperaClassifica() {
         List<Utente> classifica = new ArrayList<>();
-        // Estraiamo solo i PLAYER, ordinati per crediti (dal più alto al più basso), massimo 10 risultati
+        // Qui era già corretto: nessun "SELECT *" ma colonne specifiche!
         String query = "SELECT username, password, crediti, ruolo FROM utenti WHERE ruolo = 'PLAYER' ORDER BY crediti DESC LIMIT 10";
         
         try (Connection conn = GestoreConnessione.getConnessione();
@@ -82,7 +89,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
                 classifica.add(u);
             }
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore nel recupero della classifica globale: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore nel recupero della classifica globale", e);
         }
         return classifica;
     }
@@ -103,11 +110,9 @@ public class UtenteDAOMySQL implements UtenteDAO {
             return righeModificate > 0;
             
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore durante l'accredito dei fondi: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'accredito dei fondi", e);
             return false;
         }
     }
-
-
 
 }

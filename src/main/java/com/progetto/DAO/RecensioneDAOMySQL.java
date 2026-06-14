@@ -6,10 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.Entity.Recensione;
 
 public class RecensioneDAOMySQL {
+
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(RecensioneDAOMySQL.class.getName());
 
     /**
      * Tenta di salvare la recensione nel database. 
@@ -32,7 +37,7 @@ public class RecensioneDAOMySQL {
             
         } catch (SQLException e) {
             // Se scatta l'eccezione, probabilmente è violato il vincolo UNIQUE (recensione già esistente)
-            System.err.println("[DAO] Impossibile salvare la recensione (già esistente o errore DB): " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Impossibile salvare la recensione (già esistente o errore DB)", e);
             return false;
         }
     }
@@ -50,7 +55,7 @@ public class RecensioneDAOMySQL {
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore aggiornamento recensione: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore aggiornamento recensione", e);
             return false;
         }
     }
@@ -66,7 +71,7 @@ public class RecensioneDAOMySQL {
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore eliminazione recensione: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore eliminazione recensione", e);
             return false;
         }
     }
@@ -98,7 +103,7 @@ public class RecensioneDAOMySQL {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore durante il recupero delle recensioni: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante il recupero delle recensioni", e);
         }
         return lista;
     }
@@ -131,7 +136,7 @@ public class RecensioneDAOMySQL {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore recupero recensioni utente: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "[DAO] Errore recupero recensioni utente", e);
         }
         return lista;
     }
