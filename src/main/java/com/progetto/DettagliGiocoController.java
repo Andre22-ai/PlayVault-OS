@@ -1,6 +1,7 @@
 package com.progetto;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.progetto.Control.AcquistoControl;
 import com.progetto.DAO.LibreriaDAOMySQL;
@@ -13,6 +14,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 public class DettagliGiocoController {
+
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(DettagliGiocoController.class.getName());
 
     @FXML private Label titoloLabel;
     @FXML private Label devAnnoLabel;
@@ -45,7 +49,8 @@ public class DettagliGiocoController {
      */
     @FXML
     private void eseguiAcquisto() {
-        System.out.println("[BOUNDARY] Richiesta acquisto per: " + giocoSelezionato.getTitolo());
+        // FIX S106: Utilizzo del Logger al posto di System.out
+        LOGGER.info("[BOUNDARY] Richiesta acquisto per: " + giocoSelezionato.getTitolo());
         
         String risultato = acquistoControl.tentaAcquisto(giocoSelezionato);
 

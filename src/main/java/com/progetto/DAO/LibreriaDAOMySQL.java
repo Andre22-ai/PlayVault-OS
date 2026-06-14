@@ -4,12 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LibreriaDAOMySQL implements LibreriaDAO {
 
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(LibreriaDAOMySQL.class.getName());
+
     @Override
     public boolean verificaPossesso(String username, int idGioco) {
-        String query = "SELECT * FROM libreria WHERE username = ? AND id_gioco = ?";
+        // FIX S6905: Selezioniamo solo una colonna specifica invece di "*"
+        String query = "SELECT id_gioco FROM libreria WHERE username = ? AND id_gioco = ?";
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
@@ -18,7 +24,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                 return rs.next(); // Ritorna true se trova almeno una riga
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // FIX S106: Logger al posto di printStackTrace
+            LOGGER.log(Level.SEVERE, "[DAO] Errore verifica possesso", e);
             return false;
         }
     }
@@ -53,19 +60,32 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
             return true;
 
         } catch (SQLException e) {
-            // Se c'è un errore (es. gioco già posseduto), annulliamo tutto
-            try { if (conn != null) conn.rollback(); } catch (SQLException ex) {}
-            System.err.println("[DAO] Errore durante l'acquisto: " + e.getMessage());
+            // FIX S108: Blocco catch popolato con un log invece di essere lasciato vuoto
+            try { 
+                if (conn != null) conn.rollback(); 
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "[DAO] Errore critico durante il rollback della transazione", ex);
+            }
+            // FIX S106: Sostituito System.err
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'acquisto (possibile duplicato o fondi insufficienti)", e);
             return false;
         } finally {
-            try { if (conn != null) conn.setAutoCommit(true); } catch (SQLException ex) {}
+            // FIX S108: Blocco catch popolato
+            try { 
+                if (conn != null) conn.setAutoCommit(true); 
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "[DAO] Errore durante il ripristino dell'auto-commit", ex);
+            }
         }
     }
 
     @Override
     public java.util.List<com.progetto.Entity.Videogioco> recuperaGiochiPropri(String username) {
         java.util.List<com.progetto.Entity.Videogioco> mieiGiochi = new java.util.ArrayList<>();
-        String query = "SELECT v.* FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+        
+        // FIX S6905: Esplicitiamo le colonne invece di usare "v.*"
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione " +
+                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
         
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -85,7 +105,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore recupero libreria personale: " + e.getMessage());
+            // FIX S106: Sostituito System.err
+            LOGGER.log(Level.SEVERE, "[DAO] Errore recupero libreria personale", e);
         }
         return mieiGiochi;
     }

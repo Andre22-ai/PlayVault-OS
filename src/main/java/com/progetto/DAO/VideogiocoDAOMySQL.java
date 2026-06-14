@@ -1,14 +1,20 @@
 package com.progetto.DAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.Entity.Videogioco;
 
 public class VideogiocoDAOMySQL implements VideogiocoDAO {
+
+    // --- NUOVO: Inizializzazione del Logger ---
+    private static final Logger LOGGER = Logger.getLogger(VideogiocoDAOMySQL.class.getName());
 
     @Override
     public boolean salvaGioco(Videogioco gioco) {
@@ -24,7 +30,8 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore salvataggio: " + e.getMessage());
+            // FIX S106: Logger al posto di System.err
+            LOGGER.log(Level.SEVERE, "[DAO] Errore salvataggio", e);
             return false;
         }
     }
@@ -32,7 +39,8 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
    @Override
     public List<Videogioco> recuperaTutti() {
         List<Videogioco> catalogo = new ArrayList<>();
-        String query = "SELECT * FROM videogiochi"; // Prende TUTTO il catalogo
+        // FIX S6905: Prende TUTTO il catalogo ma dichiarando le singole colonne invece di usare "*"
+        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione FROM videogiochi"; 
         
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -53,9 +61,10 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
             }
             
         } catch (SQLException e) {
-            System.err.println("[DAO] Errore nel recupero del catalogo: " + e.getMessage());
+            // FIX S106: Logger al posto di System.err
+            LOGGER.log(Level.SEVERE, "[DAO] Errore nel recupero del catalogo", e);
         }
         
         return catalogo;
     }
-}    
+}
