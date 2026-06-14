@@ -1,5 +1,7 @@
 package com.progetto.Control;
 
+import java.util.logging.Logger;
+
 import com.progetto.DAO.UtenteDAO;
 import com.progetto.Entity.Utente;
 
@@ -8,6 +10,9 @@ import com.progetto.Entity.Utente;
  * Applica le regole di business prima di delegare il salvataggio al DAO.
  */
 public class RegistrazioneControl {
+
+    // --- NUOVO: Inizializziamo il Logger per questa classe ---
+    private static final Logger LOGGER = Logger.getLogger(RegistrazioneControl.class.getName());
 
     private final UtenteDAO utenteDao;
 
@@ -20,7 +25,7 @@ public class RegistrazioneControl {
 
     /**
      * Esegue la logica di registrazione di un nuovo utente.
-     * * @param username Stringa passata dalla UI
+     * @param username Stringa passata dalla UI
      * @param password Stringa passata dalla UI
      * @param confermaPassword Stringa di conferma passata dalla UI
      * @return true se registrato con successo, false se fallisce le validazioni o esiste già
@@ -28,12 +33,12 @@ public class RegistrazioneControl {
     public boolean registraNuovoUtente(String username, String password, String confermaPassword) {
         // 1. Validazione input (Regole di Business)
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            System.out.println("[CONTROL] Errore: Dati mancanti.");
+            LOGGER.warning("[CONTROL] Errore: Dati mancanti.");
             return false;
         }
         
         if (!password.equals(confermaPassword)) {
-            System.out.println("[CONTROL] Errore: Le password non coincidono!");
+            LOGGER.warning("[CONTROL] Errore: Le password non coincidono!");
             return false;
         }
 
