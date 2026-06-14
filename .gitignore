@@ -16,3 +16,6 @@ hs_err_pid*
 
 # NON CARICARE MAI CREDENZIALI DEL DB (se hai un file .env o simili)
 *.env
+
+# File segreti del Database
+database.properties
