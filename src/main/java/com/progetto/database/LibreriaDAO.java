@@ -1,4 +1,4 @@
-package com.progetto.DAO;
+package com.progetto.database;
 
 public interface LibreriaDAO {
     // Controlla se il giocatore possiede già questo gioco

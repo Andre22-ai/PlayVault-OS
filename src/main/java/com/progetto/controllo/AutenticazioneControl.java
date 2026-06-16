@@ -1,8 +1,8 @@
 package com.progetto.controllo;
 
-import com.progetto.DAO.UtenteDAO;
 import com.progetto.Entity.Sessione;
 import com.progetto.Entity.Utente;
+import com.progetto.database.UtenteDAO;
 
 /**
  * Controller di Caso d'Uso (BCE Architecture).

@@ -3,8 +3,8 @@ package com.progetto;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.progetto.DAO.UtenteDAOMySQL; // Cambia in Mock se usi il database finto
 import com.progetto.controllo.RegistrazioneControl;
+import com.progetto.database.UtenteDAOMySQL;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;

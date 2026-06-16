@@ -1,4 +1,4 @@
-package com.progetto.DAO;
+package com.progetto.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

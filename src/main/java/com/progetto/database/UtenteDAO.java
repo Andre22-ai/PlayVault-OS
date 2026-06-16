@@ -1,4 +1,4 @@
-package com.progetto.DAO; // o DAO se hai usato la maiuscola
+package com.progetto.database; // o DAO se hai usato la maiuscola
 
 import com.progetto.Entity.Utente;
 
