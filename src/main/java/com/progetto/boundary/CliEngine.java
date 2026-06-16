@@ -25,6 +25,13 @@ import com.progetto.entita.Videogioco;
 public class CliEngine {
 
     private static final Logger LOGGER = Logger.getLogger(CliEngine.class.getName());
+    
+    // ==========================================
+    // COSTANTI PER RISOLVERE SONARCLOUD (java:S1192)
+    // ==========================================
+    private static final String PROMPT_USERNAME = "Username: ";
+    private static final String ERR_ID_INVALIDO = "[ERRORE] ID non valido.";
+
     private boolean inEsecuzione;
     private String utenteCorrente;
 
@@ -97,7 +104,7 @@ public class CliEngine {
 
             case "login":
                 if (argomenti.length < 3) {
-                    System.out.print("Username: ");
+                    System.out.print(PROMPT_USERNAME);
                     String username = scanner.nextLine().trim();
                     System.out.print("Password: ");
                     String password = scanner.nextLine().trim();
@@ -133,7 +140,7 @@ public class CliEngine {
 
     private void eseguiRegistrazione(Scanner scanner) {
         System.out.println("\n--- CREAZIONE NUOVO ACCOUNT ---");
-        System.out.print("Username: ");
+        System.out.print(PROMPT_USERNAME);
         String user = scanner.nextLine().trim();
         System.out.print("Password: ");
         String pass = scanner.nextLine().trim();
@@ -286,12 +293,12 @@ public class CliEngine {
         }
         int rank = 1;
         for (Utente u : topPlayers) {
-            // Sostituito lo switch Java 14 con Java 11 classico
             String medaglia = "👤";
             switch(rank) {
                 case 1: medaglia = "🥇"; break;
                 case 2: medaglia = "🥈"; break;
                 case 3: medaglia = "🥉"; break;
+                default: break; // Fix per SonarCloud java:S131
             }
             System.out.println(String.format("%s %d° | %-15s | Livello: %-3d | %-4d CR", 
                 medaglia, rank, u.getUsername().toUpperCase(), (u.getCrediti() / 2), u.getCrediti()));
@@ -315,7 +322,6 @@ public class CliEngine {
             Recensione nuovaRecensione = new Recensione(utenteCorrente, idGioco, voto, testo);
             String risultato = recensioneControl.elaboraRecensione(nuovaRecensione);
 
-            // Sostituito lo switch Java 14 con Java 11 classico
             switch (risultato) {
                 case "SUCCESS":
                     System.out.println("[OK] Recensione salvata! Hai guadagnato 15 crediti!");
@@ -346,7 +352,6 @@ public class CliEngine {
 
         String risultato = acquistoControl.tentaAcquisto(gioco);
         
-        // Sostituito lo switch Java 14 con Java 11 classico
         switch (risultato) {
             case "SUCCESS":
                 System.out.println("[OK] Acquisto completato! Il gioco è stato aggiunto alla tua libreria.");
@@ -390,7 +395,7 @@ public class CliEngine {
             return;
         }
         System.out.println("\n=== IL MIO PROFILO ===");
-        System.out.println("Username: " + utente.getUsername());
+        System.out.println(PROMPT_USERNAME + utente.getUsername());
         System.out.println("Ruolo: " + utente.getRuolo());
         System.out.println("Crediti: " + utente.getCrediti());
         System.out.println();
@@ -400,28 +405,28 @@ public class CliEngine {
         try {
             int id = args.length < 2 ? Integer.parseInt(sc.nextLine().trim()) : Integer.parseInt(args[1]);
             eseguiAcquisto(id);
-        } catch (NumberFormatException e) { System.out.println("[ERRORE] ID non valido."); }
+        } catch (NumberFormatException e) { System.out.println(ERR_ID_INVALIDO); }
     }
 
     private void gestisciDettagliComando(String[] args, Scanner sc) {
         try {
             int id = args.length < 2 ? Integer.parseInt(sc.nextLine().trim()) : Integer.parseInt(args[1]);
             visualizzaDettagliGioco(id);
-        } catch (NumberFormatException e) { System.out.println("[ERRORE] ID non valido."); }
+        } catch (NumberFormatException e) { System.out.println(ERR_ID_INVALIDO); }
     }
 
     private void gestisciRecensioniComando(String[] args, Scanner sc) {
         try {
             int id = args.length < 2 ? Integer.parseInt(sc.nextLine().trim()) : Integer.parseInt(args[1]);
             visualizzaRecensioniGioco(id);
-        } catch (NumberFormatException e) { System.out.println("[ERRORE] ID non valido."); }
+        } catch (NumberFormatException e) { System.out.println(ERR_ID_INVALIDO); }
     }
 
     private void gestisciScritturaRecensioneComando(String[] args, Scanner sc) {
         try {
             int id = args.length < 2 ? Integer.parseInt(sc.nextLine().trim()) : Integer.parseInt(args[1]);
             scriviRecensione(sc, id);
-        } catch (NumberFormatException e) { System.out.println("[ERRORE] ID non valido."); }
+        } catch (NumberFormatException e) { System.out.println(ERR_ID_INVALIDO); }
     }
 
     private int getCreditiUtente() {
