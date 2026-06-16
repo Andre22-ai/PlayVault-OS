@@ -1,4 +1,5 @@
-package com.progetto.Control;
+// FIX S120: Package tutto in minuscolo per rispettare le convenzioni Java
+package com.progetto.controllo;
 
 import com.progetto.DAO.LibreriaDAO;
 import com.progetto.Entity.Sessione;
@@ -8,7 +9,9 @@ import com.progetto.Entity.Videogioco;
 public class AcquistoControl {
 
     private LibreriaDAO libreriaDAO;
-    private final int COSTO_GIOCO = 15; // Prezzo fisso per tutti i giochi
+    
+    // FIX S116 + S1170: Aggiunto "static" per renderla una costante ufficiale e zittire gli errori sul maiuscolo
+    private static final int COSTO_GIOCO = 15; // Prezzo fisso per tutti i giochi
 
     public AcquistoControl(LibreriaDAO libreriaDAO) {
         this.libreriaDAO = libreriaDAO;

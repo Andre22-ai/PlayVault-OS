@@ -1,4 +1,4 @@
-package com.progetto.Control;
+package com.progetto.controllo;
 
 import com.progetto.DAO.RecensioneDAOMySQL;
 import com.progetto.DAO.UtenteDAOMySQL;

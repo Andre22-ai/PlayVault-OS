@@ -2,8 +2,8 @@ package com.progetto;
 
 import java.io.IOException;
 
-import com.progetto.Control.GestioneCatalogoControl;
 import com.progetto.DAO.VideogiocoDAOMySQL;
+import com.progetto.controllo.GestioneCatalogoControl;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

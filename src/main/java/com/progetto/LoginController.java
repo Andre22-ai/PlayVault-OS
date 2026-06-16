@@ -3,10 +3,10 @@ package com.progetto;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.progetto.Control.AutenticazioneControl;
 import com.progetto.DAO.UtenteDAOMySQL;
 import com.progetto.Entity.Sessione;
 import com.progetto.Entity.Utente; // Importante: aggiunto per leggere l'oggetto utente
+import com.progetto.controllo.AutenticazioneControl;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;

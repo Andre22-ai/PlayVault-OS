@@ -7,12 +7,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.Control.LibreriaControl;
-import com.progetto.Control.RecensioneControl;
 import com.progetto.DAO.VideogiocoDAOMySQL;
 import com.progetto.Entity.Recensione;
 import com.progetto.Entity.Sessione;
 import com.progetto.Entity.Videogioco;
+import com.progetto.controllo.LibreriaControl;
+import com.progetto.controllo.RecensioneControl;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

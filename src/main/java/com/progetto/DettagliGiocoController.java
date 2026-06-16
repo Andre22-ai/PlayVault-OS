@@ -3,9 +3,9 @@ package com.progetto;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import com.progetto.Control.AcquistoControl;
 import com.progetto.DAO.LibreriaDAOMySQL;
 import com.progetto.Entity.Videogioco;
+import com.progetto.controllo.AcquistoControl;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

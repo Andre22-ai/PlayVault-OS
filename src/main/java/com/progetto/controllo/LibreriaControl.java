@@ -1,4 +1,4 @@
-package com.progetto.Control;
+package com.progetto.controllo;
 
 import java.util.List;
 

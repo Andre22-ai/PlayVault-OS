@@ -2,10 +2,10 @@ package com.progetto;
 
 import java.io.IOException;
 
-import com.progetto.Control.RecensioneControl;
 import com.progetto.Entity.Recensione;
 import com.progetto.Entity.Sessione;
 import com.progetto.Entity.Videogioco;
+import com.progetto.controllo.RecensioneControl;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
