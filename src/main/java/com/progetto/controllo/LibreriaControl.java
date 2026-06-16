@@ -2,10 +2,10 @@ package com.progetto.controllo;
 
 import java.util.List;
 
-import com.progetto.Entity.Videogioco;
 import com.progetto.database.LibreriaDAO;
 import com.progetto.database.LibreriaDAOMySQL;
 import com.progetto.database.VideogiocoDAO;
+import com.progetto.entita.Videogioco;
 
 /**
  * Controller di Business per la visualizzazione dei cataloghi.

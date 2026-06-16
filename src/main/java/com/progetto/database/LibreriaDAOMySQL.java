@@ -80,8 +80,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
     }
 
     @Override
-    public java.util.List<com.progetto.Entity.Videogioco> recuperaGiochiPropri(String username) {
-        java.util.List<com.progetto.Entity.Videogioco> mieiGiochi = new java.util.ArrayList<>();
+    public java.util.List<com.progetto.entita.Videogioco> recuperaGiochiPropri(String username) {
+        java.util.List<com.progetto.entita.Videogioco> mieiGiochi = new java.util.ArrayList<>();
         
         // FIX S6905: Esplicitiamo le colonne invece di usare "v.*"
         String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione " +
@@ -93,7 +93,7 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    com.progetto.Entity.Videogioco gioco = new com.progetto.Entity.Videogioco(
+                    com.progetto.entita.Videogioco gioco = new com.progetto.entita.Videogioco(
                         rs.getString("titolo"),
                         rs.getString("genere"),
                         rs.getInt("anno_uscita"),

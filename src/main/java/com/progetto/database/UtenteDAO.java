@@ -1,6 +1,6 @@
 package com.progetto.database; // o DAO se hai usato la maiuscola
 
-import com.progetto.Entity.Utente;
+import com.progetto.entita.Utente;
 
 public interface UtenteDAO {
     

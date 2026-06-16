@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.Entity.Videogioco;
+import com.progetto.entita.Videogioco;
 
 public class VideogiocoDAOMySQL implements VideogiocoDAO {
 

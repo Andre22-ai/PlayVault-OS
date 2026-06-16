@@ -2,8 +2,8 @@ package com.progetto.controllo;
 
 import java.time.Year;
 
-import com.progetto.Entity.Videogioco;
 import com.progetto.database.VideogiocoDAO;
+import com.progetto.entita.Videogioco;
 
 public class GestioneCatalogoControl {
 

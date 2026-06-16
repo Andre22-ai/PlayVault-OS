@@ -1,4 +1,4 @@
-package com.progetto.Entity;
+package com.progetto.entita;
 
 /**
  * Rappresenta l'entità di dominio del Giocatore (Entity).

@@ -1,10 +1,10 @@
 package com.progetto.controllo;
 
-import com.progetto.Entity.Recensione;
-import com.progetto.Entity.Sessione;
-import com.progetto.Entity.Utente;
 import com.progetto.database.RecensioneDAOMySQL;
 import com.progetto.database.UtenteDAOMySQL;
+import com.progetto.entita.Recensione;
+import com.progetto.entita.Sessione;
+import com.progetto.entita.Utente;
 
 public class RecensioneControl {
 

@@ -7,5 +7,5 @@ public interface LibreriaDAO {
     // Esegue l'acquisto (Scala crediti + Aggiunge in libreria)
     boolean acquistaGioco(String username, int idGioco, int costo);
 
-    java.util.List<com.progetto.Entity.Videogioco> recuperaGiochiPropri(String username);
+    java.util.List<com.progetto.entita.Videogioco> recuperaGiochiPropri(String username);
 }

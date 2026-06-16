@@ -2,8 +2,8 @@ package com.progetto.controllo;
 
 import java.util.logging.Logger;
 
-import com.progetto.Entity.Utente;
 import com.progetto.database.UtenteDAO;
+import com.progetto.entita.Utente;
 
 /**
  * Controller di Caso d'Uso per la Registrazione (Livello CONTROL).

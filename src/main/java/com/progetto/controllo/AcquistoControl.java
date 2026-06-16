@@ -1,10 +1,10 @@
 // FIX S120: Package tutto in minuscolo per rispettare le convenzioni Java
 package com.progetto.controllo;
 
-import com.progetto.Entity.Sessione;
-import com.progetto.Entity.Utente;
-import com.progetto.Entity.Videogioco;
 import com.progetto.database.LibreriaDAO;
+import com.progetto.entita.Sessione;
+import com.progetto.entita.Utente;
+import com.progetto.entita.Videogioco;
 
 public class AcquistoControl {
 

@@ -5,9 +5,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.progetto.Entity.Sessione;
-import com.progetto.Entity.Utente;
 import com.progetto.database.UtenteDAOMySQL;
+import com.progetto.entita.Sessione;
+import com.progetto.entita.Utente;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

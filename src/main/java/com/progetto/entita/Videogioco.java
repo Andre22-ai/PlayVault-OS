@@ -1,4 +1,4 @@
-package com.progetto.Entity;
+package com.progetto.entita;
 
 public class Videogioco {
     private int id;

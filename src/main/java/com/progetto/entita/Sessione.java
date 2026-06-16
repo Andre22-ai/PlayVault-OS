@@ -1,4 +1,4 @@
-package com.progetto.Entity;
+package com.progetto.entita;
 
 /**
  * Gestisce lo stato globale dell'utente attualmente autenticato.

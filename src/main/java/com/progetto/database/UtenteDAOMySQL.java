@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.Entity.Utente;
+import com.progetto.entita.Utente;
 
 /**
  * Implementazione reale del Data Access Object per MySQL.
