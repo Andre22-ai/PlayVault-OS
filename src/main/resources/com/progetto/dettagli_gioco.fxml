@@ -31,6 +31,10 @@
 
             <VBox spacing="15.0" HBox.hgrow="ALWAYS">
                <children>
+                  <Label fx:id="idLabel" text="[ID: ???]" textFill="#888888" wrapText="true">
+                     <font><Font name="Consolas" size="12.0" /></font>
+                  </Label>
+                  
                   <Label fx:id="titoloLabel" text="GAME TITLE" textFill="#39ff14" wrapText="true">
                      <font><Font name="Consolas Bold" size="40.0" /></font>
                      <effect><DropShadow color="#39ff14" radius="10.0" spread="0.2" /></effect>

@@ -23,6 +23,7 @@ public class DettagliGiocoController {
     @FXML private Label genereLabel;
     @FXML private TextArea descArea;
     @FXML private Label coverLabel;
+    @FXML private Label idLabel; // NUOVO: Label per l'ID del gioco
 
     private Videogioco giocoSelezionato; // Memorizziamo il gioco per poterlo comprare
     private AcquistoControl acquistoControl;
@@ -36,7 +37,8 @@ public class DettagliGiocoController {
         
         // Imposta i dati grafici di base
         titoloLabel.setText(gioco.getTitolo());
-        coverLabel.setText(gioco.getTitolo().split(" ")[0]); 
+        coverLabel.setText(gioco.getTitolo().split(" ")[0]);
+        idLabel.setText("[ID: " + gioco.getId() + "]");
         devAnnoLabel.setText("STUDIO: " + gioco.getSviluppatore() + " // RELEASE: " + gioco.getAnnoUscita());
         genereLabel.setText("CLASS: " + gioco.getGenere());
         

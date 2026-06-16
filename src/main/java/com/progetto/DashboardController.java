@@ -188,6 +188,12 @@ public class DashboardController implements Initializable {
         ombra.setSpread(0.1);
         card.setEffect(ombra);
 
+        // Aggiungi Label con ID del gioco
+        Label idLbl = new Label("[ID: " + gioco.getId() + "]");
+        idLbl.setTextFill(Color.web("#888888"));
+        idLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 10.0));
+        VBox.setMargin(idLbl, new Insets(0, 0, -10.0, 0));
+
         Label titoloLbl = new Label(gioco.getTitolo());
         titoloLbl.setTextFill(Color.web(neonColor));
         titoloLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16.0));
@@ -226,7 +232,7 @@ public class DashboardController implements Initializable {
                     LOGGER.log(Level.SEVERE, "Errore caricamento dettagli_gioco.fxml", ex);
                 }
             });
-            card.getChildren().addAll(titoloLbl, coverBox, spacer, buyBtn);
+            card.getChildren().addAll(idLbl, titoloLbl, coverBox, spacer, buyBtn);
             
         } else {
             HBox buttonBox = new HBox(10.0);
@@ -262,7 +268,7 @@ public class DashboardController implements Initializable {
             });
 
             buttonBox.getChildren().addAll(launchBtn, reviewBtn);
-            card.getChildren().addAll(titoloLbl, coverBox, spacer, buttonBox);
+            card.getChildren().addAll(idLbl, titoloLbl, coverBox, spacer, buttonBox);
         }
 
         return card;
