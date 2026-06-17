@@ -7,11 +7,11 @@ import java.util.logging.Logger;
 
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.controllo.AutenticazioneControl;
+import com.progetto.controllo.ClassificaControl;
 import com.progetto.controllo.GestioneCatalogoControl;
 import com.progetto.controllo.LibreriaControl;
 import com.progetto.controllo.RecensioneControl;
 import com.progetto.controllo.RegistrazioneControl;
-import com.progetto.controllo.ClassificaControl; 
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
@@ -26,9 +26,7 @@ public class CliEngine {
 
     private static final Logger LOGGER = Logger.getLogger(CliEngine.class.getName());
     
-    // ==========================================
-    // COSTANTI PER RISOLVERE SONARCLOUD (java:S1192)
-    // ==========================================
+    // Costanti per risolvere SonarCloud (java:S1192)
     private static final String PROMPT_USERNAME = "Username: ";
     private static final String ERR_ID_INVALIDO = "[ERRORE] ID non valido.";
 
@@ -62,7 +60,9 @@ public class CliEngine {
         System.out.println("\n========================================");
         System.out.println("       BENVENUTO IN PLAYVAULT CLI       ");
         System.out.println("========================================");
-        System.out.println("Digita 'aiuto' per vedere i comandi disponibili.\n");
+        
+        // MODIFICA 1: Stampiamo subito il menu all'avvio!
+        stampaAiutoGuest();
 
         try (Scanner scanner = new Scanner(System.in)) {
             while (inEsecuzione) {
@@ -96,10 +96,7 @@ public class CliEngine {
     private void gestisciComandiGuest(String comando, String[] argomenti, Scanner scanner) {
         switch (comando) {
             case "aiuto":
-                System.out.println("\n--- COMANDI OSPITE ---");
-                System.out.println("login      -> Accedi al sistema");
-                System.out.println("registrati -> Crea un nuovo account");
-                System.out.println("esci       -> Chiudi l'applicazione\n");
+                stampaAiutoGuest();
                 break;
 
             case "login":
@@ -133,6 +130,8 @@ public class CliEngine {
         if (authControl.eseguiLogin(username, password)) {
             this.utenteCorrente = username;
             System.out.println("[OK] Accesso effettuato! Benvenuto " + utenteCorrente.toUpperCase());
+            // MODIFICA 2: Appena entri, ti mostra subito cosa puoi fare!
+            stampaAiutoUtente();
         } else {
             System.out.println("[ERRORE] Credenziali errate o utente inesistente.");
         }
@@ -194,6 +193,8 @@ public class CliEngine {
                 System.out.println("Disconnessione in corso... Arrivederci " + utenteCorrente + "!");
                 this.utenteCorrente = null;
                 Sessione.getIstanza().terminaSessione();
+                // MODIFICA 3: Appena esci, ti ricorda i comandi per rientrare!
+                stampaAiutoGuest();
                 break;
             case "esci":
                 System.out.println("Chiusura in corso... Arrivederci!");
@@ -202,6 +203,14 @@ public class CliEngine {
             default:
                 System.out.println("Comando non valido. Digita 'aiuto'.");
         }
+    }
+
+    // NUOVO METODO AGGIUNTO: Per stampare il menu Ospite
+    private void stampaAiutoGuest() {
+        System.out.println("\n--- COMANDI OSPITE ---");
+        System.out.println("login      -> Accedi al sistema");
+        System.out.println("registrati -> Crea un nuovo account");
+        System.out.println("esci       -> Chiudi l'applicazione\n");
     }
 
     private void stampaAiutoUtente() {
@@ -298,7 +307,7 @@ public class CliEngine {
                 case 1: medaglia = "🥇"; break;
                 case 2: medaglia = "🥈"; break;
                 case 3: medaglia = "🥉"; break;
-                default: break; // Fix per SonarCloud java:S131
+                default: break; 
             }
             System.out.println(String.format("%s %d° | %-15s | Livello: %-3d | %-4d CR", 
                 medaglia, rank, u.getUsername().toUpperCase(), (u.getCrediti() / 2), u.getCrediti()));
