@@ -23,11 +23,16 @@ public class ScriviRecensioneController {
     @FXML private TextArea commentoArea;
 
     private Videogioco giocoDaRecensire;
-    private RecensioneControl recensioneControl;
-    private boolean modalitaModifica = false; // NUOVO: Ci dice se stiamo modificando!
+    
+    // FIX SonarCloud: Reso 'final'
+    private final RecensioneControl recensioneControl;
+    
+    private boolean modalitaModifica = false; 
 
     public ScriviRecensioneController() {
-        this.recensioneControl = new RecensioneControl();
+        // NOTA: Tra poco modificheremo anche RecensioneControl per fargli accettare
+        // un DAO dinamico da App.getRecensioneDAO(), proprio come gli altri!
+        this.recensioneControl = new RecensioneControl(App.getRecensioneDAO(), App.getUtenteDAO());
     }
 
     @FXML
@@ -36,22 +41,22 @@ public class ScriviRecensioneController {
         votoCombo.setValue(5);
     }
 
-    // Usato quando crei una recensione nuova
     public void setGioco(Videogioco gioco) {
         this.giocoDaRecensire = gioco;
         titoloGiocoLabel.setText("TARGET: " + gioco.getTitolo());
     }
 
-    // NUOVO: Usato quando clicchi su "EDIT"
     public void setRecensioneDaModificare(Recensione r) {
         this.modalitaModifica = true;
+        
         // Ricreiamo un "finto" gioco solo per avere ID e Titolo a disposizione
+        // I 5 parametri del costruttore rispettano esattamente la firma della tua Entity
         this.giocoDaRecensire = new Videogioco(r.getNomeGioco(), "", 0, "", "");
         this.giocoDaRecensire.setId(r.getIdGioco());
         
         titoloGiocoLabel.setText("TARGET: " + r.getNomeGioco() + " (EDIT MODE)");
-        votoCombo.setValue(r.getVoto()); // Pre-carica il vecchio voto
-        commentoArea.setText(r.getCommento()); // Pre-carica il vecchio commento
+        votoCombo.setValue(r.getVoto()); 
+        commentoArea.setText(r.getCommento()); 
     }
 
     @FXML
@@ -71,7 +76,7 @@ public class ScriviRecensioneController {
             boolean successo = recensioneControl.modificaRecensionePersonale(r);
             if (successo) {
                 mostraAlert("SYSTEM UPDATED", "Log modificato con successo. Nessun credito extra erogato.");
-                App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
+                App.setRoot(VIEW_DASHBOARD); 
             } else {
                 mostraAlert("ERROR", "Impossibile modificare il log.");
             }
@@ -79,7 +84,7 @@ public class ScriviRecensioneController {
             String esito = recensioneControl.elaboraRecensione(r);
             if (esito.equals("SUCCESS")) {
                 mostraAlert("REWARD UNLOCKED", "Recensione acquisita nei server. Hai guadagnato +15 CREDITS!");
-                App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
+                App.setRoot(VIEW_DASHBOARD); 
             } else if (esito.equals("ALREADY_REVIEWED")) {
                 mostraAlert("ACCESS DENIED", "Hai già lasciato un log per questo gioco.");
             }
@@ -88,7 +93,7 @@ public class ScriviRecensioneController {
 
     @FXML
     private void annulla() throws IOException { 
-        App.setRoot(VIEW_DASHBOARD); // <-- COSTANTE APPLICATA QUI
+        App.setRoot(VIEW_DASHBOARD); 
     }
 
     private void mostraAlert(String titolo, String msg) {

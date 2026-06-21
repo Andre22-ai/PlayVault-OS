@@ -21,20 +21,16 @@ public class UtenteDAOMySQL implements UtenteDAO {
 
     @Override
     public Utente autentica(String username, String password) {
-        // FIX: Rimosso il "SELECT *" e dichiarate le colonne esatte (java:S6905)
         String query = "SELECT username, password, crediti, ruolo FROM utenti WHERE BINARY username = ? AND BINARY password = ?";
         
-        // Uso del try-with-resources per chiudere automaticamente connessione e statement
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
-            // Inseriamo i parametri in modo sicuro (Addio SQL Injection!)
             stmt.setString(1, username);
             stmt.setString(2, password);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    // L'utente esiste, estraiamo i dati per costruire l'Entity pura
                     Utente utente = new Utente(rs.getString("username"), rs.getString("password"));
                     utente.aggiungiCrediti(rs.getInt("crediti"));
                     utente.setRuolo(rs.getString("ruolo"));
@@ -42,10 +38,9 @@ public class UtenteDAOMySQL implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            // FIX: Sostituito System.err con il Logger (java:S106)
             LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'autenticazione", e);
         }
-        return null; // Credenziali errate o utente non trovato
+        return null;
     }
 
     @Override
@@ -59,7 +54,6 @@ public class UtenteDAOMySQL implements UtenteDAO {
             stmt.setString(2, utente.getPassword());
             stmt.setInt(3, utente.getCrediti());
             
-            // executeUpdate restituisce il numero di righe modificate
             int righeInserite = stmt.executeUpdate();
             return righeInserite > 0;
             
@@ -69,13 +63,9 @@ public class UtenteDAOMySQL implements UtenteDAO {
         }
     }
 
-    // =================================================================
-    // STEP 2: IL MOTORE DELLA CLASSIFICA (HALL OF FAME)
-    // =================================================================
     @Override
     public List<Utente> recuperaClassifica() {
         List<Utente> classifica = new ArrayList<>();
-        // Qui era già corretto: nessun "SELECT *" ma colonne specifiche!
         String query = "SELECT username, password, crediti, ruolo FROM utenti WHERE ruolo = 'PLAYER' ORDER BY crediti DESC LIMIT 10";
         
         try (Connection conn = GestoreConnessione.getConnessione();
@@ -84,7 +74,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
             
             while (rs.next()) {
                 Utente u = new Utente(rs.getString("username"), rs.getString("password"));
-                u.setCrediti(rs.getInt("crediti")); // Assegniamo i crediti reali letti dal DB
+                u.setCrediti(rs.getInt("crediti"));
                 u.setRuolo(rs.getString("ruolo"));
                 classifica.add(u);
             }
@@ -94,9 +84,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
         return classifica;
     }
 
-    // =================================================================
-    // STEP 3: SISTEMA DI RICOMPENSA (GAMIFICATION)
-    // =================================================================
+    @Override
     public boolean aggiungiCreditiAlDB(String username, int quantita) {
         String query = "UPDATE utenti SET crediti = crediti + ? WHERE username = ?";
         
@@ -114,5 +102,4 @@ public class UtenteDAOMySQL implements UtenteDAO {
             return false;
         }
     }
-
 }

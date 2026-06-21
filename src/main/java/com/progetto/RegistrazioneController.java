@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.progetto.controllo.RegistrazioneControl;
-import com.progetto.database.UtenteDAOMySQL;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -16,7 +15,6 @@ import javafx.scene.control.TextField;
  */
 public class RegistrazioneController {
 
-    // --- NUOVO: Inizializzazione del Logger ---
     private static final Logger LOGGER = Logger.getLogger(RegistrazioneController.class.getName());
 
     // 1. Colleghiamo i campi dell'interfaccia FXML
@@ -25,13 +23,15 @@ public class RegistrazioneController {
     @FXML private PasswordField regConfirmField;
 
     // 2. Riferimento al livello Control (Logica di Business)
-    private RegistrazioneControl regControl;
+    // FIX SonarCloud: Messo "final" per renderlo immutabile dopo la creazione
+    private final RegistrazioneControl regControl;
 
     /**
      * Costruttore: Dependency Injection.
      */
     public RegistrazioneController() {
-        this.regControl = new RegistrazioneControl(new UtenteDAOMySQL());
+        // FIX 2: Chiediamo ad App.java il database Utenti scelto all'avvio (RAM, CSV o MySQL)!
+        this.regControl = new RegistrazioneControl(App.getUtenteDAO());
     }
 
     /**

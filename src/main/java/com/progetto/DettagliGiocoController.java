@@ -1,10 +1,10 @@
 package com.progetto;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.progetto.controllo.AcquistoControl;
-import com.progetto.database.LibreriaDAOMySQL;
 import com.progetto.entita.Videogioco;
 
 import javafx.fxml.FXML;
@@ -15,7 +15,6 @@ import javafx.scene.control.TextArea;
 
 public class DettagliGiocoController {
 
-    // --- NUOVO: Inizializzazione del Logger ---
     private static final Logger LOGGER = Logger.getLogger(DettagliGiocoController.class.getName());
 
     @FXML private Label titoloLabel;
@@ -23,16 +22,19 @@ public class DettagliGiocoController {
     @FXML private Label genereLabel;
     @FXML private TextArea descArea;
     @FXML private Label coverLabel;
-    @FXML private Label idLabel; // NUOVO: Label per l'ID del gioco
+    @FXML private Label idLabel;
 
-    private Videogioco giocoSelezionato; // Memorizziamo il gioco per poterlo comprare
-    private AcquistoControl acquistoControl;
+    private Videogioco giocoSelezionato; 
+    
+    // FIX SonarCloud: Variabile resa 'final'
+    private final AcquistoControl acquistoControl;
 
     public DettagliGiocoController() {
-        this.acquistoControl = new AcquistoControl(new LibreriaDAOMySQL());
+        // FIX 2: Usiamo il polimorfismo! Chiediamo il database alla classe App
+        this.acquistoControl = new AcquistoControl(App.getLibreriaDAO());
     }
 
-   public void setGioco(Videogioco gioco) {
+    public void setGioco(Videogioco gioco) {
         this.giocoSelezionato = gioco;
         
         // Imposta i dati grafici di base
@@ -51,8 +53,8 @@ public class DettagliGiocoController {
      */
     @FXML
     private void eseguiAcquisto() {
-        // FIX S106: Utilizzo del Logger al posto di System.out
-        LOGGER.info("[BOUNDARY] Richiesta acquisto per: " + giocoSelezionato.getTitolo());
+        // FIX SonarCloud: Utilizzo del Logger parametrizzato invece della concatenazione col '+'
+        LOGGER.log(Level.INFO, "[BOUNDARY] Richiesta acquisto per: {0}", giocoSelezionato.getTitolo());
         
         String risultato = acquistoControl.tentaAcquisto(giocoSelezionato);
 

@@ -1,10 +1,10 @@
 package com.progetto;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.progetto.controllo.AutenticazioneControl;
-import com.progetto.database.UtenteDAOMySQL;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
 
@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
  */
 public class LoginController {
 
-    // --- NUOVO: Inizializzazione del Logger ---
     private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
 
     // 1. Colleghiamo i campi di testo dell'interfaccia grafica
@@ -26,14 +25,15 @@ public class LoginController {
     @FXML private PasswordField passwordField;
 
     // 2. Riferimento al livello Control (Orchestratore)
-    private AutenticazioneControl authControl;
+    // FIX SonarCloud: Messo "final" visto che lo assegniamo solo nel costruttore
+    private final AutenticazioneControl authControl;
 
     /**
      * Costruttore. Qui facciamo la "Dependency Injection" manuale.
-     * Inizializziamo il Control passandogli il nostro Database.
      */
     public LoginController() {
-        this.authControl = new AutenticazioneControl(new UtenteDAOMySQL());
+        // FIX 2: Addio MySQL fisso! Chiediamo ad App.java il database scelto dall'utente all'avvio
+        this.authControl = new AutenticazioneControl(App.getUtenteDAO());
     }
 
     /**
@@ -53,7 +53,9 @@ public class LoginController {
         // C. Risposta visiva e Navigazione (Responsabilità del Boundary)
         if (accessoConsentito) {
             Utente utenteLoggato = Sessione.getIstanza().getUtenteCorrente();
-            LOGGER.info("[BOUNDARY] Accesso Consentito! Benvenuto " + utenteLoggato.getUsername());
+            
+            // FIX SonarCloud: Usiamo i parametri {0} nel logger invece di unire le stringhe col '+'
+            LOGGER.log(Level.INFO, "[BOUNDARY] Accesso Consentito! Benvenuto {0}", utenteLoggato.getUsername());
             
             // ==================================================
             // IL BIVIO RBAC (Role-Based Access Control)

@@ -3,7 +3,6 @@ package com.progetto;
 import java.io.IOException;
 
 import com.progetto.controllo.GestioneCatalogoControl;
-import com.progetto.database.VideogiocoDAOMySQL;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -22,7 +21,8 @@ public class AdminDashboardController {
     private GestioneCatalogoControl catalogoControl;
 
     public AdminDashboardController() {
-        this.catalogoControl = new GestioneCatalogoControl(new VideogiocoDAOMySQL());
+        // FIX 2: Chiediamo ad App qual è il database scelto per i videogiochi!
+        this.catalogoControl = new GestioneCatalogoControl(App.getVideogiocoDAO());
     }
 
     @FXML

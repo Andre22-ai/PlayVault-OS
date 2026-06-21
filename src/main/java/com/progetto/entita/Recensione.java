@@ -23,4 +23,11 @@ public class Recensione {
     // NUOVI GETTER E SETTER
     public String getNomeGioco() { return nomeGioco; }
     public void setNomeGioco(String nomeGioco) { this.nomeGioco = nomeGioco; }
+    public void setVoto(int voto) {
+        this.voto = voto;
+    }
+
+    public void setCommento(String commento) {
+        this.commento = commento;
+    }
 }

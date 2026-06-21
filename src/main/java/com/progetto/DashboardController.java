@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import com.progetto.controllo.LibreriaControl;
 import com.progetto.controllo.RecensioneControl;
-import com.progetto.database.VideogiocoDAOMySQL;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Videogioco;
@@ -44,12 +43,14 @@ public class DashboardController implements Initializable {
     @FXML private Label creditsLabel; 
     @FXML private Label playerLabel;   
 
-    private LibreriaControl libreriaControl;
-    private RecensioneControl recensioneControl;
+    // FIX SonarCloud: Variabili rese 'final'
+    private final LibreriaControl libreriaControl;
+    private final RecensioneControl recensioneControl;
 
     public DashboardController() {
-        this.libreriaControl = new LibreriaControl(new VideogiocoDAOMySQL());
-        this.recensioneControl = new RecensioneControl(); 
+        // ORA PASSIMO ENTRAMBI I DAO CORRETTI!
+        this.libreriaControl = new LibreriaControl(App.getVideogiocoDAO(), App.getLibreriaDAO());
+        this.recensioneControl = new RecensioneControl(App.getRecensioneDAO(), App.getUtenteDAO()); 
     }
 
     @Override
@@ -244,7 +245,8 @@ public class DashboardController implements Initializable {
             launchBtn.setPrefWidth(90.0);
             launchBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #39ff14; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #39ff14; -fx-font-weight: bold; -fx-cursor: hand;");
             launchBtn.setOnAction(e -> {
-                LOGGER.info("[SYSTEM RUNTIME] Esecuzione binaria di: " + gioco.getTitolo() + " avviata su PlayVault OS.");
+                // FIX SonarCloud: Logging parametrizzato invece della concatenazione
+                LOGGER.log(Level.INFO, "[SYSTEM RUNTIME] Esecuzione binaria di: {0} avviata su PlayVault OS.", gioco.getTitolo());
             });
 
             Button reviewBtn = new Button("REVIEW");
@@ -254,7 +256,8 @@ public class DashboardController implements Initializable {
             
             reviewBtn.setOnAction(e -> {
                 try {
-                    LOGGER.info("[BOUNDARY] Apertura terminale di recensione per: " + gioco.getTitolo());
+                    // FIX SonarCloud: Logging parametrizzato
+                    LOGGER.log(Level.INFO, "[BOUNDARY] Apertura terminale di recensione per: {0}", gioco.getTitolo());
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("scrivi_recensione.fxml"));
                     Parent root = loader.load();
                     

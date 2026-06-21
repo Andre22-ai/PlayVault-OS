@@ -1,19 +1,22 @@
 package com.progetto.controllo;
 
-import com.progetto.database.RecensioneDAOMySQL;
-import com.progetto.database.UtenteDAOMySQL;
+// FIX 1: Importiamo le interfacce, non le classi MySQL!
+import com.progetto.database.RecensioneDAO;
+import com.progetto.database.UtenteDAO;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
 
 public class RecensioneControl {
 
-    private RecensioneDAOMySQL recensioneDAO;
-    private UtenteDAOMySQL utenteDAO;
+    // FIX SonarCloud: Usiamo interfacce e aggiungiamo "final"
+    private final RecensioneDAO recensioneDAO;
+    private final UtenteDAO utenteDAO;
 
-    public RecensioneControl() {
-        this.recensioneDAO = new RecensioneDAOMySQL();
-        this.utenteDAO = new UtenteDAOMySQL();
+    // FIX 2: Dependency Injection! Il Control riceve i database dall'esterno
+    public RecensioneControl(RecensioneDAO recensioneDAO, UtenteDAO utenteDAO) {
+        this.recensioneDAO = recensioneDAO;
+        this.utenteDAO = utenteDAO;
     }
 
     public String elaboraRecensione(Recensione recensione) {
@@ -24,7 +27,7 @@ public class RecensioneControl {
             return "ALREADY_REVIEWED"; // Il DB ci ha bloccato (vincolo UNIQUE)
         }
 
-        // 2. Se salvata con successo, eroghiamo la ricompensa di 5 crediti!
+        // 2. Se salvata con successo, eroghiamo la ricompensa di 15 crediti!
         boolean accreditati = utenteDAO.aggiungiCreditiAlDB(recensione.getUsername(), 15);
         
         if (accreditati) {
@@ -54,7 +57,4 @@ public class RecensioneControl {
     public boolean eliminaRecensionePersonale(String username, int idGioco) {
         return recensioneDAO.eliminaRecensione(username, idGioco);
     }
-
-
-
 }

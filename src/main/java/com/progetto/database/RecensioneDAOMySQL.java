@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import com.progetto.entita.Recensione;
 
-public class RecensioneDAOMySQL {
+public class RecensioneDAOMySQL implements RecensioneDAO {
 
     // --- NUOVO: Inizializzazione del Logger ---
     private static final Logger LOGGER = Logger.getLogger(RecensioneDAOMySQL.class.getName());

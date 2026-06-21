@@ -3,7 +3,6 @@ package com.progetto.controllo;
 import java.util.List;
 
 import com.progetto.database.LibreriaDAO;
-import com.progetto.database.LibreriaDAOMySQL;
 import com.progetto.database.VideogiocoDAO;
 import com.progetto.entita.Videogioco;
 
@@ -12,12 +11,14 @@ import com.progetto.entita.Videogioco;
  */
 public class LibreriaControl {
 
-    private VideogiocoDAO videogiocoDAO;
-    private LibreriaDAO libreriaDAO; // Il nuovo "motore" per la libreria personale
+    // FIX SonarCloud: Mettiamo 'final'
+    private final VideogiocoDAO videogiocoDAO;
+    private final LibreriaDAO libreriaDAO;
 
-    public LibreriaControl(VideogiocoDAO videogiocoDAO) {
+    // FIX: Ora accetta entrambi i database dall'esterno!
+    public LibreriaControl(VideogiocoDAO videogiocoDAO, LibreriaDAO libreriaDAO) {
         this.videogiocoDAO = videogiocoDAO;
-        this.libreriaDAO = new LibreriaDAOMySQL(); // Inizializziamo il collegamento
+        this.libreriaDAO = libreriaDAO;
     }
 
     /**
