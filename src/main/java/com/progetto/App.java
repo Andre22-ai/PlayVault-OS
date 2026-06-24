@@ -23,7 +23,7 @@ import com.progetto.database.UtenteDAO;
 import com.progetto.database.UtenteDAOMemory;
 import com.progetto.database.UtenteDAOMySQL;
 import com.progetto.database.UtenteDAOcsv;
-import com.progetto.database.VideogiocoDAO;         // <-- NUOVI IMPORT RECENSIONI
+import com.progetto.database.VideogiocoDAO;
 import com.progetto.database.VideogiocoDAOMemory;
 import com.progetto.database.VideogiocoDAOMySQL;
 
@@ -40,13 +40,16 @@ public class App extends Application {
 
     private static Scene scene;
 
+    // --- COSTANTE PER IL FIX SONARCLOUD (java:S1192) ---
+    private static final String MENU_SEPARATOR = "========================================";
+
     // ==========================================
     // LE NOSTRE VARIABILI POLIMORFE GLOBALI
     // ==========================================
     private static UtenteDAO utenteDAOScelto;
     private static VideogiocoDAO videogiocoDAOScelto;
     private static LibreriaDAO libreriaDAOScelto;
-    private static RecensioneDAO recensioneDAOScelto; // <-- ECCO LA VARIABILE CHE MANCAVA!
+    private static RecensioneDAO recensioneDAOScelto; 
 
     // ==========================================
     // GETTER PER I CONTROLLER GRAFICI
@@ -54,7 +57,7 @@ public class App extends Application {
     public static UtenteDAO getUtenteDAO() { return utenteDAOScelto; }
     public static VideogiocoDAO getVideogiocoDAO() { return videogiocoDAOScelto; }
     public static LibreriaDAO getLibreriaDAO() { return libreriaDAOScelto; }
-    public static RecensioneDAO getRecensioneDAO() { return recensioneDAOScelto; } // <-- GETTER RECENSIONE
+    public static RecensioneDAO getRecensioneDAO() { return recensioneDAOScelto; } 
 
     // Metodo statico per risolvere il Blocker SonarCloud (java:S2696)
     private static void inizializzaScena(Parent root) {
@@ -87,9 +90,9 @@ public class App extends Application {
         // ==========================================================
         // FASE 1: SCELTA DEL DATABASE (Il Requisito del Professore)
         // ==========================================================
-        System.out.println("========================================");
+        System.out.println(MENU_SEPARATOR);
         System.out.println("      CONFIGURAZIONE SALVATAGGIO        ");
-        System.out.println("========================================");
+        System.out.println(MENU_SEPARATOR);
         System.out.println("1. Database MySQL (Full-Version DBMS)");
         System.out.println("2. File CSV (Full-Version File System)");
         System.out.println("3. Memoria RAM (Demo-Version In-Memory)");
@@ -97,7 +100,6 @@ public class App extends Application {
         
         String sceltaDB = scanner.nextLine().trim();
         
-        // Creiamo i DAO in base alla scelta (Polimorfismo!)
         // Creiamo i DAO in base alla scelta (Polimorfismo di salvataggio!)
         if (sceltaDB.equals("2")) {
             utenteDAOScelto = new UtenteDAOcsv();
@@ -117,7 +119,7 @@ public class App extends Application {
             utenteDAOScelto = new UtenteDAOMySQL();
             videogiocoDAOScelto = new VideogiocoDAOMySQL();
             libreriaDAOScelto = new LibreriaDAOMySQL();
-            recensioneDAOScelto = new RecensioneDAOMySQL(); // <-- Aggiunto
+            recensioneDAOScelto = new RecensioneDAOMySQL(); 
             System.out.println("[INFO] Selezionato MySQL (Assicurati che il server sia acceso).\n");
         }
 
@@ -127,9 +129,9 @@ public class App extends Application {
         boolean appAttiva = true;
 
         while (appAttiva) {
-            System.out.println("========================================");
+            System.out.println(MENU_SEPARATOR);
             System.out.println(" SELEZIONA MODALITA' DI AVVIO PLAYVAULT ");
-            System.out.println("========================================");
+            System.out.println(MENU_SEPARATOR);
             System.out.println("1. Avvia con Interfaccia Grafica (GUI - Finestre)");
             System.out.println("2. Avvia nel Terminale (CLI)");
             System.out.println("3. Spegni il sistema");
@@ -149,7 +151,6 @@ public class App extends Application {
                 LibreriaControl libreriaControl = new LibreriaControl(videogiocoDAOScelto, libreriaDAOScelto); 
                 AcquistoControl acquistoControl = new AcquistoControl(libreriaDAOScelto);
                 
-                // <-- ORA HA I SUOI 2 DAO! L'errore era qui.
                 RecensioneControl recensioneControl = new RecensioneControl(recensioneDAOScelto, utenteDAOScelto); 
                 
                 // Facciamo partire la CLI
