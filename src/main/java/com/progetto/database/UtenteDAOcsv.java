@@ -25,7 +25,6 @@ public class UtenteDAOcsv implements UtenteDAO {
     private static final Logger LOGGER = Logger.getLogger(UtenteDAOcsv.class.getName());
 
     public UtenteDAOcsv() {
-        // Al primo avvio, se il file non esiste, lo crea e ci mette un admin
         File file = new File(NOME_FILE);
         if (!file.exists()) {
             try {
@@ -33,8 +32,9 @@ public class UtenteDAOcsv implements UtenteDAO {
                 if (creato) {
                     Utente admin = new Utente("admin", "admin");
                     admin.setRuolo("ADMIN");
-                    admin.aggiungiCrediti(100);
-                    salvaUtente(admin); // Lo salva subito nel file!
+                    // Usiamo setCrediti per essere precisi al 100%
+                    admin.setCrediti(100);
+                    salvaUtente(admin); 
                     LOGGER.info("[CSV] Creato nuovo file utenti.csv con account admin default.");
                 }
             } catch (IOException e) {
@@ -43,9 +43,6 @@ public class UtenteDAOcsv implements UtenteDAO {
         }
     }
 
-    /**
-     * Metodo di supporto: Legge tutte le righe del CSV e le trasforma in una Lista di Utenti
-     */
     private List<Utente> leggiTuttiUtenti() {
         List<Utente> lista = new ArrayList<>();
         
@@ -59,11 +56,9 @@ public class UtenteDAOcsv implements UtenteDAO {
                     Utente u = new Utente(dati[0], dati[1]);
                     u.setRuolo(dati[2]);
                     
-                    // Impostiamo i crediti. Se il tuo utente parte già con dei crediti nel costruttore,
-                    // calcoliamo la differenza per impostare il valore esatto letto dal file
-                    int creditiDaFile = Integer.parseInt(dati[3]);
-                    int differenza = creditiDaFile - u.getCrediti();
-                    u.aggiungiCrediti(differenza);
+                    // FIX 1: Impostiamo forzatamente il valore esatto scritto nel file.
+                    // Bypassiamo qualsiasi calcolo strano di "aggiungiCrediti".
+                    u.setCrediti(Integer.parseInt(dati[3]));
                     
                     lista.add(u);
                 }
@@ -75,9 +70,6 @@ public class UtenteDAOcsv implements UtenteDAO {
         return lista;
     }
 
-    /**
-     * Metodo di supporto: Prende una Lista di Utenti e la sovrascrive sul CSV
-     */
     private void sovrascriviFile(List<Utente> utenti) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(NOME_FILE))) {
             for (Utente u : utenti) {
@@ -87,10 +79,6 @@ public class UtenteDAOcsv implements UtenteDAO {
             LOGGER.log(Level.SEVERE, "[CSV] Errore durante la scrittura del file", e);
         }
     }
-
-    // ==========================================
-    // METODI DELL'INTERFACCIA DAO
-    // ==========================================
 
     @Override
     public Utente autentica(String username, String password) {
@@ -105,7 +93,6 @@ public class UtenteDAOcsv implements UtenteDAO {
     public boolean salvaUtente(Utente utente) {
         List<Utente> tutti = leggiTuttiUtenti();
         
-        // Controllo se esiste già
         boolean esiste = tutti.stream()
                 .anyMatch(u -> u.getUsername().equalsIgnoreCase(utente.getUsername()));
         
@@ -114,7 +101,7 @@ public class UtenteDAOcsv implements UtenteDAO {
         }
         
         tutti.add(utente);
-        sovrascriviFile(tutti); // Aggiorniamo il file
+        sovrascriviFile(tutti); 
         return true;
     }
 
@@ -125,14 +112,24 @@ public class UtenteDAOcsv implements UtenteDAO {
         
         for (Utente u : tutti) {
             if (u.getUsername().equals(username)) {
-                u.aggiungiCrediti(quantita);
+                
+                // FIX 2: Simuliamo il vincolo del Database. 
+                // Se la spesa ci manda in negativo, blocchiamo l'acquisto!
+                if (u.getCrediti() + quantita < 0) {
+                    return false; // Crediti insufficienti
+                }
+                
+                // FIX 3: Usiamo la matematica cruda. 
+                // Se quantita è -15, farà: crediti + (-15) = sottrazione corretta.
+                u.setCrediti(u.getCrediti() + quantita);
+                
                 modificato = true;
                 break;
             }
         }
         
         if (modificato) {
-            sovrascriviFile(tutti); // Aggiorniamo il file con i nuovi crediti
+            sovrascriviFile(tutti); 
             return true;
         }
         return false;

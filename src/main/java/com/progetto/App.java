@@ -14,9 +14,11 @@ import com.progetto.controllo.RegistrazioneControl;
 import com.progetto.database.LibreriaDAO;
 import com.progetto.database.LibreriaDAOMemory;
 import com.progetto.database.LibreriaDAOMySQL;
+import com.progetto.database.LibreriaDAOcsv;
 import com.progetto.database.RecensioneDAO;
 import com.progetto.database.RecensioneDAOMemory;
 import com.progetto.database.RecensioneDAOMySQL;
+import com.progetto.database.RecensioneDAOcsv;
 import com.progetto.database.UtenteDAO;
 import com.progetto.database.UtenteDAOMemory;
 import com.progetto.database.UtenteDAOMySQL;
@@ -96,12 +98,13 @@ public class App extends Application {
         String sceltaDB = scanner.nextLine().trim();
         
         // Creiamo i DAO in base alla scelta (Polimorfismo!)
+        // Creiamo i DAO in base alla scelta (Polimorfismo di salvataggio!)
         if (sceltaDB.equals("2")) {
             utenteDAOScelto = new UtenteDAOcsv();
-            videogiocoDAOScelto = new VideogiocoDAOMemory(); 
-            libreriaDAOScelto = new LibreriaDAOMemory();
-            recensioneDAOScelto = new RecensioneDAOMemory(); // <-- Aggiunto
-            System.out.println("[INFO] Selezionato File System (utenti.csv).\n");
+            videogiocoDAOScelto = new VideogiocoDAOMemory(); // Usa la memoria demo per avere i 3 giochi pronti
+            libreriaDAOScelto = new LibreriaDAOcsv();       // PERSISTENZA CSV ATTIVA!
+            recensioneDAOScelto = new RecensioneDAOcsv();   // PERSISTENZA CSV ATTIVA!
+            System.out.println("[INFO] Selezionato File System (utenti.csv, libreria.csv, recensioni.csv).\n");
             
         } else if (sceltaDB.equals("3")) {
             utenteDAOScelto = new UtenteDAOMemory();
