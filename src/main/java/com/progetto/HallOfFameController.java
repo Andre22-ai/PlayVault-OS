@@ -12,6 +12,7 @@ import com.progetto.entita.Utente;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
@@ -26,6 +27,7 @@ public class HallOfFameController implements Initializable {
     @FXML private Label userNameLabel;
     @FXML private Label levelLabel;
     @FXML private FlowPane leaderboardPane;
+    @FXML private Button settingsButton;
 
     // FIX 2: Usiamo l'interfaccia! Così può contenere RAM, CSV o MySQL
     private final UtenteDAO utenteDAO;
@@ -43,6 +45,16 @@ public class HallOfFameController implements Initializable {
             userNameLabel.setText(corrente.getUsername().toUpperCase());
             avatarLabel.setText(corrente.getUsername().substring(0, 1).toUpperCase());
             levelLabel.setText("LEVEL " + (corrente.getCrediti() / 2)); // Simuliamo un livello basato sui crediti
+        }
+
+        if (settingsButton != null) {
+            settingsButton.setOnAction(event -> {
+                try {
+                    App.setRoot("impostazioni");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         }
 
         // 2. Carichiamo la Classifica Globale (Area Destra)
@@ -98,6 +110,11 @@ public class HallOfFameController implements Initializable {
         card.setEffect(ds);
         
         return card;
+    }
+
+    @FXML
+    private void apriImpostazioni() throws IOException {
+        App.setRoot("impostazioni");
     }
 
     @FXML

@@ -12,6 +12,9 @@ public interface UtenteDAO {
 
     boolean aggiungiCreditiAlDB(String username, int quantita);
 
-    // Aggiungi questa riga nel file UtenteDAO.java
+    boolean aggiornaPassword(String username, String nuovaPassword);
+
+    boolean eliminaAccount(String username);
+
     java.util.List<Utente> recuperaClassifica();
 }

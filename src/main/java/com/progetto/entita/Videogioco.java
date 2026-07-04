@@ -1,20 +1,28 @@
 package com.progetto.entita;
 
+import com.progetto.GestoreLingua;
+
 public class Videogioco {
     private int id;
     private String titolo;
     private String genere;
     private int annoUscita;
     private String sviluppatore;
-    private String descrizione;
+    private String descrizioneEn;
+    private String descrizioneIt;
 
-    // Costruttore
+    // Costruttore base
     public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizione) {
+        this(titolo, genere, annoUscita, sviluppatore, descrizione, descrizione);
+    }
+
+    public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizioneEn, String descrizioneIt) {
         this.titolo = titolo;
         this.genere = genere;
         this.annoUscita = annoUscita;
         this.sviluppatore = sviluppatore;
-        this.descrizione = descrizione;
+        this.descrizioneEn = descrizioneEn;
+        this.descrizioneIt = descrizioneIt;
     }
 
     // Getter e Setter
@@ -28,6 +36,30 @@ public class Videogioco {
     public void setAnnoUscita(int annoUscita) { this.annoUscita = annoUscita; }
     public String getSviluppatore() { return sviluppatore; }
     public void setSviluppatore(String sviluppatore) { this.sviluppatore = sviluppatore; }
-    public String getDescrizione() { return descrizione; }
-    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+
+    public String getDescrizioneLocale() {
+        String linguaAttuale = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
+        
+        // Questa spia ci dirà nel terminale cosa sta succedendo
+        System.out.println("Switching lingua per " + titolo + " -> Sistema impostato su: " + linguaAttuale);
+
+        if ("it".equalsIgnoreCase(linguaAttuale)) {
+            return descrizioneIt != null && !descrizioneIt.isBlank() ? descrizioneIt : descrizioneEn;
+        }
+        return descrizioneEn != null && !descrizioneEn.isBlank() ? descrizioneEn : descrizioneIt;
+    }
+
+    public String getDescrizione() {
+        return getDescrizioneLocale();
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizioneEn = descrizione;
+        this.descrizioneIt = descrizione;
+    }
+
+    public String getDescrizioneEn() { return descrizioneEn; }
+    public void setDescrizioneEn(String descrizioneEn) { this.descrizioneEn = descrizioneEn; }
+    public String getDescrizioneIt() { return descrizioneIt; }
+    public void setDescrizioneIt(String descrizioneIt) { this.descrizioneIt = descrizioneIt; }
 }

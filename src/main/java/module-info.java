@@ -5,6 +5,7 @@ module com.progetto {
     requires transitive java.sql;
 
     opens com.progetto to javafx.fxml;
+    opens com.progetto.boundary to javafx.fxml;
 
     exports com.progetto;
     exports com.progetto.boundary;

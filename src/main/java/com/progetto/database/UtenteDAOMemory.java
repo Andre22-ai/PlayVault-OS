@@ -63,6 +63,22 @@ public class UtenteDAOMemory implements UtenteDAO {
     }
 
     @Override
+    public boolean aggiornaPassword(String username, String nuovaPassword) {
+        for (Utente utente : utentiInMemoria) {
+            if (utente.getUsername().equals(username)) {
+                utente.setPassword(nuovaPassword);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminaAccount(String username) {
+        return utentiInMemoria.removeIf(utente -> utente.getUsername().equals(username));
+    }
+
+    @Override
     public List<Utente> recuperaClassifica() {
         // Ordina la lista in base ai crediti (dal più grande al più piccolo)
         return utentiInMemoria.stream()

@@ -136,6 +136,30 @@ public class UtenteDAOcsv implements UtenteDAO {
     }
 
     @Override
+    public boolean aggiornaPassword(String username, String nuovaPassword) {
+        List<Utente> tutti = leggiTuttiUtenti();
+
+        for (Utente utente : tutti) {
+            if (utente.getUsername().equals(username)) {
+                utente.setPassword(nuovaPassword);
+                sovrascriviFile(tutti);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean eliminaAccount(String username) {
+        List<Utente> tutti = leggiTuttiUtenti();
+        boolean rimosso = tutti.removeIf(utente -> utente.getUsername().equals(username));
+        if (rimosso) {
+            sovrascriviFile(tutti);
+        }
+        return rimosso;
+    }
+
+    @Override
     public List<Utente> recuperaClassifica() {
         List<Utente> tutti = leggiTuttiUtenti();
         return tutti.stream()

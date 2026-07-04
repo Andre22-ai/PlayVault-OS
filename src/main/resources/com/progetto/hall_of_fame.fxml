@@ -34,7 +34,10 @@
             
             <Region HBox.hgrow="ALWAYS" />
             
-            <Region prefWidth="180.0" />
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#apriImpostazioni" prefHeight="40.0" prefWidth="180.0" style="-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #00ffff; -fx-font-weight: bold; -fx-cursor: hand;" text="SETTINGS">
+               <font><Font name="Consolas Bold" size="14.0" /></font>
+               <effect><DropShadow color="#00ffff" radius="10.0" spread="0.2" /></effect>
+            </Button>
          </children>
       </HBox>
    </top>

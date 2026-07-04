@@ -41,7 +41,11 @@ public class DashboardController implements Initializable {
 
     @FXML private FlowPane catalogoPane;
     @FXML private Label creditsLabel; 
-    @FXML private Label playerLabel;   
+    @FXML private Label playerLabel;
+    @FXML private Button libraryButton;
+    @FXML private Button catalogButton;
+    @FXML private Button reviewsButton;
+    @FXML private Button settingsButton;
 
     // FIX SonarCloud: Variabili rese 'final'
     private final LibreriaControl libreriaControl;
@@ -59,10 +63,25 @@ public class DashboardController implements Initializable {
         
         if (Sessione.getIstanza().getUtenteCorrente() != null) {
             playerLabel.setText(Sessione.getIstanza().getUtenteCorrente().getUsername().toUpperCase());
-            creditsLabel.setText("CREDITS: " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
+            creditsLabel.setText(getTesto("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
         }
-
+        aggiornaTesti();
         apriLibreria();
+    }
+
+    private void aggiornaTesti() {
+        GestoreLingua lingua = GestoreLingua.getIstanza();
+        if (libraryButton != null) libraryButton.setText(lingua.get("dashboard.library").toUpperCase());
+        if (catalogButton != null) catalogButton.setText(lingua.get("dashboard.catalog").toUpperCase());
+        if (reviewsButton != null) reviewsButton.setText(lingua.get("dashboard.reviews").toUpperCase());
+        if (settingsButton != null) settingsButton.setText(lingua.get("dashboard.settings").toUpperCase());
+        if (creditsLabel != null && Sessione.getIstanza().getUtenteCorrente() != null) {
+            creditsLabel.setText(lingua.get("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
+        }
+    }
+
+    private String getTesto(String chiave) {
+        return GestoreLingua.getIstanza().get(chiave);
     }
 
     @FXML
@@ -74,7 +93,7 @@ public class DashboardController implements Initializable {
         List<Videogioco> mieiGiochi = libreriaControl.ottieniMieiGiochi(username);
         
         if (mieiGiochi.isEmpty()) {
-            Label vuotoLbl = new Label("IL TUO VAULT E' VUOTO.\nCLICCA SU 'ADD GAME' PER RISCATTARE TITOLI.");
+            Label vuotoLbl = new Label(getTesto("dashboard.empty.library"));
             vuotoLbl.setTextFill(Color.web("#ff00ff"));
             vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
@@ -110,7 +129,7 @@ public class DashboardController implements Initializable {
         List<Recensione> mieRecensioni = recensioneControl.ottieniRecensioniPersonali(username);
         
         if (mieRecensioni.isEmpty()) {
-            Label vuotoLbl = new Label("NESSUN LOG DI SISTEMA PRESENTE.\nGIOCA E RECENSISCI PER GUADAGNARE CREDITI.");
+            Label vuotoLbl = new Label(getTesto("dashboard.empty.reviews"));
             vuotoLbl.setTextFill(Color.web("#ffea00"));
             vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
@@ -125,16 +144,16 @@ public class DashboardController implements Initializable {
             card.setPadding(new Insets(15.0));
             card.setStyle("-fx-background-color: #0d0012; -fx-border-color: #ffea00; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
             
-            Label gameLbl = new Label("TARGET: " + r.getNomeGioco());
+            Label gameLbl = new Label(getTesto("dashboard.target") + " " + r.getNomeGioco());
             gameLbl.setTextFill(Color.web("#00ffff"));
             gameLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             
             String stelle = "★".repeat(r.getVoto()) + "☆".repeat(5 - r.getVoto());
-            Label ratingLbl = new Label("RATING: " + stelle);
+            Label ratingLbl = new Label(getTesto("dashboard.rating") + " " + stelle);
             ratingLbl.setTextFill(Color.web("#ffea00"));
             ratingLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
             
-            Label logLbl = new Label("LOG: " + r.getCommento());
+            Label logLbl = new Label(getTesto("dashboard.log") + " " + r.getCommento());
             logLbl.setTextFill(Color.web("#39ff14"));
             logLbl.setFont(Font.font(FONT_FAMILY, 14));
             logLbl.setWrapText(true);
@@ -143,7 +162,7 @@ public class DashboardController implements Initializable {
             buttonBox.setAlignment(Pos.CENTER_RIGHT);
             buttonBox.setPadding(new Insets(10, 0, 0, 0));
 
-            Button editBtn = new Button("EDIT");
+            Button editBtn = new Button(getTesto("dashboard.edit"));
             editBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-text-fill: #00ffff; -fx-border-radius: 5; -fx-cursor: hand;");
             editBtn.setOnAction(e -> {
                 try {
@@ -157,7 +176,7 @@ public class DashboardController implements Initializable {
                 }
             });
 
-            Button delBtn = new Button("DELETE");
+            Button delBtn = new Button(getTesto("dashboard.delete"));
             delBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #ff0000; -fx-text-fill: #ff0000; -fx-border-radius: 5; -fx-cursor: hand;");
             delBtn.setOnAction(e -> {
                 boolean eliminata = recensioneControl.eliminaRecensionePersonale(username, r.getIdGioco());
@@ -216,7 +235,7 @@ public class DashboardController implements Initializable {
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
         if (modalitaNegozio) {
-            Button buyBtn = new Button("BUY / INFO");
+            Button buyBtn = new Button(getTesto("dashboard.buy.info"));
             buyBtn.setMaxWidth(Double.MAX_VALUE);
             buyBtn.setPrefHeight(35.0);
             buyBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #00ffff; -fx-font-weight: bold; -fx-cursor: hand;");
@@ -240,7 +259,7 @@ public class DashboardController implements Initializable {
             buttonBox.setAlignment(Pos.CENTER);
             VBox.setMargin(buttonBox, new Insets(0, 10.0, 15.0, 10.0));
 
-            Button launchBtn = new Button("LAUNCH");
+            Button launchBtn = new Button(getTesto("dashboard.launch"));
             launchBtn.setPrefHeight(35.0);
             launchBtn.setPrefWidth(90.0);
             launchBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #39ff14; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #39ff14; -fx-font-weight: bold; -fx-cursor: hand;");
@@ -249,7 +268,7 @@ public class DashboardController implements Initializable {
                 LOGGER.log(Level.INFO, "[SYSTEM RUNTIME] Esecuzione binaria di: {0} avviata su PlayVault OS.", gioco.getTitolo());
             });
 
-            Button reviewBtn = new Button("REVIEW");
+            Button reviewBtn = new Button(getTesto("dashboard.review"));
             reviewBtn.setPrefHeight(35.0);
             reviewBtn.setPrefWidth(80.0);
             reviewBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #ffea00; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #ffea00; -fx-font-weight: bold; -fx-cursor: hand;");
@@ -275,6 +294,17 @@ public class DashboardController implements Initializable {
         }
 
         return card;
+    }
+
+    @FXML
+    private void apriImpostazioni() {
+        System.out.println("✅ IL BOTTONE SETTINGS È STATO CLICCATO!"); // <-- AGGIUNGI QUESTO!
+        try {
+            App.setRoot("impostazioni");
+        } catch (IOException e) {
+            System.out.println("❌ ERRORE: Non trovo il file impostazioni.fxml!");
+            e.printStackTrace();
+        }
     }
 
     @FXML

@@ -102,4 +102,33 @@ public class UtenteDAOMySQL implements UtenteDAO {
             return false;
         }
     }
+
+    @Override
+    public boolean aggiornaPassword(String username, String nuovaPassword) {
+        String query = "UPDATE utenti SET password = ? WHERE username = ?";
+
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, nuovaPassword);
+            stmt.setString(2, username);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'aggiornamento della password", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean eliminaAccount(String username) {
+        String query = "DELETE FROM utenti WHERE username = ?";
+
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'eliminazione dell'account", e);
+            return false;
+        }
+    }
 }

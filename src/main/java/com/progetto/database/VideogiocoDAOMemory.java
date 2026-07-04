@@ -17,12 +17,38 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
     public VideogiocoDAOMemory() {
         this.catalogoInMemoria = new ArrayList<>();
         this.prossimoIdDisponibile = 1;
-        
-        // BONUS: Pre-popoliamo il catalogo con un paio di giochi 
-        // così la Demo non è completamente vuota all'avvio!
-        salvaGioco(new Videogioco("Cyberpunk 2077", "RPG", 2020, "CD Projekt RED", "Un gioco di ruolo open world nell'oscura Night City."));
-        salvaGioco(new Videogioco("Hollow Knight", "Metroidvania", 2017, "Team Cherry", "Un'epica avventura in un regno di insetti in rovina."));
-        salvaGioco(new Videogioco("Elden Ring", "Souls-like", 2022, "FromSoftware", "Esplora l'Interregno e diventa il Lord Ancestrale."));
+        inizializzaCatalogoDemo();
+    }
+
+    private void inizializzaCatalogoDemo() {
+        aggiungiGiocoDemo(new Videogioco(
+            "Cyberpunk 2077",
+            "RPG",
+            2020,
+            "CD Projekt RED",
+            "Step into Night City, where chrome, corruption, and destiny collide in a neon-soaked future ruled by power and secrets.",
+            "Entra in Night City, dove chrome, corruzione e destino si scontrano in un futuro neon dominato da potere e segreti."
+        ));
+        aggiungiGiocoDemo(new Videogioco(
+            "Hollow Knight",
+            "Metroidvania",
+            2017,
+            "Team Cherry",
+            "A haunting journey through a ruined kingdom where every corridor hides a secret and every defeat sharpens your resolve.",
+            "Un viaggio inquietante attraverso un regno in rovina dove ogni corridoio nasconde un segreto e ogni sconfitta affila la tua determinazione."
+        ));
+        aggiungiGiocoDemo(new Videogioco(
+            "Elden Ring",
+            "Souls-like",
+            2022,
+            "FromSoftware",
+            "Traverse the Lands Between and forge your legend as the next Elden Lord in a world of myth, ruin, and ancient power.",
+            "Attraversa l'Interregno e forgia la tua leggenda come il prossimo Lord Ancestrale in un mondo di mito, rovina e antico potere."
+        ));
+    }
+
+    private void aggiungiGiocoDemo(Videogioco gioco) {
+        salvaGioco(gioco);
     }
 
     @Override

@@ -5,10 +5,12 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.progetto.GestoreLingua;
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.controllo.AutenticazioneControl;
 import com.progetto.controllo.ClassificaControl;
 import com.progetto.controllo.GestioneCatalogoControl;
+import com.progetto.controllo.ImpostazioniControl;
 import com.progetto.controllo.LibreriaControl;
 import com.progetto.controllo.RecensioneControl;
 import com.progetto.controllo.RegistrazioneControl;
@@ -45,7 +47,8 @@ public class CliEngine {
     private final LibreriaControl libreriaControl;
     private final RecensioneControl recensioneControl;
     private final AcquistoControl acquistoControl;
-    private final ClassificaControl classificaControl; 
+    private final ClassificaControl classificaControl;
+    private final ImpostazioniControl impostazioniControl;
 
     public CliEngine(AutenticazioneControl authControl, RegistrazioneControl regControl, 
                      GestioneCatalogoControl catalogoControl, LibreriaControl libreriaControl,
@@ -58,6 +61,7 @@ public class CliEngine {
         this.recensioneControl = recensioneControl;
         this.acquistoControl = acquistoControl;
         this.classificaControl = classificaControl;
+        this.impostazioniControl = new ImpostazioniControl(com.progetto.App.getUtenteDAO());
         this.inEsecuzione = true;
         this.utenteCorrente = null;
     }
@@ -196,6 +200,9 @@ public class CliEngine {
             case "profilo":
                 visualizzaProfilo();
                 break;
+            case "impostazioni":
+                gestisciImpostazioni(scanner);
+                break;
             case "logout":
                 System.out.println("Disconnessione in corso... Arrivederci " + utenteCorrente + "!");
                 this.utenteCorrente = null;
@@ -230,6 +237,7 @@ public class CliEngine {
         System.out.println("scrivi_recensione <id> -> Scrivi una recensione (+15 crediti)");
         System.out.println("classifica            -> Mostra la Hall of Fame dei giocatori");
         System.out.println("profilo               -> Visualizza il tuo profilo");
+        System.out.println("impostazioni          -> Apri il menu impostazioni");
         if (isUserAdmin()) {
             System.out.println("aggiungi              -> Aggiungi un nuovo gioco al catalogo (Admin)");
         }
@@ -283,7 +291,7 @@ public class CliEngine {
         System.out.println("Genere: " + gioco.getGenere());
         System.out.println("Anno: " + gioco.getAnnoUscita());
         System.out.println("Sviluppatore: " + gioco.getSviluppatore());
-        System.out.println("Descrizione: " + gioco.getDescrizione());
+        System.out.println("Descrizione: " + gioco.getDescrizioneLocale());
         System.out.println("Prezzo: 15 crediti\n");
     }
 
@@ -398,6 +406,56 @@ public class CliEngine {
         System.out.println("Ruolo: " + utente.getRuolo());
         System.out.println("Crediti: " + utente.getCrediti());
         System.out.println();
+    }
+
+    private void gestisciImpostazioni(Scanner scanner) {
+        boolean inImpostazioni = true;
+        while (inImpostazioni) {
+            System.out.println("\n--- IMPOSTAZIONI ---");
+            System.out.println("1. " + GestoreLingua.getIstanza().get("menu.settings.language"));
+            System.out.println("2. " + GestoreLingua.getIstanza().get("menu.settings.password"));
+            System.out.println("3. " + GestoreLingua.getIstanza().get("menu.settings.delete"));
+            System.out.println("4. " + GestoreLingua.getIstanza().get("menu.settings.back"));
+            System.out.print("Scelta: ");
+
+            String scelta = scanner.nextLine().trim();
+            switch (scelta) {
+                case "1":
+                    GestoreLingua.getIstanza().impostaLingua("en");
+                    System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.language.changed"));
+                    break;
+                case "2":
+                    System.out.print("Nuova password: ");
+                    String nuovaPassword = scanner.nextLine().trim();
+                    boolean passwordOk = impostazioniControl.cambiaPassword(utenteCorrente, nuovaPassword);
+                    if (passwordOk) {
+                        System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.password.changed"));
+                    } else {
+                        System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.password"));
+                    }
+                    break;
+                case "3":
+                    System.out.print(GestoreLingua.getIstanza().get("settings.confirm.delete"));
+                    String conferma = scanner.nextLine().trim();
+                    if ("Y".equalsIgnoreCase(conferma)) {
+                        boolean eliminato = impostazioniControl.eliminaAccount(utenteCorrente);
+                        if (eliminato) {
+                            System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.account.deleted"));
+                            this.utenteCorrente = null;
+                            this.inEsecuzione = false;
+                            inImpostazioni = false;
+                        } else {
+                            System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.delete"));
+                        }
+                    }
+                    break;
+                case "4":
+                    inImpostazioni = false;
+                    break;
+                default:
+                    System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.invalid"));
+            }
+        }
     }
 
     private void gestisciAcquistoComando(String[] args, Scanner sc) {

@@ -31,6 +31,10 @@ public class Utente {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public int getCrediti() {
         return crediti;
     }
