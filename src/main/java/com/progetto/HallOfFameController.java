@@ -28,7 +28,7 @@ public class HallOfFameController implements Initializable {
     @FXML private FlowPane leaderboardPane;
 
     // FIX 2: Usiamo l'interfaccia! Così può contenere RAM, CSV o MySQL
-    private UtenteDAO utenteDAO;
+    private final UtenteDAO utenteDAO;
 
     public HallOfFameController() {
         // Chiediamo ad App il DAO polimorfo (RAM, CSV o MySQL)!
@@ -70,14 +70,14 @@ public class HallOfFameController implements Initializable {
         card.setSpacing(5.0);
         
         // Colore dinamico: Oro per il primo, Argento per il secondo, Bronzo per il terzo, Cyan per gli altri
-        String color;
-        String icon;
-        switch(rank) {
-            case 1: color = "#ffea00"; icon = "🥇"; break;
-            case 2: color = "#c0c0c0"; icon = "🥈"; break;
-            case 3: color = "#cd7f32"; icon = "🥉"; break;
-            default: color = "#00ffff"; icon = "👤"; break;
-        }
+        String[] badge = switch (rank) {
+            case 1 -> new String[]{"#ffea00", "🥇"};
+            case 2 -> new String[]{"#c0c0c0", "🥈"};
+            case 3 -> new String[]{"#cd7f32", "🥉"};
+            default -> new String[]{"#00ffff", "👤"};
+        };
+        String color = badge[0];
+        String icon = badge[1];
 
         card.setStyle("-fx-background-color: #0d0012; -fx-border-color: " + color + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
         

@@ -34,4 +34,9 @@ public class Sessione {
     public void terminaSessione() {
         this.utenteCorrente = null;
     }
+
+    public void eseguiLogout() {
+        terminaSessione();
+        // Eventuali altre operazioni di pulizia o logging possono essere aggiunte qui
+    }
 }

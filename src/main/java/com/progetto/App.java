@@ -23,7 +23,7 @@ import com.progetto.database.UtenteDAO;
 import com.progetto.database.UtenteDAOMemory;
 import com.progetto.database.UtenteDAOMySQL;
 import com.progetto.database.UtenteDAOcsv;
-import com.progetto.database.VideogiocoDAO;
+import com.progetto.database.VideogiocoDAO;        // <-- NUOVI IMPORT RECENSIONI
 import com.progetto.database.VideogiocoDAOMemory;
 import com.progetto.database.VideogiocoDAOMySQL;
 
@@ -132,7 +132,7 @@ public class App extends Application {
             System.out.println(MENU_SEPARATOR);
             System.out.println(" SELEZIONA MODALITA' DI AVVIO PLAYVAULT ");
             System.out.println(MENU_SEPARATOR);
-            System.out.println("1. Avvia con Interfaccia Grafica (GUI - Finestre)");
+            System.out.println("1. Avvia con Interfaccia Grafica (GUI - JavaFX)");
             System.out.println("2. Avvia nel Terminale (CLI)");
             System.out.println("3. Spegni il sistema");
             System.out.print("Scelta (1, 2 o 3): ");

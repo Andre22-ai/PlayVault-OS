@@ -3,6 +3,7 @@ package com.progetto;
 import java.io.IOException;
 
 import com.progetto.controllo.GestioneCatalogoControl;
+import com.progetto.exceptions.SalvataggioFallitoException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,7 +19,7 @@ public class AdminDashboardController {
     @FXML private TextArea descArea;
     @FXML private Label statusLabel;
 
-    private GestioneCatalogoControl catalogoControl;
+    private final GestioneCatalogoControl catalogoControl;
 
     public AdminDashboardController() {
         // FIX 2: Chiediamo ad App qual è il database scelto per i videogiochi!
@@ -33,14 +34,13 @@ public class AdminDashboardController {
         String dev = devField.getText();
         String desc = descArea.getText();
 
-        boolean successo = catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc);
-
-        if (successo) {
+        try {
+            catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc);
             statusLabel.setText("SYSTEM OVERRIDE: DATA UPLOADED.");
             statusLabel.setTextFill(javafx.scene.paint.Color.web("#39ff14"));
             titleField.clear(); genreField.clear(); yearField.clear(); devField.clear(); descArea.clear();
-        } else {
-            statusLabel.setText("ERROR: INVALID DATA.");
+        } catch (IllegalArgumentException | SalvataggioFallitoException e) {
+            statusLabel.setText("ERROR: " + e.getMessage());
             statusLabel.setTextFill(javafx.scene.paint.Color.RED);
         }
     }

@@ -7,8 +7,10 @@ import java.util.logging.Logger;
 import com.progetto.controllo.AutenticazioneControl;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
+import com.progetto.exceptions.CredenzialiErrateException;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -48,15 +50,15 @@ public class LoginController {
         LOGGER.info("[BOUNDARY] L'utente ha premuto Login. Delego al Control...");
 
         // B. Esecuzione della Logica (Responsabilità del Control)
-        boolean accessoConsentito = authControl.eseguiLogin(userInserito, passInserita);
+        try {
+            authControl.eseguiLogin(userInserito, passInserita);
 
-        // C. Risposta visiva e Navigazione (Responsabilità del Boundary)
-        if (accessoConsentito) {
+            // C. Risposta visiva e Navigazione (Responsabilità del Boundary)
             Utente utenteLoggato = Sessione.getIstanza().getUtenteCorrente();
-            
+
             // FIX SonarCloud: Usiamo i parametri {0} nel logger invece di unire le stringhe col '+'
             LOGGER.log(Level.INFO, "[BOUNDARY] Accesso Consentito! Benvenuto {0}", utenteLoggato.getUsername());
-            
+
             // ==================================================
             // IL BIVIO RBAC (Role-Based Access Control)
             // ==================================================
@@ -68,13 +70,11 @@ public class LoginController {
                 App.setRoot("dashboard"); // Naviga alla dashboard standard
             }
             // ==================================================
-            
-        } else {
-            // Se le credenziali sono errate, puliamo i campi per fargli riprovare
-            LOGGER.warning("[BOUNDARY] Accesso Negato. Riprova.");
+        } catch (CredenzialiErrateException e) {
+            LOGGER.warning(e.getMessage());
             usernameField.clear();
             passwordField.clear();
-            usernameField.setPromptText("ERROR_INVALID_CODE");
+            mostraErrore(e.getMessage());
         }
     }
 
@@ -85,5 +85,13 @@ public class LoginController {
     private void vaiAllaRegistrazione() throws IOException {
         LOGGER.info("[BOUNDARY] Navigazione verso la schermata di Registrazione...");
         App.setRoot("registrazione");
+    }
+
+    private void mostraErrore(String messaggio) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Accesso negato");
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        alert.showAndWait();
     }
 }

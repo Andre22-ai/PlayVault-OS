@@ -16,6 +16,12 @@ import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
 import com.progetto.entita.Videogioco;
+import com.progetto.exceptions.CredenzialiErrateException;
+import com.progetto.exceptions.GiocoGiaPossedutoException;
+import com.progetto.exceptions.RecensioneInvalidaException;
+import com.progetto.exceptions.SaldoInsufficienteException;
+import com.progetto.exceptions.SalvataggioFallitoException;
+import com.progetto.exceptions.UtenteGiaEsistenteException;
 
 /**
  * Motore della CLI per PLAYVAULT.
@@ -127,13 +133,13 @@ public class CliEngine {
 
     private void eseguiLogin(String username, String password) {
         System.out.println("Verifica credenziali in corso...");
-        if (authControl.eseguiLogin(username, password)) {
+        try {
+            authControl.eseguiLogin(username, password);
             this.utenteCorrente = username;
             System.out.println("[OK] Accesso effettuato! Benvenuto " + utenteCorrente.toUpperCase());
-            // MODIFICA 2: Appena entri, ti mostra subito cosa puoi fare!
             stampaAiutoUtente();
-        } else {
-            System.out.println("[ERRORE] Credenziali errate o utente inesistente.");
+        } catch (CredenzialiErrateException e) {
+            System.out.println("[ERRORE] " + e.getMessage());
         }
     }
 
@@ -146,10 +152,11 @@ public class CliEngine {
         System.out.print("Conferma Password: ");
         String confPass = scanner.nextLine().trim();
 
-        if (regControl.registraNuovoUtente(user, pass, confPass)) {
+        try {
+            regControl.registraNuovoUtente(user, pass, confPass);
             System.out.println("[OK] Account creato con successo! Ora puoi fare il login.");
-        } else {
-            System.out.println("[ERRORE] Impossibile creare l'account. Controlla i dati o se l'utente esiste già.");
+        } catch (UtenteGiaEsistenteException | SalvataggioFallitoException e) {
+            System.out.println("[ERRORE] " + e.getMessage());
         }
     }
 
@@ -302,13 +309,12 @@ public class CliEngine {
         }
         int rank = 1;
         for (Utente u : topPlayers) {
-            String medaglia = "👤";
-            switch(rank) {
-                case 1: medaglia = "🥇"; break;
-                case 2: medaglia = "🥈"; break;
-                case 3: medaglia = "🥉"; break;
-                default: break; 
-            }
+            String medaglia = switch (rank) {
+                case 1 -> "🥇";
+                case 2 -> "🥈";
+                case 3 -> "🥉";
+                default -> "👤";
+            };
             System.out.println(String.format("%s %d° | %-15s | Livello: %-3d | %-4d CR", 
                 medaglia, rank, u.getUsername().toUpperCase(), (u.getCrediti() / 2), u.getCrediti()));
             rank++;
@@ -329,18 +335,11 @@ public class CliEngine {
             String testo = scanner.nextLine().trim();
 
             Recensione nuovaRecensione = new Recensione(utenteCorrente, idGioco, voto, testo);
-            String risultato = recensioneControl.elaboraRecensione(nuovaRecensione);
-
-            switch (risultato) {
-                case "SUCCESS":
-                    System.out.println("[OK] Recensione salvata! Hai guadagnato 15 crediti!");
-                    break;
-                case "ALREADY_REVIEWED":
-                    System.out.println("[ERRORE] Hai già scritto una recensione per questo gioco.");
-                    break;
-                default:
-                    System.out.println("[ERRORE] Errore nel sistema. Riprova più tardi.");
-                    break;
+            try {
+                recensioneControl.elaboraRecensione(nuovaRecensione);
+                System.out.println("[OK] Recensione salvata! Hai guadagnato 15 crediti!");
+            } catch (RecensioneInvalidaException | SalvataggioFallitoException e) {
+                System.out.println("[ERRORE] " + e.getMessage());
             }
         } catch (NumberFormatException e) {
             System.out.println("[ERRORE] Voto non valido.");
@@ -359,21 +358,11 @@ public class CliEngine {
             return;
         }
 
-        String risultato = acquistoControl.tentaAcquisto(gioco);
-        
-        switch (risultato) {
-            case "SUCCESS":
-                System.out.println("[OK] Acquisto completato! Il gioco è stato aggiunto alla tua libreria.");
-                break;
-            case "ALREADY_OWNED":
-                System.out.println("[ERRORE] Possiedi già questo gioco.");
-                break;
-            case "INSUFFICIENT_FUNDS":
-                System.out.println("[ERRORE] Crediti insufficienti. Hai bisogno di 15 crediti.");
-                break;
-            default:
-                System.out.println("[ERRORE] Errore nel sistema.");
-                break;
+        try {
+            acquistoControl.tentaAcquisto(gioco);
+            System.out.println("[OK] Acquisto completato! Il gioco è stato aggiunto alla tua libreria.");
+        } catch (GiocoGiaPossedutoException | SaldoInsufficienteException | SalvataggioFallitoException e) {
+            System.out.println("[ERRORE] " + e.getMessage());
         }
     }
 
@@ -390,10 +379,11 @@ public class CliEngine {
         System.out.print("Breve descrizione: ");
         String desc = scanner.nextLine().trim();
 
-        if (catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc)) {
+        try {
+            catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc);
             System.out.println("[OK] Gioco aggiunto con successo al database!");
-        } else {
-            System.out.println("[ERRORE] Dati non validi o gioco già presente.");
+        } catch (IllegalArgumentException | SalvataggioFallitoException e) {
+            System.out.println("[ERRORE] " + e.getMessage());
         }
     }
 

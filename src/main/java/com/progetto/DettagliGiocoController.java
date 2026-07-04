@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.entita.Videogioco;
+import com.progetto.exceptions.GiocoGiaPossedutoException;
+import com.progetto.exceptions.SaldoInsufficienteException;
+import com.progetto.exceptions.SalvataggioFallitoException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -56,34 +59,33 @@ public class DettagliGiocoController {
         // FIX SonarCloud: Utilizzo del Logger parametrizzato invece della concatenazione col '+'
         LOGGER.log(Level.INFO, "[BOUNDARY] Richiesta acquisto per: {0}", giocoSelezionato.getTitolo());
         
-        String risultato = acquistoControl.tentaAcquisto(giocoSelezionato);
+        try {
+            acquistoControl.tentaAcquisto(giocoSelezionato);
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-        alert.setHeaderText(null);
-        
-        switch (risultato) {
-            case "SUCCESS":
-                alert.setTitle("SYSTEM OVERRIDE");
-                alert.setContentText("TRANSACTION COMPLETE! Gioco aggiunto alla tua libreria. (-15 CREDITS)");
-                break;
-            case "ALREADY_OWNED":
-                alert.setTitle("WARNING");
-                alert.setContentText("Possiedi già questo titolo nel tuo Vault.");
-                break;
-            case "INSUFFICIENT_FUNDS":
-                alert.setTitle("ACCESS DENIED");
-                alert.setContentText("Crediti insufficienti. Ricarica il tuo conto per procedere.");
-                break;
-            default:
-                alert.setTitle("ERROR");
-                alert.setContentText("Errore critico di sistema. Riprovare.");
-                break;
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText(null);
+            alert.setTitle("SYSTEM OVERRIDE");
+            alert.setContentText("TRANSACTION COMPLETE! Gioco aggiunto alla tua libreria. (-15 CREDITS)");
+            alert.showAndWait();
+        } catch (GiocoGiaPossedutoException e) {
+            mostraAlert("WARNING", e.getMessage());
+        } catch (SaldoInsufficienteException e) {
+            mostraAlert("ACCESS DENIED", e.getMessage());
+        } catch (SalvataggioFallitoException e) {
+            mostraAlert("ERROR", e.getMessage());
         }
-        alert.showAndWait();
     }
 
     @FXML
     private void tornaAllaDashboard() throws IOException {
         App.setRoot("dashboard");
+    }
+
+    private void mostraAlert(String titolo, String contenuto) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+        alert.setHeaderText(null);
+        alert.setTitle(titolo);
+        alert.setContentText(contenuto);
+        alert.showAndWait();
     }
 }

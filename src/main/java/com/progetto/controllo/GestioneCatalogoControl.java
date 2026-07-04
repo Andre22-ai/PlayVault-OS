@@ -5,31 +5,41 @@ import java.time.ZoneId; // FIX S8688: Importiamo il fuso orario
 
 import com.progetto.database.VideogiocoDAO;
 import com.progetto.entita.Videogioco;
+import com.progetto.exceptions.SalvataggioFallitoException;
 
 public class GestioneCatalogoControl {
 
-    private VideogiocoDAO videogiocoDAO;
+    private final VideogiocoDAO videogiocoDAO;
 
     public GestioneCatalogoControl(VideogiocoDAO videogiocoDAO) {
         this.videogiocoDAO = videogiocoDAO;
     }
 
-    public boolean aggiungiNuovoGioco(String titolo, String genere, String annoString, String dev, String desc) {
+    public boolean aggiungiNuovoGioco(String titolo, String genere, String annoString, String dev, String desc)
+            throws SalvataggioFallitoException {
         // Controllo campi vuoti
-        if (titolo.isBlank() || genere.isBlank() || annoString.isBlank() || dev.isBlank()) return false;
+        if (titolo == null || titolo.isBlank() || genere == null || genere.isBlank() || annoString == null || annoString.isBlank() || dev == null || dev.isBlank()) {
+            throw new IllegalArgumentException("Titolo, genere, anno e sviluppatore sono obbligatori.");
+        }
 
         // Controllo anno valido
         try {
             int anno = Integer.parseInt(annoString);
             // FIX S8688: Dichiariamo esplicitamente il fuso orario di sistema
-            if (anno < 1950 || anno > Year.now(ZoneId.systemDefault()).getValue() + 5) return false;
-            
+            if (anno < 1950 || anno > Year.now(ZoneId.systemDefault()).getValue() + 5) {
+                throw new IllegalArgumentException("Anno non valido.");
+            }
+
             // Creazione e salvataggio
             Videogioco nuovoGioco = new Videogioco(titolo, genere, anno, dev, desc);
-            return videogiocoDAO.salvaGioco(nuovoGioco);
-            
+            boolean salvato = videogiocoDAO.salvaGioco(nuovoGioco);
+            if (!salvato) {
+                throw new SalvataggioFallitoException("salvataggio gioco");
+            }
+            return true;
+
         } catch (NumberFormatException e) {
-            return false; // L'anno non è un numero
+            throw new IllegalArgumentException("Anno non valido.", e);
         }
     }
 }

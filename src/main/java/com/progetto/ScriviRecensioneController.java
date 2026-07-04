@@ -6,6 +6,8 @@ import com.progetto.controllo.RecensioneControl;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Videogioco;
+import com.progetto.exceptions.RecensioneInvalidaException;
+import com.progetto.exceptions.SalvataggioFallitoException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -81,12 +83,12 @@ public class ScriviRecensioneController {
                 mostraAlert("ERROR", "Impossibile modificare il log.");
             }
         } else {
-            String esito = recensioneControl.elaboraRecensione(r);
-            if (esito.equals("SUCCESS")) {
+            try {
+                recensioneControl.elaboraRecensione(r);
                 mostraAlert("REWARD UNLOCKED", "Recensione acquisita nei server. Hai guadagnato +15 CREDITS!");
-                App.setRoot(VIEW_DASHBOARD); 
-            } else if (esito.equals("ALREADY_REVIEWED")) {
-                mostraAlert("ACCESS DENIED", "Hai già lasciato un log per questo gioco.");
+                App.setRoot(VIEW_DASHBOARD);
+            } catch (RecensioneInvalidaException | SalvataggioFallitoException e) {
+                mostraAlert("ACCESS DENIED", e.getMessage());
             }
         }
     }

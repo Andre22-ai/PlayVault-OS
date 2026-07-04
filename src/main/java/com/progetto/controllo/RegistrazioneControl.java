@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import com.progetto.database.UtenteDAO;
 import com.progetto.entita.Utente;
+import com.progetto.exceptions.SalvataggioFallitoException;
+import com.progetto.exceptions.UtenteGiaEsistenteException;
 
 /**
  * Controller di Caso d'Uso per la Registrazione (Livello CONTROL).
@@ -30,16 +32,17 @@ public class RegistrazioneControl {
      * @param confermaPassword Stringa di conferma passata dalla UI
      * @return true se registrato con successo, false se fallisce le validazioni o esiste già
      */
-    public boolean registraNuovoUtente(String username, String password, String confermaPassword) {
+    public boolean registraNuovoUtente(String username, String password, String confermaPassword)
+            throws UtenteGiaEsistenteException, SalvataggioFallitoException {
         // 1. Validazione input (Regole di Business)
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             LOGGER.warning("[CONTROL] Errore: Dati mancanti.");
-            return false;
+            throw new IllegalArgumentException("Username e password sono obbligatori.");
         }
-        
+
         if (!password.equals(confermaPassword)) {
             LOGGER.warning("[CONTROL] Errore: Le password non coincidono!");
-            return false;
+            throw new IllegalArgumentException("Le password non coincidono.");
         }
 
         // 2. Creazione dell'Entity pura (High Cohesion)
@@ -47,6 +50,10 @@ public class RegistrazioneControl {
         nuovoUtente.aggiungiCrediti(50); // Bonus di benvenuto per i nuovi registrati
 
         // 3. Salvataggio delegato al DAO (Low Coupling)
-        return utenteDao.salvaUtente(nuovoUtente);
+        boolean salvato = utenteDao.salvaUtente(nuovoUtente);
+        if (!salvato) {
+            throw new UtenteGiaEsistenteException(username);
+        }
+        return true;
     }
 }
