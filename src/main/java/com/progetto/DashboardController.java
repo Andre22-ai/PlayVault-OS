@@ -296,14 +296,16 @@ public class DashboardController implements Initializable {
         return card;
     }
 
-    @FXML
+   @FXML
     private void apriImpostazioni() {
-        System.out.println("✅ IL BOTTONE SETTINGS È STATO CLICCATO!"); // <-- AGGIUNGI QUESTO!
+        // Usiamo il Logger ufficiale al posto del System.out
+        LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni (Bottone cliccato con successo)."); 
+        
         try {
             App.setRoot("impostazioni");
         } catch (IOException e) {
-            System.out.println("❌ ERRORE: Non trovo il file impostazioni.fxml!");
-            e.printStackTrace();
+            // Il Logger.log gestisce automaticamente anche l'errore (rimpiazzando e.printStackTrace())
+            LOGGER.log(Level.SEVERE, "ERRORE CRITICO: Non trovo il file impostazioni.fxml!", e);
         }
     }
 
