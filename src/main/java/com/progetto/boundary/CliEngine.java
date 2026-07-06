@@ -352,7 +352,7 @@ public class CliEngine {
         }
     }
 
-    // Metodo estratto per risolvere il nesting dei try-catch (java:S1141)
+    
     private void salvaNuovaRecensione(Recensione recensione) {
         try {
             recensioneControl.elaboraRecensione(recensione);
