@@ -14,6 +14,10 @@ import javafx.scene.control.PasswordField;
  */
 public class ImpostazioniControllerFX {
 
+    // --- COSTANTI PER I MESSAGGI DI ALERT (FIX SonarCloud java:S1192) ---
+    private static final String TIPO_ERROR = "ERROR";
+    private static final String TIPO_INFO = "INFO";
+
     @FXML private Label titoloLabel;
     @FXML private PasswordField nuovaPasswordField;
 
@@ -31,7 +35,7 @@ public class ImpostazioniControllerFX {
     @FXML
     private void cambiaLingua() {
         GestoreLingua.getIstanza().impostaLingua("en");
-        mostraMessaggio("INFO", GestoreLingua.getIstanza().get("settings.language.changed"));
+        mostraMessaggio(TIPO_INFO, GestoreLingua.getIstanza().get("settings.language.changed"));
     }
 
     @FXML
@@ -41,12 +45,12 @@ public class ImpostazioniControllerFX {
             String nuovaPassword = nuovaPasswordField.getText();
             boolean successo = impostazioniControl.cambiaPassword(username, nuovaPassword);
             if (successo) {
-                mostraMessaggio("INFO", GestoreLingua.getIstanza().get("settings.password.changed"));
+                mostraMessaggio(TIPO_INFO, GestoreLingua.getIstanza().get("settings.password.changed"));
             } else {
-                mostraMessaggio("ERROR", GestoreLingua.getIstanza().get("settings.error.password"));
+                mostraMessaggio(TIPO_ERROR, GestoreLingua.getIstanza().get("settings.error.password"));
             }
         } catch (Exception e) {
-            mostraMessaggio("ERROR", e.getMessage());
+            mostraMessaggio(TIPO_ERROR, e.getMessage());
         }
     }
 
@@ -56,17 +60,17 @@ public class ImpostazioniControllerFX {
             String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
             boolean successo = impostazioniControl.eliminaAccount(username);
             if (successo) {
-                mostraMessaggio("INFO", GestoreLingua.getIstanza().get("settings.account.deleted"));
+                mostraMessaggio(TIPO_INFO, GestoreLingua.getIstanza().get("settings.account.deleted"));
             } else {
-                mostraMessaggio("ERROR", GestoreLingua.getIstanza().get("settings.error.delete"));
+                mostraMessaggio(TIPO_ERROR, GestoreLingua.getIstanza().get("settings.error.delete"));
             }
         } catch (Exception e) {
-            mostraMessaggio("ERROR", e.getMessage());
+            mostraMessaggio(TIPO_ERROR, e.getMessage());
         }
     }
 
     private void mostraMessaggio(String tipo, String messaggio) {
-        Alert alert = new Alert("ERROR".equals(tipo) ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(TIPO_ERROR.equals(tipo) ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
         alert.setTitle(tipo);
         alert.setHeaderText(null);
         alert.setContentText(messaggio);

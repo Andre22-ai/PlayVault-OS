@@ -36,7 +36,9 @@ public class CliEngine {
     
     // Costanti per risolvere SonarCloud (java:S1192)
     private static final String PROMPT_USERNAME = "Username: ";
-    private static final String ERR_ID_INVALIDO = "[ERRORE] ID non valido.";
+    private static final String MSG_ERRORE = "[ERRORE] ";
+    private static final String MSG_OK = "[OK] ";
+    private static final String ERR_ID_INVALIDO = MSG_ERRORE + "ID non valido.";
 
     private boolean inEsecuzione;
     private String utenteCorrente;
@@ -140,10 +142,10 @@ public class CliEngine {
         try {
             authControl.eseguiLogin(username, password);
             this.utenteCorrente = username;
-            System.out.println("[OK] Accesso effettuato! Benvenuto " + utenteCorrente.toUpperCase());
+            System.out.println(MSG_OK + "Accesso effettuato! Benvenuto " + utenteCorrente.toUpperCase());
             stampaAiutoUtente();
         } catch (CredenzialiErrateException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
@@ -158,9 +160,9 @@ public class CliEngine {
 
         try {
             regControl.registraNuovoUtente(user, pass, confPass);
-            System.out.println("[OK] Account creato con successo! Ora puoi fare il login.");
+            System.out.println(MSG_OK + "Account creato con successo! Ora puoi fare il login.");
         } catch (UtenteGiaEsistenteException | SalvataggioFallitoException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
@@ -194,7 +196,7 @@ public class CliEngine {
                 if (isUserAdmin()) {
                     aggiungiNuovoGioco(scanner);
                 } else {
-                    System.out.println("[ERRORE] Solo gli amministratori possono aggiungere giochi.");
+                    System.out.println(MSG_ERRORE + "Solo gli amministratori possono aggiungere giochi.");
                 }
                 break;
             case "profilo":
@@ -219,7 +221,6 @@ public class CliEngine {
         }
     }
 
-    // NUOVO METODO AGGIUNTO: Per stampare il menu Ospite
     private void stampaAiutoGuest() {
         System.out.println("\n--- COMANDI OSPITE ---");
         System.out.println("login      -> Accedi al sistema");
@@ -277,12 +278,12 @@ public class CliEngine {
     private void visualizzaDettagliGioco(int idGioco) {
         List<Videogioco> catalogo = libreriaControl.ottieniCatalogoCompleto();
         if (catalogo == null) {
-            System.out.println("[ERRORE] Impossibile recuperare il catalogo.\n");
+            System.out.println(MSG_ERRORE + "Impossibile recuperare il catalogo.\n");
             return;
         }
         Videogioco gioco = catalogo.stream().filter(g -> g.getId() == idGioco).findFirst().orElse(null);
         if (gioco == null) {
-            System.out.println("[ERRORE] Gioco non trovato.\n");
+            System.out.println(MSG_ERRORE + "Gioco non trovato.\n");
             return;
         }
         System.out.println("\n=== DETTAGLI GIOCO ===");
@@ -336,41 +337,48 @@ public class CliEngine {
         try {
             int voto = Integer.parseInt(scanner.nextLine().trim());
             if (voto < 1 || voto > 5) {
-                System.out.println("[ERRORE] Il voto deve essere tra 1 e 5.");
+                System.out.println(MSG_ERRORE + "Il voto deve essere tra 1 e 5.");
                 return;
             }
             System.out.print("Testo della recensione: ");
             String testo = scanner.nextLine().trim();
 
             Recensione nuovaRecensione = new Recensione(utenteCorrente, idGioco, voto, testo);
-            try {
-                recensioneControl.elaboraRecensione(nuovaRecensione);
-                System.out.println("[OK] Recensione salvata! Hai guadagnato 15 crediti!");
-            } catch (RecensioneInvalidaException | SalvataggioFallitoException e) {
-                System.out.println("[ERRORE] " + e.getMessage());
-            }
+            // FIX java:S1141: Estrazione del try-catch in un metodo separato
+            salvaNuovaRecensione(nuovaRecensione);
+            
         } catch (NumberFormatException e) {
-            System.out.println("[ERRORE] Voto non valido.");
+            System.out.println(MSG_ERRORE + "Voto non valido.");
+        }
+    }
+
+    // Metodo estratto per risolvere il nesting dei try-catch (java:S1141)
+    private void salvaNuovaRecensione(Recensione recensione) {
+        try {
+            recensioneControl.elaboraRecensione(recensione);
+            System.out.println(MSG_OK + "Recensione salvata! Hai guadagnato 15 crediti!");
+        } catch (RecensioneInvalidaException | SalvataggioFallitoException e) {
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
     private void eseguiAcquisto(int idGioco) {
         List<Videogioco> catalogo = libreriaControl.ottieniCatalogoCompleto();
         if (catalogo == null) {
-            System.out.println("[ERRORE] Impossibile recuperare il catalogo.\n");
+            System.out.println(MSG_ERRORE + "Impossibile recuperare il catalogo.\n");
             return;
         }
         Videogioco gioco = catalogo.stream().filter(g -> g.getId() == idGioco).findFirst().orElse(null);
         if (gioco == null) {
-            System.out.println("[ERRORE] Gioco non trovato.\n");
+            System.out.println(MSG_ERRORE + "Gioco non trovato.\n");
             return;
         }
 
         try {
             acquistoControl.tentaAcquisto(gioco);
-            System.out.println("[OK] Acquisto completato! Il gioco è stato aggiunto alla tua libreria.");
+            System.out.println(MSG_OK + "Acquisto completato! Il gioco è stato aggiunto alla tua libreria.");
         } catch (GiocoGiaPossedutoException | SaldoInsufficienteException | SalvataggioFallitoException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
@@ -389,16 +397,16 @@ public class CliEngine {
 
         try {
             catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc);
-            System.out.println("[OK] Gioco aggiunto con successo al database!");
+            System.out.println(MSG_OK + "Gioco aggiunto con successo al database!");
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
     private void visualizzaProfilo() {
         Utente utente = Sessione.getIstanza().getUtenteCorrente();
         if (utente == null) {
-            System.out.println("[ERRORE] Impossibile recuperare i dati dell'utente.\n");
+            System.out.println(MSG_ERRORE + "Impossibile recuperare i dati dell'utente.\n");
             return;
         }
         System.out.println("\n=== IL MIO PROFILO ===");
@@ -422,16 +430,16 @@ public class CliEngine {
             switch (scelta) {
                 case "1":
                     GestoreLingua.getIstanza().impostaLingua("en");
-                    System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.language.changed"));
+                    System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.language.changed"));
                     break;
                 case "2":
                     System.out.print("Nuova password: ");
                     String nuovaPassword = scanner.nextLine().trim();
                     boolean passwordOk = impostazioniControl.cambiaPassword(utenteCorrente, nuovaPassword);
                     if (passwordOk) {
-                        System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.password.changed"));
+                        System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.password.changed"));
                     } else {
-                        System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.password"));
+                        System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.password"));
                     }
                     break;
                 case "3":
@@ -440,12 +448,12 @@ public class CliEngine {
                     if ("Y".equalsIgnoreCase(conferma)) {
                         boolean eliminato = impostazioniControl.eliminaAccount(utenteCorrente);
                         if (eliminato) {
-                            System.out.println("[OK] " + GestoreLingua.getIstanza().get("settings.account.deleted"));
+                            System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.account.deleted"));
                             this.utenteCorrente = null;
                             this.inEsecuzione = false;
                             inImpostazioni = false;
                         } else {
-                            System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.delete"));
+                            System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.delete"));
                         }
                     }
                     break;
@@ -453,7 +461,7 @@ public class CliEngine {
                     inImpostazioni = false;
                     break;
                 default:
-                    System.out.println("[ERRORE] " + GestoreLingua.getIstanza().get("settings.error.invalid"));
+                    System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.invalid"));
             }
         }
     }
