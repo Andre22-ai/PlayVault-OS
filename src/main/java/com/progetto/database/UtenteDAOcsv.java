@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import com.progetto.entita.Utente;
 
@@ -164,6 +163,6 @@ public class UtenteDAOcsv implements UtenteDAO {
         List<Utente> tutti = leggiTuttiUtenti();
         return tutti.stream()
                 .sorted((u1, u2) -> Integer.compare(u2.getCrediti(), u1.getCrediti()))
-                .collect(Collectors.toList());
+                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
     }
 }

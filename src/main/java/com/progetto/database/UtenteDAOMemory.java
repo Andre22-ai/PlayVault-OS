@@ -2,7 +2,6 @@ package com.progetto.database;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.progetto.entita.Utente;
 
@@ -83,6 +82,6 @@ public class UtenteDAOMemory implements UtenteDAO {
         // Ordina la lista in base ai crediti (dal più grande al più piccolo)
         return utentiInMemoria.stream()
                 .sorted((u1, u2) -> Integer.compare(u2.getCrediti(), u1.getCrediti()))
-                .collect(Collectors.toList());
+                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
     }
 }

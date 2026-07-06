@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.progetto.controllo.RegistrazioneControl;
-import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
 
 import javafx.fxml.FXML;
@@ -51,7 +50,7 @@ public class RegistrazioneController {
             regControl.registraNuovoUtente(user, pass, conf);
             LOGGER.info("[BOUNDARY] Registrazione avvenuta con successo! Torno al Login...");
             App.setRoot("login"); // Teletrasporto al login
-        } catch (UtenteGiaEsistenteException | SalvataggioFallitoException e) {
+        } catch (UtenteGiaEsistenteException e) {
             LOGGER.warning(e.getMessage());
             regUsernameField.clear();
             regPasswordField.clear();

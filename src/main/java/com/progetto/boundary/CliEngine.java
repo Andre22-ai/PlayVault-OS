@@ -161,7 +161,7 @@ public class CliEngine {
         try {
             regControl.registraNuovoUtente(user, pass, confPass);
             System.out.println(MSG_OK + "Account creato con successo! Ora puoi fare il login.");
-        } catch (UtenteGiaEsistenteException | SalvataggioFallitoException e) {
+        } catch (UtenteGiaEsistenteException e) {
             System.out.println(MSG_ERRORE + e.getMessage());
         }
     }

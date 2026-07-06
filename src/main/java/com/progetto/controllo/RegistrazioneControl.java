@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import com.progetto.database.UtenteDAO;
 import com.progetto.entita.Utente;
-import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
 
 /**
@@ -32,8 +31,10 @@ public class RegistrazioneControl {
      * @param confermaPassword Stringa di conferma passata dalla UI
      * @return true se registrato con successo, false se fallisce le validazioni o esiste già
      */
+    // FIX SonarCloud: Rimossa l'eccezione SalvataggioFallitoException dalla clausola throws
     public boolean registraNuovoUtente(String username, String password, String confermaPassword)
-            throws UtenteGiaEsistenteException, SalvataggioFallitoException {
+            throws UtenteGiaEsistenteException {
+        
         // 1. Validazione input (Regole di Business)
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             LOGGER.warning("[CONTROL] Errore: Dati mancanti.");

@@ -2,7 +2,6 @@ package com.progetto.database;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.progetto.App;
 import com.progetto.entita.Recensione;
@@ -49,7 +48,7 @@ public class RecensioneDAOMemory implements RecensioneDAO {
     public List<Recensione> recuperaRecensioniPerGioco(int idGioco) {
         return recensioniInMemoria.stream()
                 .filter(r -> r.getIdGioco() == idGioco)
-                .collect(Collectors.toList());
+                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
     }
 
     @Override
