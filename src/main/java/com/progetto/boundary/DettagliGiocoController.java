@@ -36,25 +36,21 @@ public class DettagliGiocoController {
 
     private Videogioco giocoSelezionato; 
     
-    // FIX SonarCloud: Variabile resa 'final'
     private final AcquistoControl acquistoControl;
 
     public DettagliGiocoController() {
-        // FIX 2: Usiamo il polimorfismo! Chiediamo il database alla classe App
         this.acquistoControl = new AcquistoControl(App.getLibreriaDAO());
     }
 
     @FXML
     private void initialize() {
-        // RIMOSSO IL BLOCCO settingsButton.setOnAction(...) 
-        // Lasciamo che sia il file FXML a chiamare apriImpostazioni() tramite onAction
+        
         aggiornaTesti();
     }
 
     public void setGioco(Videogioco gioco) {
         this.giocoSelezionato = gioco;
         
-        // Imposta i dati grafici di base
         titoloLabel.setText(gioco.getTitolo());
         coverLabel.setText(gioco.getTitolo().split(" ")[0]);
         idLabel.setText("[ID: " + gioco.getId() + "]");
@@ -76,12 +72,9 @@ public class DettagliGiocoController {
         }
     }
 
-    /**
-     * Metodo agganciato al pulsante INITIALIZE GAME ENGINE
-     */
+    
     @FXML
     private void eseguiAcquisto() {
-        // FIX SonarCloud: Utilizzo del Logger parametrizzato invece della concatenazione col '+'
         LOGGER.log(Level.INFO, "[BOUNDARY] Richiesta acquisto per: {0}", giocoSelezionato.getTitolo());
         
         try {

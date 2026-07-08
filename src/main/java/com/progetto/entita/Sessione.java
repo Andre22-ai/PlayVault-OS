@@ -1,21 +1,14 @@
 package com.progetto.entita;
 
-/**
- * Gestisce lo stato globale dell'utente attualmente autenticato.
- * Implementa il Design Pattern Creazionale: Singleton.
- */
+
 public class Sessione {
 
     private static Sessione istanza;
     private Utente utenteCorrente;
 
-    // Costruttore privato: impedisce l'istanziazione dall'esterno
     private Sessione() {}
 
-    /**
-     * Punto di accesso globale all'unica istanza di Sessione.
-     * Metodo thread-safe base.
-     */
+    
     public static Sessione getIstanza() {
         if (istanza == null) {
             istanza = new Sessione();
@@ -37,6 +30,5 @@ public class Sessione {
 
     public void eseguiLogout() {
         terminaSessione();
-        // Eventuali altre operazioni di pulizia o logging possono essere aggiunte qui
     }
 }

@@ -14,27 +14,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * JavaFX App - PLAYVAULT Entry Point per la Grafica (GUI)
- */
+
 public class App extends Application {
 
-    // --- NUOVO: Sostituito System.out col Logger di sistema ---
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private static Scene scene;
 
-    // ==========================================
-    // LE NOSTRE VARIABILI POLIMORFE GLOBALI
-    // ==========================================
+    
     private static UtenteDAO utenteDAOScelto;
     private static VideogiocoDAO videogiocoDAOScelto;
     private static LibreriaDAO libreriaDAOScelto;
     private static RecensioneDAO recensioneDAOScelto; 
 
-    // ==========================================
-    // GETTER E SETTER PER IL DATABASE
-    // (Serviranno al SelettoreDBController per impostare i motori)
-    // ==========================================
+    
     public static UtenteDAO getUtenteDAO() { return utenteDAOScelto; }
     public static void setUtenteDAO(UtenteDAO dao) { utenteDAOScelto = dao; }
 
@@ -47,7 +39,6 @@ public class App extends Application {
     public static RecensioneDAO getRecensioneDAO() { return recensioneDAOScelto; } 
     public static void setRecensioneDAO(RecensioneDAO dao) { recensioneDAOScelto = dao; }
 
-    // Metodo statico per risolvere il Blocker SonarCloud (java:S2696)
     private static void inizializzaScena(Parent root) {
         scene = new Scene(root, 1000, 600);
     }
@@ -56,7 +47,6 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         LOGGER.info("[SISTEMA] Avvio Interfaccia Grafica JavaFX...");
         
-        // ATTENZIONE: Ora partiamo dal selettore del database!
         inizializzaScena(loadFXML("selettore_db"));
         
         stage.setScene(scene);
@@ -76,7 +66,6 @@ public class App extends Application {
 
     public static void main(String[] args) {
         LOGGER.info("[SISTEMA] Bootstrap dell'applicazione in corso...");
-        // Questo main fa solo una cosa: lancia la grafica.
         launch(args);
     }
 }

@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.progetto.entita.ElementoLibreria; 
+import com.progetto.entita.Videogioco;       
+
 public class LibreriaDAOMySQL implements LibreriaDAO {
 
     private static final Logger LOGGER = Logger.getLogger(LibreriaDAOMySQL.class.getName());
@@ -72,8 +75,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
     }
 
     @Override
-    public List<com.progetto.entita.Videogioco> recuperaGiochiPropri(String username) {
-        List<com.progetto.entita.Videogioco> mieiGiochi = new ArrayList<>();
+    public List<Videogioco> recuperaGiochiPropri(String username) {
+        List<Videogioco> mieiGiochi = new ArrayList<>();
 
         String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en " +
                        "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
@@ -86,7 +89,7 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                 while (rs.next()) {
                     String descrizioneIt = rs.getString("descrizione_it");
                     String descrizioneEn = rs.getString("descrizione_en");
-                    com.progetto.entita.Videogioco gioco = new com.progetto.entita.Videogioco(
+                    Videogioco gioco = new Videogioco(
                         rs.getString("titolo"),
                         rs.getString("genere"),
                         rs.getInt("anno_uscita"),
@@ -107,8 +110,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
         return mieiGiochi;
     }
 
-    private List<com.progetto.entita.Videogioco> recuperaGiochiPropriCompatibili(String username) {
-        List<com.progetto.entita.Videogioco> mieiGiochi = new ArrayList<>();
+    private List<Videogioco> recuperaGiochiPropriCompatibili(String username) {
+        List<Videogioco> mieiGiochi = new ArrayList<>();
         String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione " +
                        "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
 
@@ -118,7 +121,7 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String descrizione = rs.getString("descrizione");
-                    com.progetto.entita.Videogioco gioco = new com.progetto.entita.Videogioco(
+                    Videogioco gioco = new Videogioco(
                         rs.getString("titolo"),
                         rs.getString("genere"),
                         rs.getInt("anno_uscita"),
@@ -139,5 +142,95 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
     private boolean colonnaMancante(SQLException e) {
         String message = e.getMessage();
         return message != null && (message.contains("Unknown column") || message.contains("doesn't exist") || message.contains("unknown column"));
+    }
+
+    
+
+    @Override
+    public List<ElementoLibreria> getLibreriaUtenteCompleta(String username) {
+        List<ElementoLibreria> lista = new ArrayList<>();
+        
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en, v.exp_fornita, l.completato " +
+                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String descrizioneIt = rs.getString("descrizione_it");
+                    String descrizioneEn = rs.getString("descrizione_en");
+                    Videogioco gioco = new Videogioco(
+                        rs.getString("titolo"),
+                        rs.getString("genere"),
+                        rs.getInt("anno_uscita"),
+                        rs.getString("sviluppatore"),
+                        descrizioneEn != null ? descrizioneEn : descrizioneIt,
+                        descrizioneIt != null ? descrizioneIt : descrizioneEn
+                    );
+                    gioco.setId(rs.getInt("id_gioco"));
+                    gioco.setExpFornita(rs.getInt("exp_fornita")); 
+                    
+                    boolean completato = rs.getBoolean("completato");
+                    lista.add(new ElementoLibreria(gioco, completato));
+                }
+            }
+        } catch (SQLException e) {
+            if (colonnaMancante(e)) {
+                return getLibreriaUtenteCompletaCompatibile(username);
+            }
+            LOGGER.log(Level.SEVERE, "[DAO] Errore recupero libreria completa", e);
+        }
+        return lista;
+    }
+
+    private List<ElementoLibreria> getLibreriaUtenteCompletaCompatibile(String username) {
+        List<ElementoLibreria> lista = new ArrayList<>();
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione, l.completato " +
+                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String descrizione = rs.getString("descrizione");
+                    Videogioco gioco = new Videogioco(
+                        rs.getString("titolo"),
+                        rs.getString("genere"),
+                        rs.getInt("anno_uscita"),
+                        rs.getString("sviluppatore"),
+                        descrizione,
+                        descrizione
+                    );
+                    gioco.setId(rs.getInt("id_gioco"));
+                    
+                    boolean completato = rs.getBoolean("completato");
+                    lista.add(new ElementoLibreria(gioco, completato));
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore recupero libreria completa compatibile", ex);
+        }
+        return lista;
+    }
+
+    @Override
+    public boolean impostaGiocoCompletato(String username, int idGioco) {
+        String query = "UPDATE libreria SET completato = TRUE WHERE username = ? AND id_gioco = ?";
+        
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, username);
+            stmt.setInt(2, idGioco);
+            
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'impostazione gioco completato", e);
+            return false;
+        }
     }
 }

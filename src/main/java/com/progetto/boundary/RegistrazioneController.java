@@ -12,34 +12,25 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-/**
- * Controller di Livello BOUNDARY (Presentazione).
- * Gestisce la schermata di Registrazione e invia i dati al Control.
- */
+
 public class RegistrazioneController {
 
     private static final Logger LOGGER = Logger.getLogger(RegistrazioneController.class.getName());
 
-    // 1. Colleghiamo i campi dell'interfaccia FXML
+    
     @FXML private TextField regUsernameField;
     @FXML private PasswordField regPasswordField;
     @FXML private PasswordField regConfirmField;
 
-    // 2. Riferimento al livello Control (Logica di Business)
-    // FIX SonarCloud: Messo "final" per renderlo immutabile dopo la creazione
+    
     private final RegistrazioneControl regControl;
 
-    /**
-     * Costruttore: Dependency Injection.
-     */
+    
     public RegistrazioneController() {
-        // FIX 2: Chiediamo ad App.java il database Utenti scelto all'avvio (RAM, CSV o MySQL)!
         this.regControl = new RegistrazioneControl(App.getUtenteDAO());
     }
 
-    /**
-     * Cattura il click sul bottone di registrazione.
-     */
+    
     @FXML
     private void eseguiRegistrazione() throws IOException {
         String user = regUsernameField.getText();
@@ -50,7 +41,7 @@ public class RegistrazioneController {
         try {
             regControl.registraNuovoUtente(user, pass, conf);
             LOGGER.info("[BOUNDARY] Registrazione avvenuta con successo! Torno al Login...");
-            App.setRoot("login"); // Teletrasporto al login
+            App.setRoot("login"); 
         } catch (UtenteGiaEsistenteException e) {
             LOGGER.warning(e.getMessage());
             regUsernameField.clear();

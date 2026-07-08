@@ -8,7 +8,7 @@ public class Utente {
     
     private String username;
     private String password;
-    private int crediti; // Aggiungiamo un dato di business base
+    private int crediti; 
     private String ruolo;
 
     /**
@@ -19,7 +19,7 @@ public class Utente {
     public Utente(String username, String password) {
         this.username = username;
         this.password = password;
-        this.crediti = 0; // Default iniziale
+        this.crediti = 0; 
         this.ruolo = "PLAYER";
     }
 
@@ -51,10 +51,29 @@ public class Utente {
         this.crediti = crediti;
     }
 
-    /**
-     * Esempio di logica di dominio (Rich Domain Model).
-     * L'entità gestisce il proprio stato, non lo fa un controller esterno.
-     */
+    private int esperienza = 0; 
+
+    public void aggiungiEsperienza(int exp) {
+        this.esperienza += exp;
+    }
+
+    public void setEsperienza(int esperienza) {
+        this.esperienza = esperienza;
+    }
+
+    public int getEsperienza() {
+        return esperienza;
+    }
+
+    public int getLivello() {
+        return (esperienza / 100) + 1;
+    }
+
+    public double getProgressoLivello() {
+        return (esperienza % 100) / 100.0;
+    }
+
+    
     public void aggiungiCrediti(int quantita) {
         if (quantita > 0) {
             this.crediti += quantita;

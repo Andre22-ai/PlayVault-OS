@@ -66,41 +66,42 @@
                            <effect><DropShadow color="#ff8800" radius="5.0" spread="0.5" /></effect>
                         </Label>
                         
-                        <Label fx:id="levelLabel" style="-fx-background-color: #00ffff; -fx-text-fill: #000000; -fx-padding: 5 20 5 20; -fx-background-radius: 20;" text="LEVEL 42">
-                           <font><Font name="Consolas Bold" size="20.0" /></font>
-                        </Label>
-                        
-                        <Region prefHeight="2.0" style="-fx-background-color: #00ffff;" />
-                        
-                        <VBox spacing="15.0" alignment="CENTER_LEFT" maxWidth="Infinity">
-                           <children>
-                              <Label text="TOTAL PLAYTIME: 9,999 HRS" textFill="#00ffff">
-                                 <font><Font name="Consolas Bold" size="16.0" /></font>
-                              </Label>
-                              <Label text="GAMES COMPLETED: 104" textFill="#00ffff">
-                                 <font><Font name="Consolas Bold" size="16.0" /></font>
-                              </Label>
-                           </children>
+                        <VBox alignment="CENTER" spacing="5.0">
+                           <Label fx:id="lblLivello" style="-fx-background-color: #00ffff; -fx-text-fill: #000000; -fx-padding: 5 20 5 20; -fx-background-radius: 20;" text="LEVEL 1">
+                              <font><Font name="Consolas Bold" size="20.0" /></font>
+                           </Label>
+                           <ProgressBar fx:id="barraEsperienza" prefWidth="200.0" progress="0.0" style="-fx-accent: #00ffff; -fx-control-inner-background: #000000; -fx-border-color: #00ffff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                           <Label fx:id="lblEsperienza" text="Exp: 0/100" textFill="#00ffff">
+                              <font><Font name="Consolas" size="14.0" /></font>
+                           </Label>
                         </VBox>
-
+                        
                         <Region prefHeight="2.0" style="-fx-background-color: #00ffff;" />
-
-                        <VBox spacing="10.0" maxWidth="Infinity">
+                        
+                        <VBox alignment="CENTER" spacing="5.0" maxWidth="Infinity">
                            <children>
-                              <Label text="FAVORITE GENRES" textFill="#ffea00">
+                              <Label text="GAMES COMPLETED" textFill="#ffea00">
                                  <font><Font name="Consolas Bold" size="18.0" /></font>
                               </Label>
-                              
-                              <Label text="RPG (75%)" textFill="#39ff14"><font><Font name="Consolas" size="14.0" /></font></Label>
-                              <ProgressBar progress="0.75" maxWidth="Infinity" prefHeight="15.0" style="-fx-accent: #39ff14; -fx-control-inner-background: #000000; -fx-border-color: #39ff14; -fx-border-radius: 5; -fx-background-radius: 5;" />
-                              
-                              <Label text="FPS (50%)" textFill="#ff00ff"><font><Font name="Consolas" size="14.0" /></font></Label>
-                              <ProgressBar progress="0.50" maxWidth="Infinity" prefHeight="15.0" style="-fx-accent: #ff00ff; -fx-control-inner-background: #000000; -fx-border-color: #ff00ff; -fx-border-radius: 5; -fx-background-radius: 5;" />
-                              
-                              <Label text="ARCADE (90%)" textFill="#00ffff"><font><Font name="Consolas" size="14.0" /></font></Label>
-                              <ProgressBar progress="0.90" maxWidth="Infinity" prefHeight="15.0" style="-fx-accent: #00ffff; -fx-control-inner-background: #000000; -fx-border-color: #00ffff; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                              <Label fx:id="lblGiochiCompletati" text="0" textFill="#ffffff">
+                                 <font><Font name="System Bold" size="24.0" /></font>
+                              </Label>
                            </children>
                         </VBox>
+
+                        <Region prefHeight="2.0" style="-fx-background-color: #00ffff;" />
+
+                        <VBox alignment="CENTER" spacing="5.0" maxWidth="Infinity">
+                           <children>
+                              <Label text="TOP GENRE" textFill="#ffea00">
+                                 <font><Font name="Consolas Bold" size="18.0" /></font>
+                              </Label>
+                              <Label fx:id="lblGeneriPreferiti" text="Nessuno" textFill="#39ff14">
+                                 <font><Font name="System Bold" size="20.0" /></font>
+                              </Label>
+                           </children>
+                        </VBox>
+
                      </children>
                   </VBox>
 

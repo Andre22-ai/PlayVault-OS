@@ -18,7 +18,6 @@ import javafx.scene.control.TextArea;
 
 public class ScriviRecensioneController {
 
-    // --- LA NOSTRA COSTANTE PER LA VISTA DASHBOARD ---
     private static final String VIEW_DASHBOARD = "dashboard";
 
     @FXML private Label titoloGiocoLabel;
@@ -27,14 +26,13 @@ public class ScriviRecensioneController {
 
     private Videogioco giocoDaRecensire;
     
-    // FIX SonarCloud: Reso 'final'
+    
     private final RecensioneControl recensioneControl;
     
     private boolean modalitaModifica = false; 
 
     public ScriviRecensioneController() {
-        // NOTA: Tra poco modificheremo anche RecensioneControl per fargli accettare
-        // un DAO dinamico da App.getRecensioneDAO(), proprio come gli altri!
+        
         this.recensioneControl = new RecensioneControl(App.getRecensioneDAO(), App.getUtenteDAO());
     }
 
@@ -52,8 +50,7 @@ public class ScriviRecensioneController {
     public void setRecensioneDaModificare(Recensione r) {
         this.modalitaModifica = true;
         
-        // Ricreiamo un "finto" gioco solo per avere ID e Titolo a disposizione
-        // I 5 parametri del costruttore rispettano esattamente la firma della tua Entity
+        
         this.giocoDaRecensire = new Videogioco(r.getNomeGioco(), "", 0, "", "");
         this.giocoDaRecensire.setId(r.getIdGioco());
         
@@ -74,7 +71,6 @@ public class ScriviRecensioneController {
         int voto = votoCombo.getValue();
         Recensione r = new Recensione(username, giocoDaRecensire.getId(), voto, testo);
 
-        // BIVIO: Stiamo modificando o inserendo?
         if (modalitaModifica) {
             boolean successo = recensioneControl.modificaRecensionePersonale(r);
             if (successo) {

@@ -28,15 +28,12 @@ public class AutenticazioneControl {
      * @return true se il login ha successo, false altrimenti
      */
     public boolean eseguiLogin(String username, String password) throws CredenzialiErrateException {
-        // 1. Validazione base degli input
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             throw new CredenzialiErrateException();
         }
 
-        // 2. Interrogazione del livello dati tramite interfaccia astratta
         Utente utenteTrovato = utenteDao.autentica(username, password);
 
-        // 3. Gestione del risultato e stato della sessione
         if (utenteTrovato != null) {
             Sessione.getIstanza().setUtenteCorrente(utenteTrovato);
             return true;

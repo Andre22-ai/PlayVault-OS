@@ -12,7 +12,7 @@ import com.progetto.entita.Videogioco;
 public class VideogiocoDAOMemory implements VideogiocoDAO {
 
     private final List<Videogioco> catalogoInMemoria;
-    private int prossimoIdDisponibile; // Simula l'AUTO_INCREMENT di MySQL
+    private int prossimoIdDisponibile; 
 
     public VideogiocoDAOMemory() {
         this.catalogoInMemoria = new ArrayList<>();
@@ -53,7 +53,6 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
 
     @Override
     public List<Videogioco> recuperaTutti() {
-        // Restituiamo una copia della lista per sicurezza
         return new ArrayList<>(catalogoInMemoria);
     }
 
@@ -63,7 +62,6 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
             return false;
         }
         
-        // Controllo se esiste già un gioco con lo stesso titolo (case-insensitive)
         boolean esisteGia = catalogoInMemoria.stream()
                 .anyMatch(v -> v.getTitolo().equalsIgnoreCase(gioco.getTitolo()));
                 
@@ -71,7 +69,6 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
             return false;
         }
 
-        // Assegniamo l'ID progressivo simulando MySQL
         gioco.setId(prossimoIdDisponibile);
         prossimoIdDisponibile++;
         

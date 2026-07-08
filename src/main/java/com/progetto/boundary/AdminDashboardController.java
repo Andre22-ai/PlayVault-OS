@@ -23,7 +23,6 @@ public class AdminDashboardController {
     private final GestioneCatalogoControl catalogoControl;
 
     public AdminDashboardController() {
-        // FIX 2: Chiediamo ad App qual è il database scelto per i videogiochi!
         this.catalogoControl = new GestioneCatalogoControl(App.getVideogiocoDAO());
     }
 

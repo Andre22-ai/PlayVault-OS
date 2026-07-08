@@ -33,6 +33,8 @@ public class AppCLI {
 
     private static final String MENU_SEPARATOR = "========================================";
 
+
+    @SuppressWarnings("java:S106")
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         
@@ -79,8 +81,7 @@ public class AppCLI {
             System.out.println("[INFO] Selezionato MySQL.\n");
         }
 
-        // Iniettiamo i DAO anche in App per sicurezza, nel caso qualche
-        // parte del codice condiviso provi a usare App.getUtenteDAO()
+        
         App.setUtenteDAO(utenteDAOScelto);
         App.setVideogiocoDAO(videogiocoDAOScelto);
         App.setLibreriaDAO(libreriaDAOScelto);
@@ -101,16 +102,13 @@ public class AppCLI {
         
         RecensioneControl recensioneControl = new RecensioneControl(recensioneDAOScelto, utenteDAOScelto); 
         
-        // Facciamo partire la CLI vera e propria
         CliEngine motoreCLI = new CliEngine(
             authControl, regControl, catalogoControl, 
             libreriaControl, recensioneControl, acquistoControl, classificaControl
         );
         
-        // Avvia il ciclo vitale del menu testuale
         motoreCLI.avvia();
 
-        // Quando motoreCLI.avvia() finisce (l'utente preme "Esci"), il programma arriva qui
         System.out.println("\n[Spegnimento di PlayVault in corso. Arrivederci!]");
         scanner.close();
     }

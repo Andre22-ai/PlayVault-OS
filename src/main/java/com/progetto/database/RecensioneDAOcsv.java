@@ -21,8 +21,8 @@ import com.progetto.entita.Videogioco;
 public class RecensioneDAOcsv implements RecensioneDAO {
 
     private static final Logger LOGGER = Logger.getLogger(RecensioneDAOcsv.class.getName());
-    private static final String FILE_NAME = "recensioni.csv";
-    private static final String SEPARATORE = ";"; // Usiamo il punto e virgola perché i commenti potrebbero contenere virgole
+    private static final String FILE_NAME = "data/recensioni.csv";
+    private static final String SEPARATORE = ";"; 
 
     public RecensioneDAOcsv() {
         File file = new File(FILE_NAME);
@@ -40,7 +40,6 @@ public class RecensioneDAOcsv implements RecensioneDAO {
 
     @Override
     public boolean salvaRecensione(Recensione recensione) {
-        // Controllo duplicato (Vincolo UNIQUE simulato)
         List<Recensione> tutte = recuperaTutte();
         boolean giaRecensito = tutte.stream()
                 .anyMatch(r -> r.getUsername().equals(recensione.getUsername()) && r.getIdGioco() == recensione.getIdGioco());
@@ -115,7 +114,6 @@ public class RecensioneDAOcsv implements RecensioneDAO {
 
         for (Recensione r : tutte) {
             if (r.getUsername().equals(username)) {
-                // Troviamo il titolo del gioco per simulare la JOIN
                 String titolo = catalogoGiochi.stream()
                         .filter(g -> g.getId() == r.getIdGioco())
                         .map(Videogioco::getTitolo)
@@ -129,7 +127,6 @@ public class RecensioneDAOcsv implements RecensioneDAO {
         return listaUtente;
     }
 
-    // Metodi di utilità interni per leggere/scrivere in blocco il file
     private List<Recensione> recuperaTutte() {
         List<Recensione> lista = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {

@@ -16,11 +16,11 @@ import com.progetto.entita.Utente;
 /**
  * Versione File System del DAO.
  * Salva i dati permanentemente in un file di testo (utenti.csv).
- * Formato del file: username,password,ruolo,crediti
+ * Formato del file: username,password,ruolo,crediti,esperienza
  */
 public class UtenteDAOcsv implements UtenteDAO {
 
-    private static final String NOME_FILE = "utenti.csv";
+    private static final String NOME_FILE = "data/utenti.csv";
     private static final Logger LOGGER = Logger.getLogger(UtenteDAOcsv.class.getName());
 
     public UtenteDAOcsv() {
@@ -31,7 +31,6 @@ public class UtenteDAOcsv implements UtenteDAO {
                 if (creato) {
                     Utente admin = new Utente("admin", "admin");
                     admin.setRuolo("ADMIN");
-                    // Usiamo setCrediti per essere precisi al 100%
                     admin.setCrediti(100);
                     salvaUtente(admin); 
                     LOGGER.info("[CSV] Creato nuovo file utenti.csv con account admin default.");
@@ -55,9 +54,11 @@ public class UtenteDAOcsv implements UtenteDAO {
                     Utente u = new Utente(dati[0], dati[1]);
                     u.setRuolo(dati[2]);
                     
-                    // FIX 1: Impostiamo forzatamente il valore esatto scritto nel file.
-                    // Bypassiamo qualsiasi calcolo strano di "aggiungiCrediti".
+                    
                     u.setCrediti(Integer.parseInt(dati[3]));
+                    if (dati.length >= 5) {
+                        u.setEsperienza(Integer.parseInt(dati[4]));
+                    }
                     
                     lista.add(u);
                 }
@@ -72,12 +73,15 @@ public class UtenteDAOcsv implements UtenteDAO {
     private void sovrascriviFile(List<Utente> utenti) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(NOME_FILE))) {
             for (Utente u : utenti) {
-                pw.println(u.getUsername() + "," + u.getPassword() + "," + u.getRuolo() + "," + u.getCrediti());
+                pw.println(u.getUsername() + "," + u.getPassword() + "," + u.getRuolo() + "," + u.getCrediti() + "," + u.getEsperienza());
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "[CSV] Errore durante la scrittura del file", e);
         }
     }
+
+    
+    
 
     @Override
     public Utente autentica(String username, String password) {
@@ -112,14 +116,12 @@ public class UtenteDAOcsv implements UtenteDAO {
         for (Utente u : tutti) {
             if (u.getUsername().equals(username)) {
                 
-                // FIX 2: Simuliamo il vincolo del Database. 
-                // Se la spesa ci manda in negativo, blocchiamo l'acquisto!
+                
                 if (u.getCrediti() + quantita < 0) {
-                    return false; // Crediti insufficienti
+                    return false; 
                 }
                 
-                // FIX 3: Usiamo la matematica cruda. 
-                // Se quantita è -15, farà: crediti + (-15) = sottrazione corretta.
+                
                 u.setCrediti(u.getCrediti() + quantita);
                 
                 modificato = true;
@@ -163,6 +165,21 @@ public class UtenteDAOcsv implements UtenteDAO {
         List<Utente> tutti = leggiTuttiUtenti();
         return tutti.stream()
                 .sorted((u1, u2) -> Integer.compare(u2.getCrediti(), u1.getCrediti()))
-                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
+                .toList(); 
     }
+
+    @Override
+    public boolean aggiornaEsperienza(String username, int nuovaEsperienza) {
+        List<Utente> tutti = leggiTuttiUtenti();
+
+        for (Utente utente : tutti) {
+            if (utente.getUsername().equals(username)) {
+                utente.setEsperienza(nuovaEsperienza);
+                sovrascriviFile(tutti);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

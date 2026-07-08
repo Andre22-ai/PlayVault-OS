@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.progetto.App;
+import com.progetto.controllo.HallOfFameControl; 
 import com.progetto.database.UtenteDAO;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
@@ -15,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar; 
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -26,26 +28,40 @@ public class HallOfFameController implements Initializable {
 
     @FXML private Label avatarLabel;
     @FXML private Label userNameLabel;
-    @FXML private Label levelLabel;
+    
+    @FXML private Label lblLivello;
+    @FXML private ProgressBar barraEsperienza;
+    @FXML private Label lblEsperienza;
+    @FXML private Label lblGiochiCompletati;
+    @FXML private Label lblGeneriPreferiti;
+    
     @FXML private FlowPane leaderboardPane;
     @FXML private Button settingsButton;
 
-    // FIX 2: Usiamo l'interfaccia! Così può contenere RAM, CSV o MySQL
     private final UtenteDAO utenteDAO;
+    private final HallOfFameControl hallControl; 
 
     public HallOfFameController() {
-        // Chiediamo ad App il DAO polimorfo (RAM, CSV o MySQL)!
         this.utenteDAO = App.getUtenteDAO(); 
+        this.hallControl = new HallOfFameControl(App.getLibreriaDAO());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // 1. Carichiamo i dati del Profilo (Colonna Sinistra)
         Utente corrente = Sessione.getIstanza().getUtenteCorrente();
         if (corrente != null) {
             userNameLabel.setText(corrente.getUsername().toUpperCase());
             avatarLabel.setText(corrente.getUsername().substring(0, 1).toUpperCase());
-            levelLabel.setText("LEVEL " + (corrente.getCrediti() / 2)); // Simuliamo un livello basato sui crediti
+            
+            lblLivello.setText("LEVEL " + corrente.getLivello());
+            barraEsperienza.setProgress(corrente.getProgressoLivello());
+            lblEsperienza.setText("Exp: " + (corrente.getEsperienza() % 100) + "/100");
+
+            long completati = hallControl.calcolaGiochiCompletati(corrente);
+            String genereTop = hallControl.calcolaGenerePreferito(corrente);
+
+            lblGiochiCompletati.setText(String.valueOf(completati));
+            lblGeneriPreferiti.setText(genereTop.toUpperCase());
         }
 
         if (settingsButton != null) {
@@ -58,12 +74,11 @@ public class HallOfFameController implements Initializable {
             });
         }
 
-        // 2. Carichiamo la Classifica Globale (Area Destra)
         caricaClassifica();
     }
 
     private void caricaClassifica() {
-        leaderboardPane.getChildren().clear(); // Puliamo i trofei finti dell'FXML
+        leaderboardPane.getChildren().clear(); 
         
         List<Utente> topPlayers = utenteDAO.recuperaClassifica();
         int rank = 1;
@@ -75,14 +90,12 @@ public class HallOfFameController implements Initializable {
     }
 
     private VBox creaCardClassifica(Utente u, int rank) {
-        // Creiamo una card cyberpunk per ogni giocatore in classifica
         VBox card = new VBox();
         card.setAlignment(Pos.CENTER);
         card.setPrefHeight(140.0);
         card.setPrefWidth(140.0);
         card.setSpacing(5.0);
         
-        // Colore dinamico: Oro per il primo, Argento per il secondo, Bronzo per il terzo, Cyan per gli altri
         String[] badge = switch (rank) {
             case 1 -> new String[]{"#ffea00", "🥇"};
             case 2 -> new String[]{"#c0c0c0", "🥈"};

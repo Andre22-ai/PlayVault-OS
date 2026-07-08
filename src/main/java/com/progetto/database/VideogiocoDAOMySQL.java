@@ -17,7 +17,7 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
 
     @Override
     public boolean salvaGioco(Videogioco gioco) {
-        String query = "INSERT INTO videogiochi (titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO videogiochi (titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en, exp_fornita) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -27,6 +27,7 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
             stmt.setString(4, gioco.getSviluppatore());
             stmt.setString(5, gioco.getDescrizioneIt());
             stmt.setString(6, gioco.getDescrizioneEn());
+            stmt.setInt(7, gioco.getExpFornita()); 
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -57,7 +58,7 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
     @Override
     public List<Videogioco> recuperaTutti() {
         List<Videogioco> catalogo = new ArrayList<>();
-        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en FROM videogiochi";
+        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en, exp_fornita FROM videogiochi";
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -77,6 +78,7 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
                     descrizioni[1]
                 );
                 gioco.setId(rs.getInt("id_gioco"));
+                gioco.setExpFornita(rs.getInt("exp_fornita")); 
                 catalogo.add(gioco);
             }
 
@@ -137,7 +139,6 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
                 "Attraversa l'Interregno e forgia la tua leggenda come il prossimo Lord Ancestrale in un mondo di mito, rovina e antico potere."
             };
             default -> new String[]{
-                // Per tutti gli altri giochi usa il database, oppure l'altra lingua se manca
                 descrizioneEn != null && !descrizioneEn.isBlank() ? descrizioneEn : descrizioneIt,
                 descrizioneIt != null && !descrizioneIt.isBlank() ? descrizioneIt : descrizioneEn
             };

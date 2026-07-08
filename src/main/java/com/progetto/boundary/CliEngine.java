@@ -34,7 +34,7 @@ public class CliEngine {
 
     private static final Logger LOGGER = Logger.getLogger(CliEngine.class.getName());
     
-    // Costanti per risolvere SonarCloud (java:S1192)
+    
     private static final String PROMPT_USERNAME = "Username: ";
     private static final String MSG_ERRORE = "[ERRORE] ";
     private static final String MSG_OK = "[OK] ";
@@ -73,7 +73,7 @@ public class CliEngine {
         System.out.println("       BENVENUTO IN PLAYVAULT CLI       ");
         System.out.println("========================================");
         
-        // MODIFICA 1: Stampiamo subito il menu all'avvio!
+        
         stampaAiutoGuest();
 
         try (Scanner scanner = new Scanner(System.in)) {
@@ -209,7 +209,7 @@ public class CliEngine {
                 System.out.println("Disconnessione in corso... Arrivederci " + utenteCorrente + "!");
                 this.utenteCorrente = null;
                 Sessione.getIstanza().terminaSessione();
-                // MODIFICA 3: Appena esci, ti ricorda i comandi per rientrare!
+                
                 stampaAiutoGuest();
                 break;
             case "esci":
@@ -344,7 +344,7 @@ public class CliEngine {
             String testo = scanner.nextLine().trim();
 
             Recensione nuovaRecensione = new Recensione(utenteCorrente, idGioco, voto, testo);
-            // FIX java:S1141: Estrazione del try-catch in un metodo separato
+            
             salvaNuovaRecensione(nuovaRecensione);
             
         } catch (NumberFormatException e) {

@@ -17,7 +17,6 @@ public class RecensioneDAOMemory implements RecensioneDAO {
 
     @Override
     public boolean salvaRecensione(Recensione recensione) {
-        // Controlla se l'utente ha già recensito questo gioco (simula il vincolo UNIQUE)
         boolean esiste = recensioniInMemoria.stream()
                 .anyMatch(r -> r.getUsername().equals(recensione.getUsername()) && r.getIdGioco() == recensione.getIdGioco());
         
@@ -48,26 +47,23 @@ public class RecensioneDAOMemory implements RecensioneDAO {
     public List<Recensione> recuperaRecensioniPerGioco(int idGioco) {
         return recensioniInMemoria.stream()
                 .filter(r -> r.getIdGioco() == idGioco)
-                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
+                .toList(); 
     }
 
     @Override
     public List<Recensione> recuperaRecensioniUtente(String username) {
         List<Recensione> listaPersonale = new ArrayList<>();
         
-        // Recuperiamo i giochi attuali per simulare la JOIN e prendere i titoli
         List<Videogioco> catalogo = App.getVideogiocoDAO().recuperaTutti();
 
         for (Recensione r : recensioniInMemoria) {
             if (r.getUsername().equals(username)) {
-                // Cerchiamo il titolo del gioco
                 String titolo = catalogo.stream()
                         .filter(g -> g.getId() == r.getIdGioco())
                         .map(Videogioco::getTitolo)
                         .findFirst()
                         .orElse("Titolo Sconosciuto");
                 
-                // Creiamo una copia per non sporcare i dati in RAM e le impostiamo il nome
                 Recensione copia = new Recensione(r.getUsername(), r.getIdGioco(), r.getVoto(), r.getCommento());
                 copia.setNomeGioco(titolo);
                 listaPersonale.add(copia);

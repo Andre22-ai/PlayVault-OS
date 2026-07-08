@@ -7,7 +7,6 @@ import com.progetto.utils.GestoreLingua;
 
 public class Videogioco {
     
-    // Inizializzazione del Logger (FIX SonarCloud java:S106)
     private static final Logger LOGGER = Logger.getLogger(Videogioco.class.getName());
 
     private int id;
@@ -47,13 +46,22 @@ public class Videogioco {
     public String getDescrizioneLocale() {
         String linguaAttuale = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
         
-        // Logger parametrizzato al posto del System.out (A prova di SonarCloud!)
         LOGGER.log(Level.INFO, "Switching lingua per {0} -> Sistema impostato su: {1}", new Object[]{titolo, linguaAttuale});
 
         if ("it".equalsIgnoreCase(linguaAttuale)) {
             return descrizioneIt != null && !descrizioneIt.isBlank() ? descrizioneIt : descrizioneEn;
         }
         return descrizioneEn != null && !descrizioneEn.isBlank() ? descrizioneEn : descrizioneIt;
+    }
+
+    private int expFornita = 50; 
+
+    public int getExpFornita() {
+        return expFornita;
+    }
+
+    public void setExpFornita(int expFornita) {
+        this.expFornita = expFornita;
     }
 
     public String getDescrizione() {

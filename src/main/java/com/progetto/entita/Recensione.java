@@ -6,7 +6,7 @@ public class Recensione {
     private int voto;
     private String commento;
     
-    private String nomeGioco; // AGGIUNTO: ci serve per la grafica!
+    private String nomeGioco; 
 
     public Recensione(String username, int idGioco, int voto, String commento) {
         this.username = username;
@@ -20,7 +20,6 @@ public class Recensione {
     public int getVoto() { return voto; }
     public String getCommento() { return commento; }
 
-    // NUOVI GETTER E SETTER
     public String getNomeGioco() { return nomeGioco; }
     public void setNomeGioco(String nomeGioco) { this.nomeGioco = nomeGioco; }
     public void setVoto(int voto) {

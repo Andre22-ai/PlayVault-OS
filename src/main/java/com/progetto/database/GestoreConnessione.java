@@ -9,12 +9,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Gestore della connessione al database MySQL (Pattern Singleton Sicuro).
- */
+
 public class GestoreConnessione {
 
-    // --- NUOVO: Inizializziamo il Logger ---
     private static final Logger LOGGER = Logger.getLogger(GestoreConnessione.class.getName());
     
     private static Connection connessione;
@@ -24,7 +21,6 @@ public class GestoreConnessione {
         throw new IllegalStateException("Utility class - non instanziabile");
     }
 
-    // Carichiamo i dati dal file segreto una sola volta all'avvio
     static {
         try (InputStream input = GestoreConnessione.class.getClassLoader().getResourceAsStream("database.properties")) {
             if (input == null) {
@@ -33,7 +29,6 @@ public class GestoreConnessione {
                 props.load(input);
             }
         } catch (IOException ex) {
-            // Passiamo l'eccezione al logger per avere la traccia completa
             LOGGER.log(Level.SEVERE, "[DATABASE] ERRORE durante la lettura delle credenziali", ex);
         }
     }
@@ -41,7 +36,6 @@ public class GestoreConnessione {
     public static Connection getConnessione() {
         try {
             if (connessione == null || connessione.isClosed()) {
-                // Leggiamo i parametri in modo sicuro dal file .properties
                 String url = props.getProperty("db.url");
                 String user = props.getProperty("db.user");
                 String password = props.getProperty("db.password");
@@ -50,7 +44,6 @@ public class GestoreConnessione {
                 LOGGER.info("[DATABASE] Connessione a MySQL stabilita con successo.");
             }
         } catch (SQLException e) {
-            // Log dell'errore critico con stack trace allegato
             LOGGER.log(Level.SEVERE, "[DATABASE] ERRORE CRITICO: Impossibile connettersi a MySQL", e);
         }
         return connessione;

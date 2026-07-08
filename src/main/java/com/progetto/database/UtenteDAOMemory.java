@@ -5,19 +5,14 @@ import java.util.List;
 
 import com.progetto.entita.Utente;
 
-/**
- * Versione DEMO (In-Memory) del DAO.
- * Salva i dati in una lista temporanea. Si azzera alla chiusura dell'app.
- */
+
 public class UtenteDAOMemory implements UtenteDAO {
 
-    // Questa è la nostra "tabella" temporanea nella RAM
     private final List<Utente> utentiInMemoria;
 
     public UtenteDAOMemory() {
         this.utentiInMemoria = new ArrayList<>();
         
-        // BONUS: Creiamo un utente amministratore di default per fare subito i test!
         Utente admin = new Utente("admin", "admin");
         admin.setRuolo("ADMIN");
         admin.aggiungiCrediti(100);
@@ -26,7 +21,6 @@ public class UtenteDAOMemory implements UtenteDAO {
 
     @Override
     public Utente autentica(String username, String password) {
-        // Cerca nella lista un utente con quello username e password
         return utentiInMemoria.stream()
                 .filter(u -> u.getUsername().equals(username) && u.getPassword().equals(password))
                 .findFirst()
@@ -35,12 +29,11 @@ public class UtenteDAOMemory implements UtenteDAO {
 
     @Override
     public boolean salvaUtente(Utente utente) {
-        // Controlla se l'utente esiste già
         boolean esisteGia = utentiInMemoria.stream()
                 .anyMatch(u -> u.getUsername().equalsIgnoreCase(utente.getUsername()));
         
         if (esisteGia) {
-            return false; // Utente già presente
+            return false; 
         }
         
         utentiInMemoria.add(utente);
@@ -79,9 +72,19 @@ public class UtenteDAOMemory implements UtenteDAO {
 
     @Override
     public List<Utente> recuperaClassifica() {
-        // Ordina la lista in base ai crediti (dal più grande al più piccolo)
         return utentiInMemoria.stream()
                 .sorted((u1, u2) -> Integer.compare(u2.getCrediti(), u1.getCrediti()))
-                .toList(); // <-- FIX SonarCloud (S6204): Sostituito collect(Collectors.toList())
+                .toList(); 
+    }
+
+    @Override
+    public boolean aggiornaEsperienza(String username, int nuovaEsperienza) {
+        for (Utente utente : utentiInMemoria) {
+            if (utente.getUsername().equals(username)) {
+                utente.setEsperienza(nuovaEsperienza);
+                return true;
+            }
+        }
+        return false;
     }
 }

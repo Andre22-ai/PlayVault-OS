@@ -21,6 +21,8 @@ import javafx.fxml.FXML;
 public class SelettoreDBController {
 
     private static final Logger LOGGER = Logger.getLogger(SelettoreDBController.class.getName());
+    
+    private static final String SCHERMATA_LOGIN = "login";
 
     @FXML
     private void avviaMySQL() throws IOException {
@@ -30,18 +32,18 @@ public class SelettoreDBController {
         App.setLibreriaDAO(new LibreriaDAOMySQL());
         App.setRecensioneDAO(new RecensioneDAOMySQL());
         
-        App.setRoot("login");
+        App.setRoot(SCHERMATA_LOGIN);
     }
 
     @FXML
     private void avviaCSV() throws IOException {
         LOGGER.info("[BOOT] Avvio motori su File System (CSV)...");
         App.setUtenteDAO(new UtenteDAOcsv());
-        App.setVideogiocoDAO(new VideogiocoDAOMemory()); // Come avevi impostato tu
+        App.setVideogiocoDAO(new VideogiocoDAOMemory()); 
         App.setLibreriaDAO(new LibreriaDAOcsv());
         App.setRecensioneDAO(new RecensioneDAOcsv());
         
-        App.setRoot("login");
+        App.setRoot(SCHERMATA_LOGIN);
     }
 
     @FXML
@@ -52,6 +54,6 @@ public class SelettoreDBController {
         App.setLibreriaDAO(new LibreriaDAOMemory());
         App.setRecensioneDAO(new RecensioneDAOMemory());
         
-        App.setRoot("login");
+        App.setRoot(SCHERMATA_LOGIN);
     }
 }
