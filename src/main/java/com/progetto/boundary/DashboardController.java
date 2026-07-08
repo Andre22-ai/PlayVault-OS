@@ -1,4 +1,4 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 import java.net.URL;
@@ -7,11 +7,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.progetto.App;
 import com.progetto.controllo.LibreriaControl;
 import com.progetto.controllo.RecensioneControl;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Videogioco;
+import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -166,7 +168,7 @@ public class DashboardController implements Initializable {
             editBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-text-fill: #00ffff; -fx-border-radius: 5; -fx-cursor: hand;");
             editBtn.setOnAction(e -> {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("scrivi_recensione.fxml"));
+                    FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
                     Parent root = loader.load();
                     ScriviRecensioneController controller = loader.getController();
                     controller.setRecensioneDaModificare(r); 
@@ -243,7 +245,7 @@ public class DashboardController implements Initializable {
             
             buyBtn.setOnAction(e -> {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("dettagli_gioco.fxml"));
+                    FXMLLoader loader = new FXMLLoader(App.class.getResource("dettagli_gioco.fxml"));
                     Parent root = loader.load();
                     DettagliGiocoController controller = loader.getController();
                     controller.setGioco(gioco);
@@ -277,7 +279,7 @@ public class DashboardController implements Initializable {
                 try {
                     // FIX SonarCloud: Logging parametrizzato
                     LOGGER.log(Level.INFO, "[BOUNDARY] Apertura terminale di recensione per: {0}", gioco.getTitolo());
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("scrivi_recensione.fxml"));
+                    FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
                     Parent root = loader.load();
                     
                     ScriviRecensioneController controller = loader.getController();

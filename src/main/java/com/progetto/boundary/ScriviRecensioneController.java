@@ -1,7 +1,8 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 
+import com.progetto.App;
 import com.progetto.controllo.RecensioneControl;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;

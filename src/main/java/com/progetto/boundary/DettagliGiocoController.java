@@ -1,14 +1,16 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.progetto.App;
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.entita.Videogioco;
 import com.progetto.exceptions.GiocoGiaPossedutoException;
 import com.progetto.exceptions.SaldoInsufficienteException;
 import com.progetto.exceptions.SalvataggioFallitoException;
+import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

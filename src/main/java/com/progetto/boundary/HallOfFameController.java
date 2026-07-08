@@ -1,10 +1,11 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.progetto.App;
 import com.progetto.database.UtenteDAO;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;

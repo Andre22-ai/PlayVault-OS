@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" stylesheets="@arcade.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.SelettoreDBController">
+   <children>
+      <VBox alignment="CENTER" layoutX="250.0" layoutY="100.0" prefHeight="400.0" prefWidth="500.0" spacing="30.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
+         <children>
+            
+            <Label text="SELECT PERSISTANCE" textFill="#ffea00">
+               <font>
+                  <Font name="System Bold" size="64.0" />
+               </font>
+               <effect>
+                  <DropShadow color="#e60067" offsetX="5.0" offsetY="5.0" radius="0.0" spread="1.0" />
+               </effect>
+               <VBox.margin>
+                  <Insets bottom="30.0" />
+               </VBox.margin>
+            </Label>
+            
+            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#avviaMySQL" prefHeight="60.0" styleClass="arcade-button" text="1. MYSQL (FULL DATABASE)">
+               <font>
+                  <Font name="Consolas Bold" size="20.0" />
+               </font>
+               <effect>
+                  <InnerShadow color="#1b5e0c" offsetX="3.0" offsetY="3.0" radius="0.0" />
+               </effect>
+            </Button>
+            
+            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#avviaCSV" prefHeight="60.0" styleClass="arcade-button" text="2. CSV (FILE SYSTEM)">
+               <font>
+                  <Font name="Consolas Bold" size="20.0" />
+               </font>
+               <effect>
+                  <InnerShadow color="#1b5e0c" offsetX="3.0" offsetY="3.0" radius="0.0" />
+               </effect>
+            </Button>
+            
+            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#avviaDemo" prefHeight="60.0" styleClass="arcade-button" text="3. RAM (DEMO MODE)">
+               <font>
+                  <Font name="Consolas Bold" size="20.0" />
+               </font>
+               <effect>
+                  <InnerShadow color="#1b5e0c" offsetX="3.0" offsetY="3.0" radius="0.0" />
+               </effect>
+            </Button>
+            
+         </children>
+      </VBox>
+      <Label text="SYSTEM BOOT SEQUENCE..." textFill="#00ffff" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+         <font>
+            <Font name="Consolas" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

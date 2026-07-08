@@ -1,9 +1,10 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.progetto.App;
 import com.progetto.controllo.AutenticazioneControl;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;

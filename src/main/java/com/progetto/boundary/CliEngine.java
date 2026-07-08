@@ -5,7 +5,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.GestoreLingua;
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.controllo.AutenticazioneControl;
 import com.progetto.controllo.ClassificaControl;
@@ -24,6 +23,7 @@ import com.progetto.exceptions.RecensioneInvalidaException;
 import com.progetto.exceptions.SaldoInsufficienteException;
 import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
+import com.progetto.utils.GestoreLingua;
 
 /**
  * Motore della CLI per PLAYVAULT.

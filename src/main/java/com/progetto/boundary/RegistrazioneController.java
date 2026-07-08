@@ -1,8 +1,9 @@
-package com.progetto;
+package com.progetto.boundary;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.progetto.App;
 import com.progetto.controllo.RegistrazioneControl;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
 

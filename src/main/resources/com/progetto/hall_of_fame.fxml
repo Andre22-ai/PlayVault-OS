@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #1a0524;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.HallOfFameController">
+<BorderPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #1a0524;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.HallOfFameController">
    
    <top>
       <HBox alignment="CENTER" prefHeight="80.0" spacing="20.0" style="-fx-background-color: #0d0012; -fx-border-color: #00ffff; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;" BorderPane.alignment="CENTER">

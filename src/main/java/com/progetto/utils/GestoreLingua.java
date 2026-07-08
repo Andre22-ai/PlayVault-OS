@@ -1,4 +1,4 @@
-package com.progetto;
+package com.progetto.utils;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

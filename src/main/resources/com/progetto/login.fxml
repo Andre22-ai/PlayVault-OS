@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.LoginController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.LoginController">
    <children>
    
       <Label layoutX="20.0" layoutY="20.0" text="1UP: 00000" textFill="#00ffff" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
@@ -60,7 +60,7 @@
                </font>
             </PasswordField>
             
-            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#accediAllaDashboard" prefHeight="50.0" style="-fx-background-color: #39ff14; -fx-text-fill: #000000; -fx-background-radius: 0; -fx-border-radius: 0; -fx-font-weight: bold; -fx-cursor: hand;" text="INSERT COIN &amp; START">
+            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#accediAllaDashboard" prefHeight="50.0" style="-fx-background-color: #39ff14; -fx-text-fill: #000000; -fx-background-radius: 0; -fx-border-width: 0; -fx-background-insets: 0; -fx-padding: 10 20 10 20; -fx-font-weight: bold; -fx-cursor: hand;" text="INSERT COIN &amp; START">
                <font>
                   <Font name="Consolas Bold" size="20.0" />
                </font>

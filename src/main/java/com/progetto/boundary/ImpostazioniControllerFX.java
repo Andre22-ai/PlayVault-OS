@@ -3,9 +3,9 @@ package com.progetto.boundary;
 import java.io.IOException;
 
 import com.progetto.App;
-import com.progetto.GestoreLingua;
 import com.progetto.controllo.ImpostazioniControl;
 import com.progetto.entita.Sessione;
+import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

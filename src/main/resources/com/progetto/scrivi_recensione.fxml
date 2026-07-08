@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #1a0524; -fx-border-color: #39ff14; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.ScriviRecensioneController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #1a0524; -fx-border-color: #39ff14; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.ScriviRecensioneController">
    <children>
       <VBox alignment="CENTER" spacing="30.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="80.0">
          <children>

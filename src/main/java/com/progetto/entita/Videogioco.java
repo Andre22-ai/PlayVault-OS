@@ -3,7 +3,7 @@ package com.progetto.entita;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.GestoreLingua;
+import com.progetto.utils.GestoreLingua;
 
 public class Videogioco {
     
