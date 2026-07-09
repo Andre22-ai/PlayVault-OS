@@ -30,6 +30,7 @@ public class CardNegozioController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriDettagliAcquisto() {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("dettagli_gioco.fxml"));

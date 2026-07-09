@@ -25,6 +25,7 @@ public class SelettoreDBController {
     private static final String SCHERMATA_LOGIN = "login";
 
     @FXML
+    @SuppressWarnings("unused")
     private void avviaMySQL() throws IOException {
         LOGGER.info("[BOOT] Avvio motori su MySQL...");
         App.setUtenteDAO(new UtenteDAOMySQL());
@@ -36,6 +37,7 @@ public class SelettoreDBController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void avviaCSV() throws IOException {
         LOGGER.info("[BOOT] Avvio motori su File System (CSV)...");
         App.setUtenteDAO(new UtenteDAOcsv());
@@ -47,6 +49,7 @@ public class SelettoreDBController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void avviaDemo() throws IOException {
         LOGGER.info("[BOOT] Avvio motori in RAM (Demo)...");
         App.setUtenteDAO(new UtenteDAOMemory());

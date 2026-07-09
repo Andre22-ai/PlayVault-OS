@@ -75,11 +75,13 @@ public class CardLibreriaController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void lanciaGioco() {
-        LOGGER.info("[SYSTEM RUNTIME] Lancio binario di: " + elemento.getVideogioco().getTitolo());
+        LOGGER.info(() -> "[SYSTEM RUNTIME] Lancio binario di: " + elemento.getVideogioco().getTitolo());
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void recensisciGioco() {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));

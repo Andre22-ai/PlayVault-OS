@@ -6,7 +6,7 @@ package com.progetto.entita;
  */
 public class Utente {
     
-    private String username;
+    private final String username;
     private String password;
     private int crediti; 
     private String ruolo;

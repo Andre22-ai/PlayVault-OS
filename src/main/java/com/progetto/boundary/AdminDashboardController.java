@@ -27,6 +27,7 @@ public class AdminDashboardController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void eseguiUpload() {
         String titolo = titleField.getText();
         String genere = genreField.getText();
@@ -46,6 +47,7 @@ public class AdminDashboardController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void eseguiLogout() throws IOException {
         App.setRoot("login");
     }

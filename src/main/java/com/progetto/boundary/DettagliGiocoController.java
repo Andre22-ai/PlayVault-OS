@@ -74,6 +74,7 @@ public class DettagliGiocoController {
 
     
     @FXML
+    @SuppressWarnings("unused")
     private void eseguiAcquisto() {
         LOGGER.log(Level.INFO, "[BOUNDARY] Richiesta acquisto per: {0}", giocoSelezionato.getTitolo());
         
@@ -95,6 +96,7 @@ public class DettagliGiocoController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriImpostazioni() {
         LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni da Dettagli Gioco...");
         try {
@@ -105,6 +107,7 @@ public class DettagliGiocoController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void tornaAllaDashboard() throws IOException {
         App.setRoot("dashboard");
     }

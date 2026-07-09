@@ -32,6 +32,7 @@ public class RegistrazioneController {
 
     
     @FXML
+    @SuppressWarnings("unused")
     private void eseguiRegistrazione() throws IOException {
         String user = regUsernameField.getText();
         String pass = regPasswordField.getText();
@@ -53,6 +54,7 @@ public class RegistrazioneController {
 
     
     @FXML
+    @SuppressWarnings("unused")
     private void tornaAlLogin() throws IOException {
         LOGGER.info("[BOUNDARY] Registrazione annullata. Ritorno al Login.");
         App.setRoot("login");

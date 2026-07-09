@@ -32,6 +32,7 @@ public class LoginController {
 
     
     @FXML
+    @SuppressWarnings("unused")
     private void accediAllaDashboard() throws IOException {
         String userInserito = usernameField.getText();
         String passInserita = passwordField.getText();
@@ -63,6 +64,7 @@ public class LoginController {
 
    
     @FXML
+    @SuppressWarnings("unused")
     private void vaiAllaRegistrazione() throws IOException {
         LOGGER.info("[BOUNDARY] Navigazione verso la schermata di Registrazione...");
         App.setRoot("registrazione");

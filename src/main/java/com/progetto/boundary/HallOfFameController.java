@@ -16,7 +16,6 @@ import com.progetto.entita.Utente;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar; 
 import javafx.scene.layout.FlowPane;
@@ -36,7 +35,6 @@ public class HallOfFameController implements Initializable {
     @FXML private Label lblGeneriPreferiti;
     
     @FXML private FlowPane leaderboardPane;
-    @FXML private Button settingsButton;
 
     private final UtenteDAO utenteDAO;
     private final HallOfFameControl hallControl; 
@@ -89,6 +87,7 @@ public class HallOfFameController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriImpostazioni() {
         try {
             App.setRoot("impostazioni");
@@ -98,6 +97,7 @@ public class HallOfFameController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void tornaAllaDashboard() {
         try {
             App.setRoot("dashboard");

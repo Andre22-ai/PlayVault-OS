@@ -60,6 +60,7 @@ public class ScriviRecensioneController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void inviaRecensione() throws IOException {
         String testo = commentoArea.getText().trim();
         if (testo.isEmpty()) {
@@ -91,6 +92,7 @@ public class ScriviRecensioneController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void annulla() throws IOException { 
         App.setRoot(VIEW_DASHBOARD); 
     }

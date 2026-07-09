@@ -39,6 +39,7 @@ public class CardRecensioneController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void modificaRecensione() {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
@@ -52,6 +53,7 @@ public class CardRecensioneController {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void eliminaRecensione() {
         boolean eliminata = recensioneControl.eliminaRecensionePersonale(username, recensione.getIdGioco());
         if (eliminata && onAggiornamento != null) {

@@ -42,6 +42,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void selezionaItaliano() {
         GestoreLingua.getIstanza().impostaLingua("it");
         aggiornaInterfaccia();
@@ -49,6 +50,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void selezionaEnglish() {
         GestoreLingua.getIstanza().impostaLingua("en");
         aggiornaInterfaccia();
@@ -56,6 +58,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void aggiornaPassword() {
         try {
             String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
@@ -73,6 +76,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void eliminaAccount() {
         Alert conferma = new Alert(Alert.AlertType.CONFIRMATION);
         conferma.setTitle(getTesto("settings.confirm.title"));
@@ -90,7 +94,7 @@ public class ImpostazioniControllerFX {
                     } else {
                         mostraAlertErrore(getTesto("settings.delete.error"));
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     LOGGER.log(Level.SEVERE, "Errore durante l'eliminazione dell'account", e);
                     mostraAlertErrore(e.getMessage());
                 }
@@ -99,6 +103,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void tornaAllaDashboard() {
         try {
             App.setRoot("dashboard");

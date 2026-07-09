@@ -103,6 +103,7 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriCatalogoAcquisti() {
         LOGGER.info("[BOUNDARY] Switch -> ADD GAME (Store / Global Catalogue)");
         catalogoPane.getChildren().clear();
@@ -125,6 +126,7 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriMieRecensioni() {
         LOGGER.info("[BOUNDARY] Switch -> MY REVIEWS (Personal Logs)");
         catalogoPane.getChildren().clear();
@@ -155,6 +157,7 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void apriImpostazioni() {
         LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni (Bottone cliccato con successo)."); 
         try {
@@ -165,11 +168,13 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void esciDalGioco() throws IOException {
         App.setRoot("login");
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void vaiAllaHallOfFame() throws IOException {
         App.setRoot("hall_of_fame");
     }

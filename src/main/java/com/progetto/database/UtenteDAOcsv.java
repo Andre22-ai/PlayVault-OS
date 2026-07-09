@@ -18,7 +18,7 @@ import com.progetto.entita.Utente;
  * Salva i dati permanentemente in un file di testo (utenti.csv).
  * Formato del file: username,password,ruolo,crediti,esperienza
  */
-public class UtenteDAOcsv implements UtenteDAO {
+public final class UtenteDAOcsv implements UtenteDAO {
 
     private static final String NOME_FILE = "data/utenti.csv";
     private static final Logger LOGGER = Logger.getLogger(UtenteDAOcsv.class.getName());

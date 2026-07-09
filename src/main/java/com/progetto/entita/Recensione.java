@@ -1,8 +1,8 @@
 package com.progetto.entita;
 
 public class Recensione {
-    private String username;
-    private int idGioco;
+    private final String username;
+    private final int idGioco;
     private int voto;
     private String commento;
     
