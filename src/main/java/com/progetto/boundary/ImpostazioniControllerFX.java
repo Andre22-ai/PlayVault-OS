@@ -1,6 +1,8 @@
 package com.progetto.boundary;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.App;
 import com.progetto.controllo.ImpostazioniControl;
@@ -15,8 +17,7 @@ import javafx.scene.control.PasswordField;
 
 public class ImpostazioniControllerFX {
 
-    private static final String STYLE_SELECTED = "-fx-background-color: #ff00ff; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: #ff00ff; -fx-border-radius: 20; -fx-border-width: 2; -fx-cursor: hand;";
-    private static final String STYLE_UNSELECTED = "-fx-background-color: #000000; -fx-text-fill: #00ffff; -fx-background-radius: 20; -fx-border-color: #00ffff; -fx-border-radius: 20; -fx-border-width: 2; -fx-cursor: hand;";
+    private static final Logger LOGGER = Logger.getLogger(ImpostazioniControllerFX.class.getName());
 
     @FXML private Button italianoButton;
     @FXML private Button englishButton;
@@ -66,6 +67,7 @@ public class ImpostazioniControllerFX {
                 mostraAlertErrore(getTesto("settings.password.error"));
             }
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Errore durante l'aggiornamento della password", e);
             mostraAlertErrore(e.getMessage());
         }
     }
@@ -89,6 +91,7 @@ public class ImpostazioniControllerFX {
                         mostraAlertErrore(getTesto("settings.delete.error"));
                     }
                 } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Errore durante l'eliminazione dell'account", e);
                     mostraAlertErrore(e.getMessage());
                 }
             }
@@ -100,6 +103,7 @@ public class ImpostazioniControllerFX {
         try {
             App.setRoot("dashboard");
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Errore nel ritorno alla dashboard", e);
             mostraAlertErrore(e.getMessage());
         }
     }
@@ -119,8 +123,13 @@ public class ImpostazioniControllerFX {
         backButton.setText(lingua.get("menu.settings.back").toUpperCase());
         nuovaPasswordField.setPromptText(lingua.get("settings.password.prompt"));
 
-        italianoButton.setStyle(italiano ? STYLE_SELECTED : STYLE_UNSELECTED);
-        englishButton.setStyle(italiano ? STYLE_UNSELECTED : STYLE_SELECTED);
+        // Rimuoviamo prima le classi esistenti per evitare conflitti
+        italianoButton.getStyleClass().removeAll("btn-lang-selected", "btn-lang-unselected");
+        englishButton.getStyleClass().removeAll("btn-lang-selected", "btn-lang-unselected");
+
+        // Applichiamo la logica CSS
+        italianoButton.getStyleClass().add(italiano ? "btn-lang-selected" : "btn-lang-unselected");
+        englishButton.getStyleClass().add(italiano ? "btn-lang-unselected" : "btn-lang-selected");
     }
 
     private String getTesto(String chiave) {

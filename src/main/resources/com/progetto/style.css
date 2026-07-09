@@ -1,0 +1,191 @@
+/* =========================================
+   PLAYVAULT - GLOBAL STYLESHEET
+   ========================================= */
+
+/* --- TESTI COMUNI --- */
+.testo-id {
+    -fx-text-fill: #888888;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+}
+
+.testo-descrizione {
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+}
+
+/* --- CARD GENERICHE --- */
+.card-base {
+    -fx-background-color: #000000;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* --- TEMA VERDE (MY LIBRARY) --- */
+.card-verde {
+    -fx-border-color: #39ff14;
+    -fx-effect: dropshadow(gaussian, #39ff14, 10, 0.1, 0, 0);
+}
+.testo-titolo-verde {
+    -fx-text-fill: #39ff14;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.cover-verde {
+    -fx-background-color: #0a2b00;
+    -fx-border-color: #39ff14;
+    -fx-border-radius: 5;
+}
+.btn-outline-verde {
+    -fx-background-color: #000000;
+    -fx-border-color: #39ff14;
+    -fx-text-fill: #39ff14;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-outline-verde:hover {
+    -fx-background-color: #39ff14;
+    -fx-text-fill: #000000;
+}
+
+/* --- TEMA CIANO (STORE / ADD GAME) --- */
+.card-ciano {
+    -fx-border-color: #00ffff;
+    -fx-effect: dropshadow(gaussian, #00ffff, 10, 0.1, 0, 0);
+}
+.testo-titolo-ciano {
+    -fx-text-fill: #00ffff;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.cover-ciano {
+    -fx-background-color: #002b2b;
+    -fx-border-color: #00ffff;
+    -fx-border-radius: 5;
+}
+.btn-outline-ciano {
+    -fx-background-color: #000000;
+    -fx-border-color: #00ffff;
+    -fx-text-fill: #00ffff;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-outline-ciano:hover {
+    -fx-background-color: #00ffff;
+    -fx-text-fill: #000000;
+}
+
+/* --- TEMA GIALLO E ROSSO (RECENSIONI E DELETE) --- */
+.card-gialla {
+    -fx-background-color: #0d0012;
+    -fx-border-color: #ffea00;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+.testo-titolo-giallo {
+    -fx-text-fill: #ffea00;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+}
+.btn-outline-giallo {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffea00;
+    -fx-text-fill: #ffea00;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-outline-giallo:hover {
+    -fx-background-color: #ffea00;
+    -fx-text-fill: #000000;
+}
+.btn-outline-rosso {
+    -fx-background-color: #000000;
+    -fx-border-color: #ff0000;
+    -fx-text-fill: #ff0000;
+    -fx-border-radius: 5;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-outline-rosso:hover {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #ffffff;
+}
+
+/* --- TEMA CLASSIFICA (HALL OF FAME) --- */
+.card-rank {
+    -fx-background-color: #0d0012;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* 1° Posto: ORO */
+.rank-gold {
+    -fx-border-color: #ffea00;
+    -fx-effect: dropshadow(gaussian, #ffea00, 10, 0.1, 0, 0);
+}
+.testo-gold { -fx-text-fill: #ffea00; }
+
+/* 2° Posto: ARGENTO */
+.rank-silver {
+    -fx-border-color: #c0c0c0;
+    -fx-effect: dropshadow(gaussian, #c0c0c0, 10, 0.1, 0, 0);
+}
+.testo-silver { -fx-text-fill: #c0c0c0; }
+
+/* 3° Posto: BRONZO */
+.rank-bronze {
+    -fx-border-color: #cd7f32;
+    -fx-effect: dropshadow(gaussian, #cd7f32, 10, 0.1, 0, 0);
+}
+.testo-bronze { -fx-text-fill: #cd7f32; }
+
+/* 4° Posto in poi: STANDARD */
+.rank-standard {
+    -fx-border-color: #00ffff;
+    -fx-effect: dropshadow(gaussian, #00ffff, 10, 0.1, 0, 0);
+}
+.testo-standard { -fx-text-fill: #00ffff; }
+
+.testo-crediti {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 12px;
+}
+
+/* --- TEMA IMPOSTAZIONI (LINGUA) --- */
+.btn-lang-selected {
+    -fx-background-color: #ff00ff;
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-border-color: #ff00ff;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}
+
+.btn-lang-unselected {
+    -fx-background-color: #000000;
+    -fx-text-fill: #00ffff;
+    -fx-background-radius: 20;
+    -fx-border-color: #00ffff;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}

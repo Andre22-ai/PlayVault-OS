@@ -1,6 +1,7 @@
 package com.progetto;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import com.progetto.database.LibreriaDAO;
@@ -14,19 +15,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class App extends Application {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private static Scene scene;
 
-    
     private static UtenteDAO utenteDAOScelto;
     private static VideogiocoDAO videogiocoDAOScelto;
     private static LibreriaDAO libreriaDAOScelto;
     private static RecensioneDAO recensioneDAOScelto; 
 
-    
     public static UtenteDAO getUtenteDAO() { return utenteDAOScelto; }
     public static void setUtenteDAO(UtenteDAO dao) { utenteDAOScelto = dao; }
 
@@ -41,6 +39,15 @@ public class App extends Application {
 
     private static void inizializzaScena(Parent root) {
         scene = new Scene(root, 1000, 600);
+        
+        // --- AGGANCIO DEL FOGLIO DI STILE GLOBALE (CSS) ---
+        URL cssUrl = App.class.getResource("style.css");
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+            LOGGER.info("[SISTEMA] Foglio di stile globale (style.css) caricato con successo.");
+        } else {
+            LOGGER.warning("[SISTEMA] Foglio di stile globale (style.css) NON TROVATO! Verifica che sia nella stessa cartella dei file FXML.");
+        }
     }
 
     @Override

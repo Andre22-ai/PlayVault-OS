@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.progetto.App;
 import com.progetto.controllo.HallOfFameControl; 
@@ -12,19 +14,17 @@ import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar; 
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class HallOfFameController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(HallOfFameController.class.getName());
 
     @FXML private Label avatarLabel;
     @FXML private Label userNameLabel;
@@ -64,16 +64,6 @@ public class HallOfFameController implements Initializable {
             lblGeneriPreferiti.setText(genereTop.toUpperCase());
         }
 
-        if (settingsButton != null) {
-            settingsButton.setOnAction(event -> {
-                try {
-                    App.setRoot("impostazioni");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        }
-
         caricaClassifica();
     }
 
@@ -84,55 +74,35 @@ public class HallOfFameController implements Initializable {
         int rank = 1;
 
         for (Utente u : topPlayers) {
-            VBox rankCard = creaCardClassifica(u, rank++);
-            leaderboardPane.getChildren().add(rankCard);
+            try {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("card_classifica.fxml"));
+                VBox rankCard = loader.load();
+                
+                CardClassificaController miniController = loader.getController();
+                miniController.setDati(u, rank++);
+                
+                leaderboardPane.getChildren().add(rankCard);
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Errore durante il caricamento della card classifica FXML", e);
+            }
         }
     }
 
-    private VBox creaCardClassifica(Utente u, int rank) {
-        VBox card = new VBox();
-        card.setAlignment(Pos.CENTER);
-        card.setPrefHeight(140.0);
-        card.setPrefWidth(140.0);
-        card.setSpacing(5.0);
-        
-        String[] badge = switch (rank) {
-            case 1 -> new String[]{"#ffea00", "🥇"};
-            case 2 -> new String[]{"#c0c0c0", "🥈"};
-            case 3 -> new String[]{"#cd7f32", "🥉"};
-            default -> new String[]{"#00ffff", "👤"};
-        };
-        String color = badge[0];
-        String icon = badge[1];
-
-        card.setStyle("-fx-background-color: #0d0012; -fx-border-color: " + color + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
-        
-        Label iconLbl = new Label(icon);
-        iconLbl.setFont(Font.font(32));
-        
-        Label nameLbl = new Label(u.getUsername().toUpperCase());
-        nameLbl.setTextFill(Color.web(color));
-        nameLbl.setFont(Font.font("Consolas", FontWeight.BOLD, 14));
-
-        Label creditsLbl = new Label(u.getCrediti() + " CR");
-        creditsLbl.setTextFill(Color.WHITE);
-        creditsLbl.setFont(Font.font("Consolas", 12));
-
-        card.getChildren().addAll(iconLbl, nameLbl, creditsLbl);
-        
-        DropShadow ds = new DropShadow(10, Color.web(color));
-        card.setEffect(ds);
-        
-        return card;
+    @FXML
+    private void apriImpostazioni() {
+        try {
+            App.setRoot("impostazioni");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Errore navigazione verso impostazioni", e);
+        }
     }
 
     @FXML
-    private void apriImpostazioni() throws IOException {
-        App.setRoot("impostazioni");
-    }
-
-    @FXML
-    private void tornaAllaDashboard() throws IOException {
-        App.setRoot("dashboard");
+    private void tornaAllaDashboard() {
+        try {
+            App.setRoot("dashboard");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Errore navigazione verso dashboard", e);
+        }
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="cardBox" alignment="CENTER" prefHeight="140.0" prefWidth="140.0" spacing="5.0" styleClass="card-rank" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.CardClassificaController">
+   
+   <Label fx:id="iconLbl" text="👤">
+      <font><Font size="32.0" /></font>
+   </Label>
+   
+   <Label fx:id="nameLbl" text="NOME">
+      <font><Font name="Consolas Bold" size="14.0" /></font>
+   </Label>
+   
+   <Label fx:id="creditsLbl" styleClass="testo-crediti" text="0 CR" />
+
+</VBox>

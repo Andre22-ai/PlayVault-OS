@@ -13,50 +13,20 @@ import com.progetto.controllo.RecensioneControl;
 import com.progetto.entita.ElementoLibreria;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
-import com.progetto.entita.Utente;
 import com.progetto.entita.Videogioco;
 import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class DashboardController implements Initializable {
 
-    // --- INIZIALIZZAZIONE DEL LOGGER ---
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
-
-    // --- COSTANTI PER FONT E COLORI ---
-    private static final String FONT_FAMILY = "Consolas";
-    private static final String COLOR_NEON_GREEN = "#39ff14";
-    private static final String COLOR_NEON_CYAN = "#00ffff";
-    private static final String COLOR_NEON_YELLOW = "#ffea00";
-    private static final String COLOR_NEON_PINK = "#ff00ff";
-    private static final String COLOR_BG_BLACK = "#000000";
-    private static final String COLOR_ERROR_RED = "#ff0000";
-
-    // --- COSTANTI PER CSS (FIX SonarCloud java:S1192) ---
-    private static final String CSS_BG = "-fx-background-color: ";
-    private static final String CSS_BORDER = "; -fx-border-color: ";
-    private static final String CSS_TEXT = "; -fx-text-fill: ";
-    private static final String CSS_RADIUS_BOX = "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;";
-    private static final String CSS_BTN_STYLE = "; -fx-font-weight: bold; -fx-cursor: hand;";
 
     @FXML private FlowPane catalogoPane;
     @FXML private Label creditsLabel; 
@@ -83,7 +53,7 @@ public class DashboardController implements Initializable {
             creditsLabel.setText(getTesto("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
         }
         aggiornaTesti();
-        apriLibreria();
+        apriLibreria(); // Apre la libreria di default
     }
 
     private void aggiornaTesti() {
@@ -111,16 +81,24 @@ public class DashboardController implements Initializable {
         
         if (miaLibreria.isEmpty()) {
             Label vuotoLbl = new Label(getTesto("dashboard.empty.library"));
-            vuotoLbl.setTextFill(Color.web(COLOR_NEON_PINK));
-            vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
-            vuotoLbl.setStyle("-fx-text-alignment: center;");
+            // Questo stile inline minimale va bene per i messaggi vuoti
+            vuotoLbl.setStyle("-fx-text-fill: #ff00ff; -fx-font-family: Consolas; -fx-font-weight: bold; -fx-font-size: 16px;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
         }
 
         for (ElementoLibreria elemento : miaLibreria) {
-            VBox card = creaCardGiocoLibreria(elemento); 
-            catalogoPane.getChildren().add(card);
+            try {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("card_libreria.fxml"));
+                VBox card = loader.load();
+                
+                CardLibreriaController miniController = loader.getController();
+                miniController.setDati(elemento, Sessione.getIstanza().getUtenteCorrente(), libreriaControl, this::apriLibreria);
+                
+                catalogoPane.getChildren().add(card);
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Errore caricamento card_libreria.fxml", e);
+            }
         }
     }
 
@@ -132,8 +110,17 @@ public class DashboardController implements Initializable {
         List<Videogioco> catalogoModello = libreriaControl.ottieniCatalogoCompleto();
         
         for (Videogioco gioco : catalogoModello) {
-            VBox card = creaCardGioco(gioco, true); 
-            catalogoPane.getChildren().add(card);
+            try {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("card_negozio.fxml"));
+                VBox card = loader.load();
+                
+                CardNegozioController miniController = loader.getController();
+                miniController.setDati(gioco);
+                
+                catalogoPane.getChildren().add(card);
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Errore caricamento card_negozio.fxml", e);
+            }
         }
     }
 
@@ -147,239 +134,27 @@ public class DashboardController implements Initializable {
         
         if (mieRecensioni.isEmpty()) {
             Label vuotoLbl = new Label(getTesto("dashboard.empty.reviews"));
-            vuotoLbl.setTextFill(Color.web(COLOR_NEON_YELLOW));
-            vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
-            vuotoLbl.setStyle("-fx-text-alignment: center;");
+            vuotoLbl.setStyle("-fx-text-fill: #ffea00; -fx-font-family: Consolas; -fx-font-weight: bold; -fx-font-size: 16px;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
         }
 
         for (Recensione r : mieRecensioni) {
-            VBox card = new VBox();
-            card.setPrefWidth(300.0);
-            card.setSpacing(10.0);
-            card.setPadding(new Insets(15.0));
-            card.setStyle(CSS_BG + "#0d0012" + CSS_BORDER + COLOR_NEON_YELLOW + CSS_RADIUS_BOX);
-            
-            Label gameLbl = new Label(getTesto("dashboard.target") + " " + r.getNomeGioco());
-            gameLbl.setTextFill(Color.web(COLOR_NEON_CYAN));
-            gameLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
-            
-            String stelle = "★".repeat(r.getVoto()) + "☆".repeat(5 - r.getVoto());
-            Label ratingLbl = new Label(getTesto("dashboard.rating") + " " + stelle);
-            ratingLbl.setTextFill(Color.web(COLOR_NEON_YELLOW));
-            ratingLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
-            
-            Label logLbl = new Label(getTesto("dashboard.log") + " " + r.getCommento());
-            logLbl.setTextFill(Color.web(COLOR_NEON_GREEN));
-            logLbl.setFont(Font.font(FONT_FAMILY, 14));
-            logLbl.setWrapText(true);
-            
-            HBox buttonBox = new HBox(15.0);
-            buttonBox.setAlignment(Pos.CENTER_RIGHT);
-            buttonBox.setPadding(new Insets(10, 0, 0, 0));
-
-            Button editBtn = new Button(getTesto("dashboard.edit"));
-            editBtn.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_NEON_CYAN + CSS_TEXT + COLOR_NEON_CYAN + "; -fx-border-radius: 5; -fx-cursor: hand;");
-            editBtn.setOnAction(e -> {
-                try {
-                    FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
-                    Parent root = loader.load();
-                    ScriviRecensioneController controller = loader.getController();
-                    controller.setRecensioneDaModificare(r); 
-                    editBtn.getScene().setRoot(root);
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, "Errore caricamento scrivi_recensione.fxml", ex);
-                }
-            });
-
-            Button delBtn = new Button(getTesto("dashboard.delete"));
-            delBtn.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_ERROR_RED + CSS_TEXT + COLOR_ERROR_RED + "; -fx-border-radius: 5; -fx-cursor: hand;");
-            delBtn.setOnAction(e -> {
-                boolean eliminata = recensioneControl.eliminaRecensionePersonale(username, r.getIdGioco());
-                if(eliminata) {
-                    apriMieRecensioni(); 
-                }
-            });
-
-            buttonBox.getChildren().addAll(editBtn, delBtn);
-            card.getChildren().addAll(gameLbl, ratingLbl, logLbl, buttonBox);
-            catalogoPane.getChildren().add(card);
-        }
-    }
-
-    private VBox creaCardGiocoLibreria(ElementoLibreria elemento) {
-        Videogioco gioco = elemento.getVideogioco();
-        String neonColor = COLOR_NEON_GREEN; 
-
-        VBox card = new VBox();
-        card.setAlignment(Pos.CENTER);
-        card.setPrefHeight(320.0); 
-        card.setPrefWidth(200.0);
-        card.setSpacing(10.0);
-        card.setPadding(new Insets(15.0, 0, 0, 0));
-        card.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + neonColor + CSS_RADIUS_BOX);
-        
-        DropShadow ombra = new DropShadow();
-        ombra.setColor(Color.web(neonColor));
-        ombra.setRadius(10.0);
-        ombra.setSpread(0.1);
-        card.setEffect(ombra);
-
-        Label idLbl = new Label("[ID: " + gioco.getId() + "]");
-        idLbl.setTextFill(Color.web("#888888"));
-        idLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 10.0));
-        VBox.setMargin(idLbl, new Insets(0, 0, -5.0, 0));
-
-        Label titoloLbl = new Label(gioco.getTitolo());
-        titoloLbl.setTextFill(Color.web(neonColor));
-        titoloLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16.0));
-
-        VBox coverBox = new VBox();
-        coverBox.setAlignment(Pos.CENTER);
-        coverBox.setPrefHeight(100.0);
-        coverBox.setPrefWidth(160.0);
-        coverBox.setStyle(CSS_BG + "#0a2b00" + CSS_BORDER + neonColor + "; -fx-border-radius: 5;");
-        VBox.setMargin(coverBox, new Insets(0, 10.0, 0, 10.0));
-        
-        String parolaCover = gioco.getTitolo().split(" ")[0];
-        Label coverTesto = new Label(parolaCover);
-        coverTesto.setTextFill(Color.web(neonColor));
-        coverTesto.setFont(Font.font("System", FontWeight.BOLD, 24.0));
-        coverBox.getChildren().add(coverTesto);
-
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-
-        HBox buttonBox = new HBox(10.0);
-        buttonBox.setAlignment(Pos.CENTER);
-        
-        Button launchBtn = new Button(getTesto("dashboard.launch"));
-        launchBtn.setPrefHeight(30.0);
-        launchBtn.setPrefWidth(85.0);
-        launchBtn.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_NEON_GREEN + "; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15" + CSS_TEXT + COLOR_NEON_GREEN + CSS_BTN_STYLE);
-        launchBtn.setOnAction(e -> {
-            LOGGER.log(Level.INFO, "[SYSTEM RUNTIME] Esecuzione binaria di: {0} avviata su PlayVault OS.", gioco.getTitolo());
-        });
-
-        Button reviewBtn = new Button(getTesto("dashboard.review"));
-        reviewBtn.setPrefHeight(30.0);
-        reviewBtn.setPrefWidth(85.0);
-        reviewBtn.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_NEON_YELLOW + "; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15" + CSS_TEXT + COLOR_NEON_YELLOW + CSS_BTN_STYLE);
-        
-        reviewBtn.setOnAction(e -> {
             try {
-                LOGGER.log(Level.INFO, "[BOUNDARY] Apertura terminale di recensione per: {0}", gioco.getTitolo());
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
-                Parent root = loader.load();
-                ScriviRecensioneController controller = loader.getController();
-                controller.setGioco(gioco);
-                reviewBtn.getScene().setRoot(root);
-            } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Errore caricamento scrivi_recensione.fxml", ex);
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("card_recensione.fxml"));
+                VBox card = loader.load();
+                
+                CardRecensioneController miniController = loader.getController();
+                miniController.setDati(r, recensioneControl, username, this::apriMieRecensioni);
+                
+                catalogoPane.getChildren().add(card);
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Errore caricamento card_recensione.fxml", e);
             }
-        });
-
-        buttonBox.getChildren().addAll(launchBtn, reviewBtn);
-
-        VBox gameBox = new VBox(5.0);
-        gameBox.setAlignment(Pos.CENTER);
-        VBox.setMargin(gameBox, new Insets(0, 10.0, 15.0, 10.0));
-        
-        if (elemento.isCompletato()) {
-            Label lblCompletato = new Label("COMPLETATO ✔");
-            lblCompletato.setTextFill(Color.web(COLOR_NEON_GREEN));
-            lblCompletato.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
-            lblCompletato.setEffect(new DropShadow(5, Color.web(COLOR_NEON_GREEN)));
-            gameBox.getChildren().add(lblCompletato);
-        } else {
-            Button btnCompleta = new Button("COMPLETA (" + gioco.getExpFornita() + " XP)");
-            btnCompleta.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_NEON_CYAN + CSS_TEXT + COLOR_NEON_CYAN + "; -fx-cursor: hand; -fx-border-radius: 5;");
-            btnCompleta.setOnAction(e -> {
-                Utente uCorrente = Sessione.getIstanza().getUtenteCorrente();
-                boolean successo = libreriaControl.completaGioco(uCorrente, gioco);
-                if(successo) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                    alert.setHeaderText(null);
-                    alert.setTitle("Level Up!");
-                    alert.setContentText("Complimenti! Hai completato " + gioco.getTitolo() + " e guadagnato " + gioco.getExpFornita() + " EXP!");
-                    alert.showAndWait();
-                    apriLibreria(); 
-                }
-            });
-            gameBox.getChildren().add(btnCompleta);
         }
-
-        card.getChildren().addAll(idLbl, titoloLbl, coverBox, spacer, buttonBox, gameBox);
-        return card;
     }
 
-    private VBox creaCardGioco(Videogioco gioco, boolean modalitaNegozio) {
-        String neonColor = modalitaNegozio ? COLOR_NEON_CYAN : COLOR_NEON_GREEN; 
-
-        VBox card = new VBox();
-        card.setAlignment(Pos.CENTER);
-        card.setPrefHeight(280.0);
-        card.setPrefWidth(200.0);
-        card.setSpacing(15.0);
-        card.setPadding(new Insets(15.0, 0, 0, 0));
-        card.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + neonColor + CSS_RADIUS_BOX);
-        
-        DropShadow ombra = new DropShadow();
-        ombra.setColor(Color.web(neonColor));
-        ombra.setRadius(10.0);
-        ombra.setSpread(0.1);
-        card.setEffect(ombra);
-
-        Label idLbl = new Label("[ID: " + gioco.getId() + "]");
-        idLbl.setTextFill(Color.web("#888888"));
-        idLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 10.0));
-        VBox.setMargin(idLbl, new Insets(0, 0, -10.0, 0));
-
-        Label titoloLbl = new Label(gioco.getTitolo());
-        titoloLbl.setTextFill(Color.web(neonColor));
-        titoloLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16.0));
-
-        VBox coverBox = new VBox();
-        coverBox.setAlignment(Pos.CENTER);
-        coverBox.setPrefHeight(120.0);
-        coverBox.setPrefWidth(160.0);
-        coverBox.setStyle(CSS_BG + (modalitaNegozio ? "#002b2b" : "#0a2b00") + CSS_BORDER + neonColor + "; -fx-border-radius: 5;");
-        VBox.setMargin(coverBox, new Insets(0, 10.0, 0, 10.0));
-        
-        String parolaCover = gioco.getTitolo().split(" ")[0];
-        Label coverTesto = new Label(parolaCover);
-        coverTesto.setTextFill(Color.web(neonColor));
-        coverTesto.setFont(Font.font("System", FontWeight.BOLD, 24.0));
-        coverBox.getChildren().add(coverTesto);
-
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-
-        if (modalitaNegozio) {
-            Button buyBtn = new Button(getTesto("dashboard.buy.info"));
-            buyBtn.setMaxWidth(Double.MAX_VALUE);
-            buyBtn.setPrefHeight(35.0);
-            buyBtn.setStyle(CSS_BG + COLOR_BG_BLACK + CSS_BORDER + COLOR_NEON_CYAN + "; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20" + CSS_TEXT + COLOR_NEON_CYAN + CSS_BTN_STYLE);
-            VBox.setMargin(buyBtn, new Insets(0, 20.0, 15.0, 20.0));
-            
-            buyBtn.setOnAction(e -> {
-                try {
-                    FXMLLoader loader = new FXMLLoader(App.class.getResource("dettagli_gioco.fxml"));
-                    Parent root = loader.load();
-                    DettagliGiocoController controller = loader.getController();
-                    controller.setGioco(gioco);
-                    buyBtn.getScene().setRoot(root);
-                } catch (IOException ex) {
-                    LOGGER.log(Level.SEVERE, "Errore caricamento dettagli_gioco.fxml", ex);
-                }
-            });
-            card.getChildren().addAll(idLbl, titoloLbl, coverBox, spacer, buyBtn);
-        }
-        return card;
-    }
-
-   @FXML
+    @FXML
     private void apriImpostazioni() {
         LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni (Bottone cliccato con successo)."); 
         try {
