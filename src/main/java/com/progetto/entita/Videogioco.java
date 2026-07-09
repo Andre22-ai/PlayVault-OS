@@ -17,7 +17,6 @@ public class Videogioco {
     private String descrizioneEn;
     private String descrizioneIt;
 
-    // Costruttore base
     public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizione) {
         this(titolo, genere, annoUscita, sviluppatore, descrizione, descrizione);
     }

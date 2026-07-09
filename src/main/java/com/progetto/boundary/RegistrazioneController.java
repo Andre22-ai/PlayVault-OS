@@ -51,9 +51,7 @@ public class RegistrazioneController {
         }
     }
 
-    /**
-     * Cattura il click sul link "ABORT" per tornare indietro.
-     */
+    
     @FXML
     private void tornaAlLogin() throws IOException {
         LOGGER.info("[BOUNDARY] Registrazione annullata. Ritorno al Login.");

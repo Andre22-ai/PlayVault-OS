@@ -45,9 +45,7 @@ public class LoginController {
 
             LOGGER.log(Level.INFO, "[BOUNDARY] Accesso Consentito! Benvenuto {0}", utenteLoggato.getUsername());
 
-            // ==================================================
-            // IL BIVIO RBAC (Role-Based Access Control)
-            // ==================================================
+            
             if ("ADMIN".equals(utenteLoggato.getRuolo())) {
                 LOGGER.info("[SISTEMA] Accesso Amministratore Rilevato. Inizializzazione Override...");
                 App.setRoot("admin_dashboard"); 

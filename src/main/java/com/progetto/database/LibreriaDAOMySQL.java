@@ -9,12 +9,22 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.progetto.entita.ElementoLibreria; 
-import com.progetto.entita.Videogioco;       
+import com.progetto.entita.ElementoLibreria;
+import com.progetto.entita.Videogioco;
 
 public class LibreriaDAOMySQL implements LibreriaDAO {
 
     private static final Logger LOGGER = Logger.getLogger(LibreriaDAOMySQL.class.getName());
+
+    // --- COSTANTI PER SONARCLOUD (java:S1192) ---
+    private static final String COL_ID = "id_gioco";
+    private static final String COL_TITOLO = "titolo";
+    private static final String COL_GENERE = "genere";
+    private static final String COL_ANNO = "anno_uscita";
+    private static final String COL_SVILUPPATORE = "sviluppatore";
+    
+    // Costante per la parte finale della query ripetuta 4 volte
+    private static final String QUERY_JOIN_BASE = "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
 
     @Override
     public boolean verificaPossesso(String username, int idGioco) {
@@ -78,8 +88,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
     public List<Videogioco> recuperaGiochiPropri(String username) {
         List<Videogioco> mieiGiochi = new ArrayList<>();
 
-        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en " +
-                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+        // Utilizziamo la costante per il JOIN
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en " + QUERY_JOIN_BASE;
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -90,14 +100,14 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                     String descrizioneIt = rs.getString("descrizione_it");
                     String descrizioneEn = rs.getString("descrizione_en");
                     Videogioco gioco = new Videogioco(
-                        rs.getString("titolo"),
-                        rs.getString("genere"),
-                        rs.getInt("anno_uscita"),
-                        rs.getString("sviluppatore"),
+                        rs.getString(COL_TITOLO),
+                        rs.getString(COL_GENERE),
+                        rs.getInt(COL_ANNO),
+                        rs.getString(COL_SVILUPPATORE),
                         descrizioneEn != null ? descrizioneEn : descrizioneIt,
                         descrizioneIt != null ? descrizioneIt : descrizioneEn
                     );
-                    gioco.setId(rs.getInt("id_gioco"));
+                    gioco.setId(rs.getInt(COL_ID));
                     mieiGiochi.add(gioco);
                 }
             }
@@ -112,8 +122,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
 
     private List<Videogioco> recuperaGiochiPropriCompatibili(String username) {
         List<Videogioco> mieiGiochi = new ArrayList<>();
-        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione " +
-                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+        // Utilizziamo la costante per il JOIN
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione " + QUERY_JOIN_BASE;
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -122,14 +132,14 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                 while (rs.next()) {
                     String descrizione = rs.getString("descrizione");
                     Videogioco gioco = new Videogioco(
-                        rs.getString("titolo"),
-                        rs.getString("genere"),
-                        rs.getInt("anno_uscita"),
-                        rs.getString("sviluppatore"),
+                        rs.getString(COL_TITOLO),
+                        rs.getString(COL_GENERE),
+                        rs.getInt(COL_ANNO),
+                        rs.getString(COL_SVILUPPATORE),
                         descrizione,
                         descrizione
                     );
-                    gioco.setId(rs.getInt("id_gioco"));
+                    gioco.setId(rs.getInt(COL_ID));
                     mieiGiochi.add(gioco);
                 }
             }
@@ -144,14 +154,16 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
         return message != null && (message.contains("Unknown column") || message.contains("doesn't exist") || message.contains("unknown column"));
     }
 
-    
+    // =========================================================================
+    // METODI GAMIFICATION E STATISTICHE
+    // =========================================================================
 
     @Override
     public List<ElementoLibreria> getLibreriaUtenteCompleta(String username) {
         List<ElementoLibreria> lista = new ArrayList<>();
         
-        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en, v.exp_fornita, l.completato " +
-                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+        // Utilizziamo la costante per il JOIN
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione_it, v.descrizione_en, v.exp_fornita, l.completato " + QUERY_JOIN_BASE;
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -162,14 +174,14 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                     String descrizioneIt = rs.getString("descrizione_it");
                     String descrizioneEn = rs.getString("descrizione_en");
                     Videogioco gioco = new Videogioco(
-                        rs.getString("titolo"),
-                        rs.getString("genere"),
-                        rs.getInt("anno_uscita"),
-                        rs.getString("sviluppatore"),
+                        rs.getString(COL_TITOLO),
+                        rs.getString(COL_GENERE),
+                        rs.getInt(COL_ANNO),
+                        rs.getString(COL_SVILUPPATORE),
                         descrizioneEn != null ? descrizioneEn : descrizioneIt,
                         descrizioneIt != null ? descrizioneIt : descrizioneEn
                     );
-                    gioco.setId(rs.getInt("id_gioco"));
+                    gioco.setId(rs.getInt(COL_ID));
                     gioco.setExpFornita(rs.getInt("exp_fornita")); 
                     
                     boolean completato = rs.getBoolean("completato");
@@ -187,8 +199,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
 
     private List<ElementoLibreria> getLibreriaUtenteCompletaCompatibile(String username) {
         List<ElementoLibreria> lista = new ArrayList<>();
-        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione, l.completato " +
-                       "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
+        // Utilizziamo la costante per il JOIN
+        String query = "SELECT v.id_gioco, v.titolo, v.genere, v.anno_uscita, v.sviluppatore, v.descrizione, l.completato " + QUERY_JOIN_BASE;
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -197,14 +209,14 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
                 while (rs.next()) {
                     String descrizione = rs.getString("descrizione");
                     Videogioco gioco = new Videogioco(
-                        rs.getString("titolo"),
-                        rs.getString("genere"),
-                        rs.getInt("anno_uscita"),
-                        rs.getString("sviluppatore"),
+                        rs.getString(COL_TITOLO),
+                        rs.getString(COL_GENERE),
+                        rs.getInt(COL_ANNO),
+                        rs.getString(COL_SVILUPPATORE),
                         descrizione,
                         descrizione
                     );
-                    gioco.setId(rs.getInt("id_gioco"));
+                    gioco.setId(rs.getInt(COL_ID));
                     
                     boolean completato = rs.getBoolean("completato");
                     lista.add(new ElementoLibreria(gioco, completato));

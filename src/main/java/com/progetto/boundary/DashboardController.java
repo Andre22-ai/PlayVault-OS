@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import com.progetto.App;
 import com.progetto.controllo.LibreriaControl;
 import com.progetto.controllo.RecensioneControl;
-import com.progetto.entita.ElementoLibreria; 
+import com.progetto.entita.ElementoLibreria;
 import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
@@ -23,9 +23,9 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert; 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType; 
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
@@ -39,11 +39,17 @@ import javafx.scene.text.FontWeight;
 
 public class DashboardController implements Initializable {
 
-    
+    // --- INIZIALIZZAZIONE DEL LOGGER ---
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
 
-    
+    // --- COSTANTI PER FONT E COLORI (FIX SonarCloud java:S1192) ---
     private static final String FONT_FAMILY = "Consolas";
+    private static final String COLOR_NEON_GREEN = "#39ff14";
+    private static final String COLOR_NEON_CYAN = "#00ffff";
+    private static final String COLOR_NEON_YELLOW = "#ffea00";
+    private static final String COLOR_NEON_PINK = "#ff00ff";
+    private static final String COLOR_BG_BLACK = "#000000";
+    private static final String COLOR_ERROR_RED = "#ff0000";
 
     @FXML private FlowPane catalogoPane;
     @FXML private Label creditsLabel; 
@@ -53,7 +59,6 @@ public class DashboardController implements Initializable {
     @FXML private Button reviewsButton;
     @FXML private Button settingsButton;
 
-    
     private final LibreriaControl libreriaControl;
     private final RecensioneControl recensioneControl;
 
@@ -95,12 +100,11 @@ public class DashboardController implements Initializable {
         catalogoPane.getChildren().clear();
         
         String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
-        
         List<ElementoLibreria> miaLibreria = libreriaControl.ottieniLibreriaCompleta(username);
         
         if (miaLibreria.isEmpty()) {
             Label vuotoLbl = new Label(getTesto("dashboard.empty.library"));
-            vuotoLbl.setTextFill(Color.web("#ff00ff"));
+            vuotoLbl.setTextFill(Color.web(COLOR_NEON_PINK));
             vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
             catalogoPane.getChildren().add(vuotoLbl);
@@ -136,7 +140,7 @@ public class DashboardController implements Initializable {
         
         if (mieRecensioni.isEmpty()) {
             Label vuotoLbl = new Label(getTesto("dashboard.empty.reviews"));
-            vuotoLbl.setTextFill(Color.web("#ffea00"));
+            vuotoLbl.setTextFill(Color.web(COLOR_NEON_YELLOW));
             vuotoLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             vuotoLbl.setStyle("-fx-text-alignment: center;");
             catalogoPane.getChildren().add(vuotoLbl);
@@ -148,19 +152,19 @@ public class DashboardController implements Initializable {
             card.setPrefWidth(300.0);
             card.setSpacing(10.0);
             card.setPadding(new Insets(15.0));
-            card.setStyle("-fx-background-color: #0d0012; -fx-border-color: #ffea00; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+            card.setStyle("-fx-background-color: #0d0012; -fx-border-color: " + COLOR_NEON_YELLOW + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
             
             Label gameLbl = new Label(getTesto("dashboard.target") + " " + r.getNomeGioco());
-            gameLbl.setTextFill(Color.web("#00ffff"));
+            gameLbl.setTextFill(Color.web(COLOR_NEON_CYAN));
             gameLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 16));
             
             String stelle = "★".repeat(r.getVoto()) + "☆".repeat(5 - r.getVoto());
             Label ratingLbl = new Label(getTesto("dashboard.rating") + " " + stelle);
-            ratingLbl.setTextFill(Color.web("#ffea00"));
+            ratingLbl.setTextFill(Color.web(COLOR_NEON_YELLOW));
             ratingLbl.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
             
             Label logLbl = new Label(getTesto("dashboard.log") + " " + r.getCommento());
-            logLbl.setTextFill(Color.web("#39ff14"));
+            logLbl.setTextFill(Color.web(COLOR_NEON_GREEN));
             logLbl.setFont(Font.font(FONT_FAMILY, 14));
             logLbl.setWrapText(true);
             
@@ -169,7 +173,7 @@ public class DashboardController implements Initializable {
             buttonBox.setPadding(new Insets(10, 0, 0, 0));
 
             Button editBtn = new Button(getTesto("dashboard.edit"));
-            editBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-text-fill: #00ffff; -fx-border-radius: 5; -fx-cursor: hand;");
+            editBtn.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_NEON_CYAN + "; -fx-text-fill: " + COLOR_NEON_CYAN + "; -fx-border-radius: 5; -fx-cursor: hand;");
             editBtn.setOnAction(e -> {
                 try {
                     FXMLLoader loader = new FXMLLoader(App.class.getResource("scrivi_recensione.fxml"));
@@ -183,7 +187,7 @@ public class DashboardController implements Initializable {
             });
 
             Button delBtn = new Button(getTesto("dashboard.delete"));
-            delBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #ff0000; -fx-text-fill: #ff0000; -fx-border-radius: 5; -fx-cursor: hand;");
+            delBtn.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_ERROR_RED + "; -fx-text-fill: " + COLOR_ERROR_RED + "; -fx-border-radius: 5; -fx-cursor: hand;");
             delBtn.setOnAction(e -> {
                 boolean eliminata = recensioneControl.eliminaRecensionePersonale(username, r.getIdGioco());
                 if(eliminata) {
@@ -197,10 +201,9 @@ public class DashboardController implements Initializable {
         }
     }
 
-    
     private VBox creaCardGiocoLibreria(ElementoLibreria elemento) {
         Videogioco gioco = elemento.getVideogioco();
-        String neonColor = "#39ff14"; 
+        String neonColor = COLOR_NEON_GREEN; 
 
         VBox card = new VBox();
         card.setAlignment(Pos.CENTER);
@@ -208,7 +211,7 @@ public class DashboardController implements Initializable {
         card.setPrefWidth(200.0);
         card.setSpacing(10.0);
         card.setPadding(new Insets(15.0, 0, 0, 0));
-        card.setStyle("-fx-background-color: #000000; -fx-border-color: " + neonColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        card.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + neonColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
         
         DropShadow ombra = new DropShadow();
         ombra.setColor(Color.web(neonColor));
@@ -241,14 +244,13 @@ public class DashboardController implements Initializable {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        
         HBox buttonBox = new HBox(10.0);
         buttonBox.setAlignment(Pos.CENTER);
         
         Button launchBtn = new Button(getTesto("dashboard.launch"));
         launchBtn.setPrefHeight(30.0);
         launchBtn.setPrefWidth(85.0);
-        launchBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #39ff14; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: #39ff14; -fx-font-weight: bold; -fx-cursor: hand;");
+        launchBtn.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_NEON_GREEN + "; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: " + COLOR_NEON_GREEN + "; -fx-font-weight: bold; -fx-cursor: hand;");
         launchBtn.setOnAction(e -> {
             LOGGER.log(Level.INFO, "[SYSTEM RUNTIME] Esecuzione binaria di: {0} avviata su PlayVault OS.", gioco.getTitolo());
         });
@@ -256,7 +258,7 @@ public class DashboardController implements Initializable {
         Button reviewBtn = new Button(getTesto("dashboard.review"));
         reviewBtn.setPrefHeight(30.0);
         reviewBtn.setPrefWidth(85.0);
-        reviewBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #ffea00; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: #ffea00; -fx-font-weight: bold; -fx-cursor: hand;");
+        reviewBtn.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_NEON_YELLOW + "; -fx-border-width: 1; -fx-border-radius: 15; -fx-background-radius: 15; -fx-text-fill: " + COLOR_NEON_YELLOW + "; -fx-font-weight: bold; -fx-cursor: hand;");
         
         reviewBtn.setOnAction(e -> {
             try {
@@ -273,20 +275,19 @@ public class DashboardController implements Initializable {
 
         buttonBox.getChildren().addAll(launchBtn, reviewBtn);
 
-        
         VBox gameBox = new VBox(5.0);
         gameBox.setAlignment(Pos.CENTER);
         VBox.setMargin(gameBox, new Insets(0, 10.0, 15.0, 10.0));
         
         if (elemento.isCompletato()) {
             Label lblCompletato = new Label("COMPLETATO ✔");
-            lblCompletato.setTextFill(Color.web("#39ff14"));
+            lblCompletato.setTextFill(Color.web(COLOR_NEON_GREEN));
             lblCompletato.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, 14));
-            lblCompletato.setEffect(new DropShadow(5, Color.web("#39ff14")));
+            lblCompletato.setEffect(new DropShadow(5, Color.web(COLOR_NEON_GREEN)));
             gameBox.getChildren().add(lblCompletato);
         } else {
             Button btnCompleta = new Button("COMPLETA (" + gioco.getExpFornita() + " XP)");
-            btnCompleta.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-text-fill: #00ffff; -fx-cursor: hand; -fx-border-radius: 5;");
+            btnCompleta.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_NEON_CYAN + "; -fx-text-fill: " + COLOR_NEON_CYAN + "; -fx-cursor: hand; -fx-border-radius: 5;");
             btnCompleta.setOnAction(e -> {
                 Utente uCorrente = Sessione.getIstanza().getUtenteCorrente();
                 boolean successo = libreriaControl.completaGioco(uCorrente, gioco);
@@ -306,9 +307,8 @@ public class DashboardController implements Initializable {
         return card;
     }
 
-
     private VBox creaCardGioco(Videogioco gioco, boolean modalitaNegozio) {
-        String neonColor = modalitaNegozio ? "#00ffff" : "#39ff14"; 
+        String neonColor = modalitaNegozio ? COLOR_NEON_CYAN : COLOR_NEON_GREEN; 
 
         VBox card = new VBox();
         card.setAlignment(Pos.CENTER);
@@ -316,7 +316,7 @@ public class DashboardController implements Initializable {
         card.setPrefWidth(200.0);
         card.setSpacing(15.0);
         card.setPadding(new Insets(15.0, 0, 0, 0));
-        card.setStyle("-fx-background-color: #000000; -fx-border-color: " + neonColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        card.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + neonColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
         
         DropShadow ombra = new DropShadow();
         ombra.setColor(Color.web(neonColor));
@@ -353,7 +353,7 @@ public class DashboardController implements Initializable {
             Button buyBtn = new Button(getTesto("dashboard.buy.info"));
             buyBtn.setMaxWidth(Double.MAX_VALUE);
             buyBtn.setPrefHeight(35.0);
-            buyBtn.setStyle("-fx-background-color: #000000; -fx-border-color: #00ffff; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #00ffff; -fx-font-weight: bold; -fx-cursor: hand;");
+            buyBtn.setStyle("-fx-background-color: " + COLOR_BG_BLACK + "; -fx-border-color: " + COLOR_NEON_CYAN + "; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: " + COLOR_NEON_CYAN + "; -fx-font-weight: bold; -fx-cursor: hand;");
             VBox.setMargin(buyBtn, new Insets(0, 20.0, 15.0, 20.0));
             
             buyBtn.setOnAction(e -> {
