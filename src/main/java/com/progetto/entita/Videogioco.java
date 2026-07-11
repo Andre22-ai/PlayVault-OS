@@ -14,31 +14,38 @@ public class Videogioco {
     private String genere;
     private int annoUscita;
     private String sviluppatore;
-    private String descrizioneEn;
+    
+    // Invertite per ordine logico
     private String descrizioneIt;
+    private String descrizioneEn;
+    private int expFornita = 50; 
 
     public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizione) {
         this(titolo, genere, annoUscita, sviluppatore, descrizione, descrizione);
     }
 
-    public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizioneEn, String descrizioneIt) {
+    // FIX: Allineato l'ordine dei parametri a quello del DAO e Controller (Prima IT, poi EN)
+    public Videogioco(String titolo, String genere, int annoUscita, String sviluppatore, String descrizioneIt, String descrizioneEn) {
         this.titolo = titolo;
         this.genere = genere;
         this.annoUscita = annoUscita;
         this.sviluppatore = sviluppatore;
-        this.descrizioneEn = descrizioneEn;
         this.descrizioneIt = descrizioneIt;
+        this.descrizioneEn = descrizioneEn;
     }
 
-    // Getter e Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    
     public String getTitolo() { return titolo; }
     public void setTitolo(String titolo) { this.titolo = titolo; }
+    
     public String getGenere() { return genere; }
     public void setGenere(String genere) { this.genere = genere; }
+    
     public int getAnnoUscita() { return annoUscita; }
     public void setAnnoUscita(int annoUscita) { this.annoUscita = annoUscita; }
+    
     public String getSviluppatore() { return sviluppatore; }
     public void setSviluppatore(String sviluppatore) { this.sviluppatore = sviluppatore; }
 
@@ -53,8 +60,6 @@ public class Videogioco {
         return descrizioneEn != null && !descrizioneEn.isBlank() ? descrizioneEn : descrizioneIt;
     }
 
-    private int expFornita = 50; 
-
     public int getExpFornita() {
         return expFornita;
     }
@@ -68,12 +73,13 @@ public class Videogioco {
     }
 
     public void setDescrizione(String descrizione) {
-        this.descrizioneEn = descrizione;
         this.descrizioneIt = descrizione;
+        this.descrizioneEn = descrizione;
     }
 
     public String getDescrizioneEn() { return descrizioneEn; }
     public void setDescrizioneEn(String descrizioneEn) { this.descrizioneEn = descrizioneEn; }
+    
     public String getDescrizioneIt() { return descrizioneIt; }
     public void setDescrizioneIt(String descrizioneIt) { this.descrizioneIt = descrizioneIt; }
 }

@@ -309,10 +309,15 @@ public class CliEngine {
     private void visualizzaClassifica() {
         System.out.println("\n=== HALL OF FAME ===");
         List<Utente> topPlayers = classificaControl.ottieniTopPlayers();
+        
         if (topPlayers == null || topPlayers.isEmpty()) {
             System.out.println("Nessun utente in classifica.");
             return;
         }
+
+        // --- FIX: ORDINAMENTO IN BASE ALL'ESPERIENZA (Dal più alto al più basso) ---
+        topPlayers.sort((u1, u2) -> Integer.compare(u2.getEsperienza(), u1.getEsperienza()));
+
         int rank = 1;
         for (Utente u : topPlayers) {
             String medaglia = switch (rank) {
@@ -321,8 +326,11 @@ public class CliEngine {
                 case 3 -> "🥉";
                 default -> "👤";
             };
-            System.out.println(String.format("%s %d° | %-15s | Livello: %-3d | %-4d CR", 
-                medaglia, rank, u.getUsername().toUpperCase(), (u.getCrediti() / 2), u.getCrediti()));
+
+            // --- FIX: USO DEI METODI UFFICIALI DELL'ENTITA' UTENTE ---
+            System.out.println(String.format("%s %d° | %-15s | Lvl: %-3d | Exp: %-5d | %-4d CR", 
+                medaglia, rank, u.getUsername().toUpperCase(), u.getLivello(), u.getEsperienza(), u.getCrediti()));
+            
             rank++;
         }
         System.out.println();
@@ -389,11 +397,17 @@ public class CliEngine {
         String anno = scanner.nextLine().trim();
         System.out.print("Sviluppatore: ");
         String dev = scanner.nextLine().trim();
-        System.out.print("Breve descrizione: ");
-        String desc = scanner.nextLine().trim();
-
+        
+        // --- FIX: Chiediamo entrambe le descrizioni ---
+        System.out.print("Descrizione (Italiano): ");
+        String descIt = scanner.nextLine().trim();
+        
+        System.out.print("Descrizione (English): ");
+        String descEn = scanner.nextLine().trim();
+        
         try {
-            catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, desc);
+            // --- FIX: Passiamo entrambi i testi al Control ---
+            catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, descIt, descEn);
             System.out.println(MSG_OK + "Gioco aggiunto con successo al database!");
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
             System.out.println(MSG_ERRORE + e.getMessage());

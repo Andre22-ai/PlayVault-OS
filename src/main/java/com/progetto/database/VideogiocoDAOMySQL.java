@@ -58,25 +58,26 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
     @Override
     public List<Videogioco> recuperaTutti() {
         List<Videogioco> catalogo = new ArrayList<>();
-        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en, exp_fornita FROM videogiochi";
+        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione_it, descrizione_en, exp_fornita FROM videogiochi WHERE visibile = true";
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                String titolo = rs.getString("titolo");
-                String descrizioneIt = rs.getString("descrizione_it");
-                String descrizioneEn = rs.getString("descrizione_en");
-                String[] descrizioni = descrizioniPerTitolo(titolo, descrizioneIt, descrizioneEn);
+                String descIt = rs.getString("descrizione_it");
+                String descEn = rs.getString("descrizione_en");
+                
+                // Creiamo l'oggetto usando direttamente i dati del DB, proteggendoci da eventuali null
                 Videogioco gioco = new Videogioco(
-                    titolo,
+                    rs.getString("titolo"),
                     rs.getString("genere"),
                     rs.getInt("anno_uscita"),
                     rs.getString("sviluppatore"),
-                    descrizioni[0],
-                    descrizioni[1]
+                    descIt != null ? descIt : "",
+                    descEn != null ? descEn : ""
                 );
+                
                 gioco.setId(rs.getInt("id_gioco"));
                 gioco.setExpFornita(rs.getInt("exp_fornita")); 
                 catalogo.add(gioco);
@@ -94,24 +95,26 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
 
     private List<Videogioco> recuperaTuttiCompatibili() {
         List<Videogioco> catalogo = new ArrayList<>();
-        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione FROM videogiochi";
+        String query = "SELECT id_gioco, titolo, genere, anno_uscita, sviluppatore, descrizione FROM videogiochi WHERE visibile = true";
 
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                String titolo = rs.getString("titolo");
-                String descrizioneDb = rs.getString("descrizione");
-                String[] descrizioni = descrizioniPerTitolo(titolo, descrizioneDb, null);
+                String descDb = rs.getString("descrizione");
+                String descSicura = descDb != null ? descDb : "";
+                
+                // Nel DB compatibile abbiamo una sola colonna, la usiamo per entrambe le lingue
                 Videogioco gioco = new Videogioco(
-                    titolo,
+                    rs.getString("titolo"),
                     rs.getString("genere"),
                     rs.getInt("anno_uscita"),
                     rs.getString("sviluppatore"),
-                    descrizioni[0],
-                    descrizioni[1]
+                    descSicura,
+                    descSicura
                 );
+                
                 gioco.setId(rs.getInt("id_gioco"));
                 catalogo.add(gioco);
             }
@@ -122,27 +125,20 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
         return catalogo;
     }
 
-    private String[] descrizioniPerTitolo(String titolo, String descrizioneIt, String descrizioneEn) {
-        if (titolo == null) return new String[]{"", ""};
-
-        return switch (titolo.toLowerCase()) {
-            case "cyberpunk 2077" -> new String[]{
-                "Step into Night City, where chrome, corruption, and destiny collide in a neon-soaked future ruled by power and secrets.",
-                "Entra in Night City, dove chrome, corruzione e destino si scontrano in un futuro neon dominato da potere e segreti."
-            };
-            case "hollow knight" -> new String[]{
-                "A haunting journey through a ruined kingdom where every corridor hides a secret and every defeat sharpens your resolve.",
-                "Un viaggio inquietante attraverso un regno in rovina dove ogni corridoio nasconde un segreto e ogni sconfitta affila la tua determinazione."
-            };
-            case "elden ring" -> new String[]{
-                "Traverse the Lands Between and forge your legend as the next Elden Lord in a world of myth, ruin, and ancient power.",
-                "Attraversa l'Interregno e forgia la tua leggenda come il prossimo Lord Ancestrale in un mondo di mito, rovina e antico potere."
-            };
-            default -> new String[]{
-                descrizioneEn != null && !descrizioneEn.isBlank() ? descrizioneEn : descrizioneIt,
-                descrizioneIt != null && !descrizioneIt.isBlank() ? descrizioneIt : descrizioneEn
-            };
-        };
+    @Override
+    public boolean nascondiGiocoDalCatalogo(int idGioco) {
+        String query = "UPDATE videogiochi SET visibile = false WHERE id_gioco = ?";
+        
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+             
+            stmt.setInt(1, idGioco);
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'operazione di rimozione logica (Soft Delete)", e);
+            return false;
+        }
     }
 
     private boolean colonnaMancante(SQLException e) {

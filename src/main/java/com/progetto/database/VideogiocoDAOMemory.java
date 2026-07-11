@@ -26,24 +26,24 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
             "RPG",
             2020,
             "CD Projekt RED",
-            "Step into Night City, where chrome, corruption, and destiny collide in a neon-soaked future ruled by power and secrets.",
-            "Entra in Night City, dove chrome, corruzione e destino si scontrano in un futuro neon dominato da potere e segreti."
+            "Entra in Night City, dove chrome, corruzione e destino si scontrano in un futuro neon dominato da potere e segreti.",
+            "Step into Night City, where chrome, corruption, and destiny collide in a neon-soaked future ruled by power and secrets."
         ));
         aggiungiGiocoDemo(new Videogioco(
             "Hollow Knight",
             "Metroidvania",
             2017,
             "Team Cherry",
-            "A haunting journey through a ruined kingdom where every corridor hides a secret and every defeat sharpens your resolve.",
-            "Un viaggio inquietante attraverso un regno in rovina dove ogni corridoio nasconde un segreto e ogni sconfitta affila la tua determinazione."
+            "Un viaggio inquietante attraverso un regno in rovina dove ogni corridoio nasconde un segreto e ogni sconfitta affila la tua determinazione.",
+            "A haunting journey through a ruined kingdom where every corridor hides a secret and every defeat sharpens your resolve."
         ));
         aggiungiGiocoDemo(new Videogioco(
             "Elden Ring",
             "Souls-like",
             2022,
             "FromSoftware",
-            "Traverse the Lands Between and forge your legend as the next Elden Lord in a world of myth, ruin, and ancient power.",
-            "Attraversa l'Interregno e forgia la tua leggenda come il prossimo Lord Ancestrale in un mondo di mito, rovina e antico potere."
+            "Attraversa l'Interregno e forgia la tua leggenda come il prossimo Lord Ancestrale in un mondo di mito, rovina e antico potere.",
+            "Traverse the Lands Between and forge your legend as the next Elden Lord in a world of myth, ruin, and ancient power."
         ));
     }
 
@@ -74,5 +74,13 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
         
         catalogoInMemoria.add(gioco);
         return true;
+    }
+
+    // --- NUOVO METODO: Implementazione per l'interfaccia DAO ---
+    @Override
+    public boolean nascondiGiocoDalCatalogo(int idGioco) {
+        // Rimuove l'oggetto dalla lista in memoria, simulando il soft-delete
+        // (Il gioco non verrà più restituito da recuperaTutti)
+        return catalogoInMemoria.removeIf(gioco -> gioco.getId() == idGioco);
     }
 }

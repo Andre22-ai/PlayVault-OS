@@ -24,8 +24,8 @@ public class LibreriaDAOMySQL implements LibreriaDAO {
     private static final String COL_SVILUPPATORE = "sviluppatore";
     
     // Costante per la parte finale della query ripetuta 4 volte
-    private static final String QUERY_JOIN_BASE = "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ?";
-
+// Costante per la parte finale della query ripetuta 4 volte
+    private static final String QUERY_JOIN_BASE = "FROM videogiochi v JOIN libreria l ON v.id_gioco = l.id_gioco WHERE l.username = ? AND v.visibile = true";
     @Override
     public boolean verificaPossesso(String username, int idGioco) {
         String query = "SELECT id_gioco FROM libreria WHERE username = ? AND id_gioco = ?";
