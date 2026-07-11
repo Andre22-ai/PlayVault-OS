@@ -189,3 +189,27 @@
     -fx-border-width: 2;
     -fx-cursor: hand;
 }
+
+/* --- STILI PER LE COPERTINE MINIMAL --- */
+.cover-base {
+    -fx-text-fill: white;
+    -fx-font-size: 45px; /* Rimpicciolito un po' per far entrare 2 icone */
+    -fx-alignment: center;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2;
+    
+    /* --- FIX EMOJI: Forza JavaFX a usare i font delle emoji di Windows/Mac --- */
+    -fx-font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* Colori dinamici in base al genere */
+.cover-action { -fx-background-color: #ff3333; }
+.cover-rpg { -fx-background-color: #3333ff; }
+.cover-sports { -fx-background-color: #33cc33; }
+.cover-shooter { -fx-background-color: #ff9900; }
+.cover-racing { -fx-background-color: #cccc00; }
+.cover-strategy { -fx-background-color: #00cccc; }
+.cover-horror { -fx-background-color: #4a0000; }
+.cover-default { -fx-background-color: #4a235a; }

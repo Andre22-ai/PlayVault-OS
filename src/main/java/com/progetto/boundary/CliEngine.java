@@ -25,10 +25,7 @@ import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
 import com.progetto.utils.GestoreLingua;
 
-/**
- * Motore della CLI per PLAYVAULT.
- * Compatibile con Java 11 (senza switch expressions).
- */
+
 @SuppressWarnings("java:S106")
 public class CliEngine {
 

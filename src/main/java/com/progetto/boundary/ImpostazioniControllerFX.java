@@ -37,6 +37,7 @@ public class ImpostazioniControllerFX {
     }
 
     @FXML
+    @SuppressWarnings("unused")
     private void initialize() {
         aggiornaInterfaccia();
     }
@@ -104,12 +105,12 @@ public class ImpostazioniControllerFX {
 
     @FXML
     @SuppressWarnings("unused")
-    private void tornaAllaDashboard() {
+    private void tornaAllaDashboard() { // <- IL NOME DEVE RIMANERE QUESTO PER L'FXML!
         try {
-            App.setRoot("dashboard");
+            // Ma dentro usiamo la memoria intelligente che abbiamo creato:
+            App.tornaIndietro(); 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Errore nel ritorno alla dashboard", e);
-            mostraAlertErrore(e.getMessage());
+            e.printStackTrace();
         }
     }
 

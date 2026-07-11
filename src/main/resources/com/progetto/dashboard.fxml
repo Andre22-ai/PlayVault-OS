@@ -45,7 +45,7 @@
             
             <Region HBox.hgrow="ALWAYS" />
             
-            <Button mnemonicParsing="false" onAction="#esciDalGioco" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #ff00ff; -fx-font-weight: bold; -fx-cursor: hand;" text="EJECT (LOGOUT)">
+            <Button mnemonicParsing="false" onAction="#esciDalGioco" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-border-radius: 20; -fx-background-radius: 20; -fx-text-fill: #ff00ff; -fx-font-weight: bold; -fx-cursor: hand;" text="%bottone.logout">
                <font>
                   <Font name="Consolas Bold" size="14.0" />
                </font>
@@ -96,7 +96,7 @@
                </font>
             </Button>
             
-            <Button fx:id="reviewsButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#apriMieRecensioni" prefHeight="60.0" style="-fx-background-color: #000000; -fx-border-color: #ffea00; -fx-border-width: 2; -fx-text-fill: #ffea00; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-weight: bold; -fx-cursor: hand;" text="MY REVIEWS">
+            <Button fx:id="reviewsButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#apriMieRecensioni" prefHeight="60.0" style="-fx-background-color: #000000; -fx-border-color: #ffea00; -fx-border-width: 2; -fx-text-fill: #ffea00; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-weight: bold; -fx-cursor: hand;" text="%bottone.menu_recensioni">
                <font>
                   <Font name="Consolas Bold" size="16.0" />
                </font>

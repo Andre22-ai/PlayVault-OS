@@ -1,6 +1,7 @@
 package com.progetto.boundary;
 
 import com.progetto.entita.Utente;
+import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -15,7 +16,12 @@ public class CardClassificaController {
 
     public void setDati(Utente u, int rank) {
         nameLbl.setText(u.getUsername().toUpperCase());
-        creditsLbl.setText(u.getCrediti() + " CR");
+        
+        // --- FIX: Mostriamo il Livello al posto dei crediti ---
+        String prefissoLivello = GestoreLingua.getIstanza().get("card.classifica.livello");
+        
+        // Mantengo la variabile creditsLbl perché è così che si chiama nel tuo file FXML
+        creditsLbl.setText(prefissoLivello + " " + u.getLivello());
 
         // Applichiamo stile e icona in base alla posizione in classifica
         switch (rank) {

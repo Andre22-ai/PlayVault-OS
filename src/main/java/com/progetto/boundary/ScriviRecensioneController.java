@@ -9,6 +9,7 @@ import com.progetto.entita.Sessione;
 import com.progetto.entita.Videogioco;
 import com.progetto.exceptions.RecensioneInvalidaException;
 import com.progetto.exceptions.SalvataggioFallitoException;
+import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -26,13 +27,11 @@ public class ScriviRecensioneController {
 
     private Videogioco giocoDaRecensire;
     
-    
     private final RecensioneControl recensioneControl;
     
     private boolean modalitaModifica = false; 
 
     public ScriviRecensioneController() {
-        
         this.recensioneControl = new RecensioneControl(App.getRecensioneDAO(), App.getUtenteDAO());
     }
 
@@ -44,17 +43,23 @@ public class ScriviRecensioneController {
 
     public void setGioco(Videogioco gioco) {
         this.giocoDaRecensire = gioco;
-        titoloGiocoLabel.setText("TARGET: " + gioco.getTitolo());
+        
+        // --- FIX LINGUA: Traduzione del prefisso TARGET ---
+        String testoTarget = GestoreLingua.getIstanza().get("card.recensione.target");
+        titoloGiocoLabel.setText(testoTarget + ": " + gioco.getTitolo());
     }
 
     public void setRecensioneDaModificare(Recensione r) {
         this.modalitaModifica = true;
         
-        
         this.giocoDaRecensire = new Videogioco(r.getNomeGioco(), "", 0, "", "");
         this.giocoDaRecensire.setId(r.getIdGioco());
         
-        titoloGiocoLabel.setText("TARGET: " + r.getNomeGioco() + " (EDIT MODE)");
+        // --- FIX LINGUA: Traduzione del prefisso TARGET e (EDIT MODE) ---
+        String testoTarget = GestoreLingua.getIstanza().get("card.recensione.target");
+        String testoEdit = GestoreLingua.getIstanza().get("recensione.edit_mode");
+        titoloGiocoLabel.setText(testoTarget + ": " + r.getNomeGioco() + " " + testoEdit);
+        
         votoCombo.setValue(r.getVoto()); 
         commentoArea.setText(r.getCommento()); 
     }
@@ -64,7 +69,7 @@ public class ScriviRecensioneController {
     private void inviaRecensione() throws IOException {
         String testo = commentoArea.getText().trim();
         if (testo.isEmpty()) {
-            mostraAlert("WARNING", "Il log di sistema (commento) non può essere vuoto!");
+            mostraAlert("WARNING", GestoreLingua.getIstanza().get("alert.recensione.vuota"));
             return;
         }
 
@@ -75,15 +80,15 @@ public class ScriviRecensioneController {
         if (modalitaModifica) {
             boolean successo = recensioneControl.modificaRecensionePersonale(r);
             if (successo) {
-                mostraAlert("SYSTEM UPDATED", "Log modificato con successo. Nessun credito extra erogato.");
+                mostraAlert("SYSTEM UPDATED", GestoreLingua.getIstanza().get("alert.recensione.modificata"));
                 App.setRoot(VIEW_DASHBOARD); 
             } else {
-                mostraAlert("ERROR", "Impossibile modificare il log.");
+                mostraAlert("ERROR", GestoreLingua.getIstanza().get("alert.recensione.errore"));
             }
         } else {
             try {
                 recensioneControl.elaboraRecensione(r);
-                mostraAlert("REWARD UNLOCKED", "Recensione acquisita nei server. Hai guadagnato +15 CREDITS!");
+                mostraAlert("REWARD UNLOCKED", GestoreLingua.getIstanza().get("alert.recensione.successo"));
                 App.setRoot(VIEW_DASHBOARD);
             } catch (RecensioneInvalidaException | SalvataggioFallitoException e) {
                 mostraAlert("ACCESS DENIED", e.getMessage());
@@ -94,7 +99,7 @@ public class ScriviRecensioneController {
     @FXML
     @SuppressWarnings("unused")
     private void annulla() throws IOException { 
-        App.setRoot(VIEW_DASHBOARD); 
+        App.tornaIndietro(); 
     }
 
     private void mostraAlert(String titolo, String msg) {

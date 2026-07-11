@@ -3,6 +3,7 @@ package com.progetto.boundary;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,9 @@ public class DashboardController implements Initializable {
 
     private final LibreriaControl libreriaControl;
     private final RecensioneControl recensioneControl;
+    // 0 = Libreria, 1 = Catalogo, 2 = Recensioni
+    private static int tabAttivo = 0;
+    public static Videogioco giocoApertoInDettaglio = null;
 
     public DashboardController() {
         this.libreriaControl = new LibreriaControl(App.getVideogiocoDAO(), App.getLibreriaDAO());
@@ -53,15 +57,24 @@ public class DashboardController implements Initializable {
             creditsLabel.setText(getTesto("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
         }
         aggiornaTesti();
-        apriLibreria(); // Apre la libreria di default
+        
+        // --- FIX: Riapre l'ultima sezione visitata! ---
+        if (tabAttivo == 1) {
+            apriCatalogoAcquisti();
+        } else if (tabAttivo == 2) {
+            apriMieRecensioni();
+        } else {
+            apriLibreria();
+        }
     }
 
     private void aggiornaTesti() {
         GestoreLingua lingua = GestoreLingua.getIstanza();
-        if (libraryButton != null) libraryButton.setText(lingua.get("dashboard.library").toUpperCase());
-        if (catalogButton != null) catalogButton.setText(lingua.get("dashboard.catalog").toUpperCase());
-        if (reviewsButton != null) reviewsButton.setText(lingua.get("dashboard.reviews").toUpperCase());
-        if (settingsButton != null) settingsButton.setText(lingua.get("dashboard.settings").toUpperCase());
+        if (libraryButton != null) libraryButton.setText(lingua.get("bottone.libreria").toUpperCase());
+        if (catalogButton != null) catalogButton.setText(lingua.get("bottone.aggiungi_gioco").toUpperCase());
+        if (reviewsButton != null) reviewsButton.setText(lingua.get("bottone.menu_recensioni").toUpperCase());
+        if (settingsButton != null) settingsButton.setText(lingua.get("bottone.impostazioni").toUpperCase());
+        
         if (creditsLabel != null && Sessione.getIstanza().getUtenteCorrente() != null) {
             creditsLabel.setText(lingua.get("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
         }
@@ -73,6 +86,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void apriLibreria() {
+        tabAttivo = 0;
         LOGGER.info("[BOUNDARY] Switch -> MY LIBRARY (Owned Games)");
         catalogoPane.getChildren().clear();
         
@@ -81,15 +95,22 @@ public class DashboardController implements Initializable {
         
         if (miaLibreria.isEmpty()) {
             Label vuotoLbl = new Label(getTesto("dashboard.empty.library"));
-            // Questo stile inline minimale va bene per i messaggi vuoti
             vuotoLbl.setStyle("-fx-text-fill: #ff00ff; -fx-font-family: Consolas; -fx-font-weight: bold; -fx-font-size: 16px;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
         }
 
+        Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+
         for (ElementoLibreria elemento : miaLibreria) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_libreria.fxml"));
+                
+                // --- FIX LINGUA: Iniezione del bundle prima del load ---
+                loader.setResources(bundle);
+                // -------------------------------------------------------
+                
                 VBox card = loader.load();
                 
                 CardLibreriaController miniController = loader.getController();
@@ -105,14 +126,23 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void apriCatalogoAcquisti() {
+        tabAttivo = 1;
         LOGGER.info("[BOUNDARY] Switch -> ADD GAME (Store / Global Catalogue)");
         catalogoPane.getChildren().clear();
         
         List<Videogioco> catalogoModello = libreriaControl.ottieniCatalogoCompleto();
         
+        Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+
         for (Videogioco gioco : catalogoModello) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_negozio.fxml"));
+                
+                // --- FIX LINGUA: Iniezione del bundle prima del load ---
+                loader.setResources(bundle);
+                // -------------------------------------------------------
+                
                 VBox card = loader.load();
                 
                 CardNegozioController miniController = loader.getController();
@@ -128,9 +158,9 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void apriMieRecensioni() {
+        tabAttivo = 2;
         LOGGER.info("[BOUNDARY] Switch -> MY REVIEWS (Personal Logs)");
         catalogoPane.getChildren().clear();
-        
         String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
         List<Recensione> mieRecensioni = recensioneControl.ottieniRecensioniPersonali(username);
         
@@ -141,9 +171,17 @@ public class DashboardController implements Initializable {
             return;
         }
 
+        Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+
         for (Recensione r : mieRecensioni) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_recensione.fxml"));
+                
+                // --- FIX LINGUA: Iniezione del bundle prima del load ---
+                loader.setResources(bundle);
+                // -------------------------------------------------------
+                
                 VBox card = loader.load();
                 
                 CardRecensioneController miniController = loader.getController();

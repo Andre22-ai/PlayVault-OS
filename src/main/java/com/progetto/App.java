@@ -20,6 +20,11 @@ public class App extends Application {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private static Scene scene;
 
+    // --- NUOVO: Variabili per la cronologia delle schermate ---
+    private static String schermataPrecedente = "";
+    private static String schermataCorrente = "selettore_db";
+    // ----------------------------------------------------------
+
     private static UtenteDAO utenteDAOScelto;
     private static VideogiocoDAO videogiocoDAOScelto;
     private static LibreriaDAO libreriaDAOScelto;
@@ -63,11 +68,36 @@ public class App extends Application {
     }
 
     public static void setRoot(String fxml) throws IOException {
+        // --- NUOVO: Salviamo la storia prima di cambiare pagina ---
+        schermataPrecedente = schermataCorrente;
+        schermataCorrente = fxml;
+        // ----------------------------------------------------------
+        
         scene.setRoot(loadFXML(fxml));
     }
 
+    // --- NUOVO: Metodo per tornare indietro in automatico ---
+    public static void tornaIndietro() throws IOException {
+        if (!schermataPrecedente.isEmpty()) {
+            // Cambiamo pagina senza aggiornare di nuovo la storia, 
+            // altrimenti rimaniamo bloccati in un loop infinito!
+            schermataCorrente = schermataPrecedente;
+            scene.setRoot(loadFXML(schermataPrecedente));
+        } else {
+            setRoot("dashboard"); // Fallback di sicurezza
+        }
+    }
+    // --------------------------------------------------------
+
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        
+        // --- FIX LINGUA: Passiamo il ResourceBundle all'FXMLLoader ---
+        java.util.Locale localeAttuale = com.progetto.utils.GestoreLingua.getIstanza().getLocaleCorrente();
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("messages", localeAttuale);
+        fxmlLoader.setResources(bundle);
+        // -------------------------------------------------------------
+        
         return fxmlLoader.load();
     }
 

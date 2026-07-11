@@ -27,7 +27,7 @@
 
    <Region VBox.vgrow="ALWAYS" />
 
-   <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#apriDettagliAcquisto" prefHeight="35.0" styleClass="btn-outline-ciano" text="INFO / BUY">
+   <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#apriDettagliAcquisto" prefHeight="35.0" styleClass="btn-outline-ciano" text="%bottone.info_buy">
       <VBox.margin><Insets bottom="5.0" left="10.0" right="10.0" /></VBox.margin>
    </Button>
 </VBox>

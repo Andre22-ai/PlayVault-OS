@@ -65,8 +65,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
     @Override
     public List<Utente> recuperaClassifica() {
         List<Utente> classifica = new ArrayList<>();
-        String query = "SELECT username, password, crediti, ruolo, esperienza FROM utenti WHERE ruolo = 'PLAYER' ORDER BY crediti DESC LIMIT 10";
-        
+        String query = "SELECT username, password, crediti, ruolo, esperienza FROM utenti WHERE ruolo = 'PLAYER' ORDER BY esperienza DESC LIMIT 10";        
         try (Connection conn = GestoreConnessione.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
@@ -81,7 +80,7 @@ public class UtenteDAOMySQL implements UtenteDAO {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "[DAO] Errore nel recupero della classifica globale", e);
         }
-        return classifica;
+        return classifica; 
     }
 
     @Override
