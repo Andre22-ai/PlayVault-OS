@@ -10,6 +10,7 @@ import com.progetto.entita.Videogioco;
 import com.progetto.exceptions.GiocoGiaPossedutoException;
 import com.progetto.exceptions.SaldoInsufficienteException;
 import com.progetto.exceptions.SalvataggioFallitoException;
+import com.progetto.utils.BadgeUtils;
 import com.progetto.utils.GestoreLingua;
 
 import javafx.fxml.FXML;
@@ -25,7 +26,6 @@ public class DettagliGiocoController {
 
     // --- MEMORIA GLOBALE PER IL GIOCO DA MOSTRARE ---
     public static Videogioco giocoInMemoria = null;
-    // ------------------------------------------------
 
     @FXML private Label titoloLabel;
     @FXML private Label devAnnoLabel;
@@ -47,10 +47,8 @@ public class DettagliGiocoController {
     }
 
     @FXML
-    @SuppressWarnings("unused")
     private void initialize() {
-        // Se c'è un gioco in memoria (perché siamo tornati indietro dalle impostazioni),
-        // lo ripristina automaticamente a schermo!
+        // Se c'è un gioco in memoria lo ripristina automaticamente a schermo!
         if (giocoInMemoria != null) {
             setGioco(giocoInMemoria);
         }
@@ -59,7 +57,7 @@ public class DettagliGiocoController {
 
     public void setGioco(Videogioco gioco) {
         this.giocoSelezionato = gioco;
-        giocoInMemoria = gioco; 
+        giocoInMemoria = gioco; // <-- Salva nella memoria statica!
         
         titoloLabel.setText(gioco.getTitolo());
         idLabel.setText("[ID: " + gioco.getId() + "]");
@@ -67,46 +65,13 @@ public class DettagliGiocoController {
         genereLabel.setText("CLASS: " + gioco.getGenere());
         descArea.setText(gioco.getDescrizioneLocale());
         
-        // --- NUOVA LOGICA BADGE MULTIPLI ---
+        // --- LOGICA BADGE (Gestita da BadgeUtils) ---
         coverLabel.setText("");
         coverLabel.getStyleClass().clear();
         coverLabel.setStyle("-fx-background-color: transparent; -fx-alignment: center;");
-        
-        javafx.scene.layout.HBox contenitoreIcone = new javafx.scene.layout.HBox(15);
-        contenitoreIcone.setAlignment(javafx.geometry.Pos.CENTER);
-        
-        String g = gioco.getGenere() != null ? gioco.getGenere().toUpperCase() : "";
-        boolean genereTrovato = false;
-        
-        if (g.contains("ACTION") || g.contains("AZIONE")) { contenitoreIcone.getChildren().add(creaMiniIcona("⚔️", "cover-action")); genereTrovato = true; }
-        if (g.contains("RPG") || g.contains("GDR") || g.contains("FANTASY")) { contenitoreIcone.getChildren().add(creaMiniIcona("🔮", "cover-rpg")); genereTrovato = true; }
-        if (g.contains("SPORT")) { contenitoreIcone.getChildren().add(creaMiniIcona("⚽", "cover-sports")); genereTrovato = true; }
-        if (g.contains("SHOOTER") || g.contains("SPARATUTTO")) { contenitoreIcone.getChildren().add(creaMiniIcona("🎯", "cover-shooter")); genereTrovato = true; }
-        if (g.contains("RACING") || g.contains("CORSE")) { contenitoreIcone.getChildren().add(creaMiniIcona("🏎️", "cover-racing")); genereTrovato = true; }
-        if (g.contains("STRATEGY") || g.contains("STRATEGIA")) { contenitoreIcone.getChildren().add(creaMiniIcona("♟️", "cover-strategy")); genereTrovato = true; }
-        if (g.contains("HORROR")) { contenitoreIcone.getChildren().add(creaMiniIcona("💀", "cover-horror")); genereTrovato = true; }
-        
-        if (!genereTrovato) {
-            contenitoreIcone.getChildren().add(creaMiniIcona("🎮", "cover-default"));
-        }
-        
-        coverLabel.setGraphic(contenitoreIcone);
-        // -----------------------------------
+        coverLabel.setGraphic(BadgeUtils.generaBadgeGeneri(gioco.getGenere()));
         
         aggiornaTesti();
-    }
-
-    // Aggiungi questo metodo in fondo alla classe
-    private Label creaMiniIcona(String icona, String classeCss) {
-        Label miniLabel = new Label(icona);
-        miniLabel.getStyleClass().addAll("cover-base", classeCss);
-        miniLabel.setPrefSize(70, 70);
-        miniLabel.setMinSize(70, 70);
-        miniLabel.setMaxSize(70, 70);
-        miniLabel.setStyle("-fx-font-size: 28px; -fx-padding: 0;"); 
-        miniLabel.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
-        miniLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        return miniLabel;
     }
 
     private void aggiornaTesti() {
@@ -147,7 +112,6 @@ public class DettagliGiocoController {
     private void apriImpostazioni() {
         LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni da Dettagli Gioco...");
         try {
-            // App sa che veniamo dai "dettagli_gioco" grazie a App.java
             App.setRoot("impostazioni");
         } catch (IOException e) {
              LOGGER.log(Level.SEVERE, "ERRORE CRITICO: Impossibile trovare il file impostazioni.fxml!", e);
@@ -157,11 +121,7 @@ public class DettagliGiocoController {
     @FXML
     @SuppressWarnings("unused")
     private void tornaAllaDashboard() throws IOException {
-        // Svuotiamo la memoria quando chiudiamo la card per evitare "fantasmi"
         giocoInMemoria = null; 
-        
-        // Torna alla Dashboard. La Dashboard leggerà il "tabAttivo" = 1 
-        // e ricaricherà automaticamente la tab "Aggiungi Gioco"!
         App.setRoot("dashboard");
     }
 
