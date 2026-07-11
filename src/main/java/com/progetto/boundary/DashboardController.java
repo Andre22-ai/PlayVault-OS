@@ -28,6 +28,9 @@ import javafx.scene.layout.VBox;
 public class DashboardController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(DashboardController.class.getName());
+    
+    // --- FIX S1192: Costante per la risorsa dei messaggi ---
+    private static final String BUNDLE_MESSAGGI = "messages";
 
     @FXML private FlowPane catalogoPane;
     @FXML private Label creditsLabel; 
@@ -39,6 +42,7 @@ public class DashboardController implements Initializable {
 
     private final LibreriaControl libreriaControl;
     private final RecensioneControl recensioneControl;
+    
     // 0 = Libreria, 1 = Catalogo, 2 = Recensioni
     private static int tabAttivo = 0;
     public static Videogioco giocoApertoInDettaglio = null;
@@ -46,6 +50,11 @@ public class DashboardController implements Initializable {
     public DashboardController() {
         this.libreriaControl = new LibreriaControl(App.getVideogiocoDAO(), App.getLibreriaDAO());
         this.recensioneControl = new RecensioneControl(App.getRecensioneDAO(), App.getUtenteDAO()); 
+    }
+
+    // --- FIX S2696: Metodo statico per modificare il campo statico in sicurezza ---
+    private static void impostaTabAttivo(int tab) {
+        tabAttivo = tab;
     }
 
     @Override
@@ -58,7 +67,7 @@ public class DashboardController implements Initializable {
         }
         aggiornaTesti();
         
-        // --- FIX: Riapre l'ultima sezione visitata! ---
+        // Riapre l'ultima sezione visitata!
         if (tabAttivo == 1) {
             apriCatalogoAcquisti();
         } else if (tabAttivo == 2) {
@@ -86,7 +95,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void apriLibreria() {
-        tabAttivo = 0;
+        impostaTabAttivo(0); // FIX S2696 applicato
         LOGGER.info("[BOUNDARY] Switch -> MY LIBRARY (Owned Games)");
         catalogoPane.getChildren().clear();
         
@@ -101,15 +110,12 @@ public class DashboardController implements Initializable {
         }
 
         Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_MESSAGGI, locale); // FIX S1192 applicato
 
         for (ElementoLibreria elemento : miaLibreria) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_libreria.fxml"));
-                
-                // --- FIX LINGUA: Iniezione del bundle prima del load ---
                 loader.setResources(bundle);
-                // -------------------------------------------------------
                 
                 VBox card = loader.load();
                 
@@ -126,22 +132,19 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void apriCatalogoAcquisti() {
-        tabAttivo = 1;
+        impostaTabAttivo(1); // FIX S2696 applicato
         LOGGER.info("[BOUNDARY] Switch -> ADD GAME (Store / Global Catalogue)");
         catalogoPane.getChildren().clear();
         
         List<Videogioco> catalogoModello = libreriaControl.ottieniCatalogoCompleto();
         
         Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_MESSAGGI, locale); // FIX S1192 applicato
 
         for (Videogioco gioco : catalogoModello) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_negozio.fxml"));
-                
-                // --- FIX LINGUA: Iniezione del bundle prima del load ---
                 loader.setResources(bundle);
-                // -------------------------------------------------------
                 
                 VBox card = loader.load();
                 
@@ -158,7 +161,7 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void apriMieRecensioni() {
-        tabAttivo = 2;
+        impostaTabAttivo(2); // FIX S2696 applicato
         LOGGER.info("[BOUNDARY] Switch -> MY REVIEWS (Personal Logs)");
         catalogoPane.getChildren().clear();
         String username = Sessione.getIstanza().getUtenteCorrente().getUsername();
@@ -172,15 +175,12 @@ public class DashboardController implements Initializable {
         }
 
         Locale locale = GestoreLingua.getIstanza().getLocaleCorrente();
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_MESSAGGI, locale); // FIX S1192 applicato
 
         for (Recensione r : mieRecensioni) {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_recensione.fxml"));
-                
-                // --- FIX LINGUA: Iniezione del bundle prima del load ---
                 loader.setResources(bundle);
-                // -------------------------------------------------------
                 
                 VBox card = loader.load();
                 

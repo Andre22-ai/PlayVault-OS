@@ -6,6 +6,11 @@ import javafx.scene.layout.HBox;
 
 public class BadgeUtils {
 
+    // --- FIX S1118: Costruttore privato per impedire l'istanza della classe ---
+    private BadgeUtils() {
+        throw new IllegalStateException("Classe di utilità: non può essere istanziata");
+    }
+
     // Metodo statico che fa tutto il lavoro "sporco"
     public static HBox generaBadgeGeneri(String genere) {
         HBox contenitoreIcone = new HBox(15);

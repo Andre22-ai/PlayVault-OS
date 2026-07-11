@@ -19,6 +19,10 @@ public class ImpostazioniControllerFX {
 
     private static final Logger LOGGER = Logger.getLogger(ImpostazioniControllerFX.class.getName());
 
+    // --- FIX S1192: Costanti per le stringhe ripetute delle classi CSS ---
+    private static final String CSS_LANG_SELECTED = "btn-lang-selected";
+    private static final String CSS_LANG_UNSELECTED = "btn-lang-unselected";
+
     @FXML private Button italianoButton;
     @FXML private Button englishButton;
     @FXML private PasswordField nuovaPasswordField;
@@ -71,8 +75,9 @@ public class ImpostazioniControllerFX {
                 mostraAlertErrore(getTesto("settings.password.error"));
             }
         } catch (Exception e) {
+            // FIX S4507: Log dell'errore nel terminale, alert generico all'utente
             LOGGER.log(Level.SEVERE, "Errore durante l'aggiornamento della password", e);
-            mostraAlertErrore(e.getMessage());
+            mostraAlertErrore("Si è verificato un errore imprevisto.");
         }
     }
 
@@ -96,8 +101,9 @@ public class ImpostazioniControllerFX {
                         mostraAlertErrore(getTesto("settings.delete.error"));
                     }
                 } catch (IOException e) {
-                    LOGGER.log(Level.SEVERE, "Errore durante l'eliminazione dell'account", e);
-                    mostraAlertErrore(e.getMessage());
+                    // FIX S4507: Log dell'errore nel terminale, alert generico all'utente
+                    LOGGER.log(Level.SEVERE, "Errore di navigazione durante l'eliminazione dell'account", e);
+                    mostraAlertErrore("Si è verificato un errore di sistema.");
                 }
             }
         });
@@ -105,12 +111,12 @@ public class ImpostazioniControllerFX {
 
     @FXML
     @SuppressWarnings("unused")
-    private void tornaAllaDashboard() { // <- IL NOME DEVE RIMANERE QUESTO PER L'FXML!
+    private void tornaAllaDashboard() { 
         try {
-            // Ma dentro usiamo la memoria intelligente che abbiamo creato:
             App.tornaIndietro(); 
         } catch (IOException e) {
-            e.printStackTrace();
+            // --- FIX S4507: Assicurato l'uso esclusivo del LOGGER al posto del printStackTrace ---
+            LOGGER.log(Level.SEVERE, "Errore critico durante la navigazione all'indietro", e);
         }
     }
 
@@ -129,13 +135,12 @@ public class ImpostazioniControllerFX {
         backButton.setText(lingua.get("menu.settings.back").toUpperCase());
         nuovaPasswordField.setPromptText(lingua.get("settings.password.prompt"));
 
-        // Rimuoviamo prima le classi esistenti per evitare conflitti
-        italianoButton.getStyleClass().removeAll("btn-lang-selected", "btn-lang-unselected");
-        englishButton.getStyleClass().removeAll("btn-lang-selected", "btn-lang-unselected");
+        // --- FIX S1192: Applicazione delle costanti CSS ---
+        italianoButton.getStyleClass().removeAll(CSS_LANG_SELECTED, CSS_LANG_UNSELECTED);
+        englishButton.getStyleClass().removeAll(CSS_LANG_SELECTED, CSS_LANG_UNSELECTED);
 
-        // Applichiamo la logica CSS
-        italianoButton.getStyleClass().add(italiano ? "btn-lang-selected" : "btn-lang-unselected");
-        englishButton.getStyleClass().add(italiano ? "btn-lang-unselected" : "btn-lang-selected");
+        italianoButton.getStyleClass().add(italiano ? CSS_LANG_SELECTED : CSS_LANG_UNSELECTED);
+        englishButton.getStyleClass().add(italiano ? CSS_LANG_UNSELECTED : CSS_LANG_SELECTED);
     }
 
     private String getTesto(String chiave) {

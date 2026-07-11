@@ -46,9 +46,13 @@ public class DettagliGiocoController {
         this.acquistoControl = new AcquistoControl(App.getLibreriaDAO());
     }
 
+    // --- FIX S2696: Metodo statico per modificare il campo statico in sicurezza ---
+    public static void impostaGiocoInMemoria(Videogioco gioco) {
+        giocoInMemoria = gioco;
+    }
+
     @FXML
     private void initialize() {
-        // Se c'è un gioco in memoria lo ripristina automaticamente a schermo!
         if (giocoInMemoria != null) {
             setGioco(giocoInMemoria);
         }
@@ -57,7 +61,9 @@ public class DettagliGiocoController {
 
     public void setGioco(Videogioco gioco) {
         this.giocoSelezionato = gioco;
-        giocoInMemoria = gioco; // <-- Salva nella memoria statica!
+        
+        // Uso il metodo statico invece di assegnare direttamente la variabile!
+        impostaGiocoInMemoria(gioco); 
         
         titoloLabel.setText(gioco.getTitolo());
         idLabel.setText("[ID: " + gioco.getId() + "]");
@@ -65,7 +71,6 @@ public class DettagliGiocoController {
         genereLabel.setText("CLASS: " + gioco.getGenere());
         descArea.setText(gioco.getDescrizioneLocale());
         
-        // --- LOGICA BADGE (Gestita da BadgeUtils) ---
         coverLabel.setText("");
         coverLabel.getStyleClass().clear();
         coverLabel.setStyle("-fx-background-color: transparent; -fx-alignment: center;");
@@ -121,7 +126,8 @@ public class DettagliGiocoController {
     @FXML
     @SuppressWarnings("unused")
     private void tornaAllaDashboard() throws IOException {
-        giocoInMemoria = null; 
+        // Uso il metodo statico per svuotare la memoria in modo sicuro
+        impostaGiocoInMemoria(null); 
         App.setRoot("dashboard");
     }
 
