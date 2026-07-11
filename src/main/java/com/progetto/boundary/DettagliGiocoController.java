@@ -12,6 +12,7 @@ import com.progetto.exceptions.SaldoInsufficienteException;
 import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.utils.BadgeUtils;
 import com.progetto.utils.GestoreLingua;
+import com.progetto.utils.UIUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -100,27 +101,24 @@ public class DettagliGiocoController {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText(null);
-            alert.setTitle(getTesto("details.alert.success"));
-            alert.setContentText(getTesto("details.purchase.success"));
+            // Utilizzo UIUtils per recuperare il testo della lingua
+            alert.setTitle(UIUtils.getTesto("details.alert.success"));
+            alert.setContentText(UIUtils.getTesto("details.purchase.success"));
             alert.showAndWait();
         } catch (GiocoGiaPossedutoException e) {
-            mostraAlert(getTesto("details.alert.warning"), e.getMessage());
+            mostraAlert(UIUtils.getTesto("details.alert.warning"), e.getMessage());
         } catch (SaldoInsufficienteException e) {
-            mostraAlert(getTesto("details.alert.access"), e.getMessage());
+            mostraAlert(UIUtils.getTesto("details.alert.access"), e.getMessage());
         } catch (SalvataggioFallitoException e) {
-            mostraAlert(getTesto("details.alert.error"), e.getMessage());
+            mostraAlert(UIUtils.getTesto("details.alert.error"), e.getMessage());
         }
     }
 
     @FXML
     @SuppressWarnings("unused")
     private void apriImpostazioni() {
-        LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni da Dettagli Gioco...");
-        try {
-            App.setRoot("impostazioni");
-        } catch (IOException e) {
-             LOGGER.log(Level.SEVERE, "ERRORE CRITICO: Impossibile trovare il file impostazioni.fxml!", e);
-        }
+        // Ridotto a una singola riga grazie alla classe UIUtils
+        UIUtils.navigaAImpostazioni();
     }
 
     @FXML
@@ -129,10 +127,6 @@ public class DettagliGiocoController {
         // Uso il metodo statico per svuotare la memoria in modo sicuro
         impostaGiocoInMemoria(null); 
         App.setRoot("dashboard");
-    }
-
-    private String getTesto(String chiave) {
-        return GestoreLingua.getIstanza().get(chiave);
     }
 
     private void mostraAlert(String titolo, String contenuto) {

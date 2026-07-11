@@ -16,6 +16,7 @@ import com.progetto.entita.Recensione;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Videogioco;
 import com.progetto.utils.GestoreLingua;
+import com.progetto.utils.UIUtils;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -63,7 +64,8 @@ public class DashboardController implements Initializable {
         
         if (Sessione.getIstanza().getUtenteCorrente() != null) {
             playerLabel.setText(Sessione.getIstanza().getUtenteCorrente().getUsername().toUpperCase());
-            creditsLabel.setText(getTesto("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
+            // Utilizzo della nuova classe utility per i testi
+            creditsLabel.setText(UIUtils.getTesto("dashboard.credits") + ": " + Sessione.getIstanza().getUtenteCorrente().getCrediti());
         }
         aggiornaTesti();
         
@@ -89,10 +91,6 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private String getTesto(String chiave) {
-        return GestoreLingua.getIstanza().get(chiave);
-    }
-
     @FXML
     private void apriLibreria() {
         impostaTabAttivo(0); // FIX S2696 applicato
@@ -103,7 +101,8 @@ public class DashboardController implements Initializable {
         List<ElementoLibreria> miaLibreria = libreriaControl.ottieniLibreriaCompleta(username);
         
         if (miaLibreria.isEmpty()) {
-            Label vuotoLbl = new Label(getTesto("dashboard.empty.library"));
+            // Utilizzo della nuova classe utility per i testi
+            Label vuotoLbl = new Label(UIUtils.getTesto("dashboard.empty.library"));
             vuotoLbl.setStyle("-fx-text-fill: #ff00ff; -fx-font-family: Consolas; -fx-font-weight: bold; -fx-font-size: 16px;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
@@ -168,7 +167,8 @@ public class DashboardController implements Initializable {
         List<Recensione> mieRecensioni = recensioneControl.ottieniRecensioniPersonali(username);
         
         if (mieRecensioni.isEmpty()) {
-            Label vuotoLbl = new Label(getTesto("dashboard.empty.reviews"));
+            // Utilizzo della nuova classe utility per i testi
+            Label vuotoLbl = new Label(UIUtils.getTesto("dashboard.empty.reviews"));
             vuotoLbl.setStyle("-fx-text-fill: #ffea00; -fx-font-family: Consolas; -fx-font-weight: bold; -fx-font-size: 16px;");
             catalogoPane.getChildren().add(vuotoLbl);
             return;
@@ -197,12 +197,8 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void apriImpostazioni() {
-        LOGGER.info("[BOUNDARY] Richiesta apertura Impostazioni (Bottone cliccato con successo)."); 
-        try {
-            App.setRoot("impostazioni");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "ERRORE CRITICO: Non trovo il file impostazioni.fxml!", e);
-        }
+        // Ridotto a una singola riga grazie alla classe UIUtils
+        UIUtils.navigaAImpostazioni();
     }
 
     @FXML
