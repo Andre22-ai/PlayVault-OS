@@ -37,10 +37,10 @@ public class CardNegozioController {
     @SuppressWarnings("unused")
     private void apriDettagliAcquisto() {
         try {
-            // 1. Salviamo il gioco nella memoria globale del dettaglio
-            DettagliGiocoController.giocoInMemoria = this.gioco;
+            // --- FIX S2696: Usiamo il metodo statico sicuro che abbiamo creato poco fa! ---
+            DettagliGiocoController.impostaGiocoInMemoria(this.gioco);
             
-            // 2. Usiamo App.setRoot per aggiornare la cronologia di navigazione
+            // Usiamo App.setRoot per aggiornare la cronologia di navigazione
             App.setRoot("dettagli_gioco");
             
         } catch (IOException ex) {
