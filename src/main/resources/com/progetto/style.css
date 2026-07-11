@@ -213,3 +213,85 @@
 .cover-strategy { -fx-background-color: #00cccc; }
 .cover-horror { -fx-background-color: #4a0000; }
 .cover-default { -fx-background-color: #4a235a; }
+
+/* =========================================
+   TEMA ADMIN TERMINAL (CYBERPUNK NEON)
+   ========================================= */
+
+.admin-root {
+    -fx-background-color: #0b0114;
+    -fx-border-color: #ff00ff;
+    -fx-border-width: 4;
+}
+
+.admin-title {
+    -fx-text-fill: #ff00ff;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+}
+
+.admin-label {
+    -fx-text-fill: #39ff14;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px; /* Etichette un po' più grandi */
+}
+
+.admin-label-danger {
+    -fx-text-fill: #ff0055;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Stile per TextField e TextArea verdi */
+.admin-input {
+    -fx-background-color: #000000;
+    -fx-control-inner-background: #000000; 
+    -fx-border-color: #39ff14;
+    -fx-text-fill: #39ff14;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 16px; /* Testo dell'input più grande */
+    -fx-padding: 8px 10px; /* Alza e allarga i riquadri */
+}
+
+/* Stile per la ComboBox rossa */
+.admin-input-danger {
+    -fx-background-color: #000000;
+    -fx-border-color: #ff0055;
+    -fx-text-fill: #ff0055;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 16px; /* Testo più grande */
+    -fx-padding: 8px 10px; /* Alza il riquadro */
+}
+
+/* --- BOTTONI ADMIN --- */
+
+/* Applichiamo font e padding a TUTTI i bottoni admin per farli belli cicciotti */
+.btn-admin-green, .btn-admin-magenta, .btn-admin-red {
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 16px; /* Testo dei bottoni più leggibile */
+    -fx-padding: 10px 20px; /* Gonfia i bottoni */
+    -fx-cursor: hand;
+}
+
+.btn-admin-green {
+    -fx-background-color: #39ff14;
+    -fx-text-fill: #000000;
+}
+.btn-admin-green:hover { -fx-background-color: #2ebc0f; }
+
+.btn-admin-magenta {
+    -fx-background-color: #ff00ff;
+    -fx-text-fill: #000000;
+    -fx-font-size: 18px; /* Il bottone UPLOAD è il principale, lo facciamo ancora più grande */
+    -fx-padding: 12px 20px;
+}
+.btn-admin-magenta:hover { -fx-background-color: #cc00cc; }
+
+.btn-admin-red {
+    -fx-background-color: #ff0055;
+    -fx-text-fill: #ffffff;
+}
+.btn-admin-red:hover { -fx-background-color: #cc0044; }
