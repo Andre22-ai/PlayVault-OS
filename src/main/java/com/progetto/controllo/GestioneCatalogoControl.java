@@ -75,4 +75,32 @@ public class GestioneCatalogoControl {
         
         return true;
     }
+
+    public void modificaGiocoEsistente(int idGioco, String titolo, String genere, String anno, String sviluppatore, String descIt, String descEn) throws SalvataggioFallitoException {
+        // Controllo base
+        if (titolo == null || titolo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il titolo non può essere vuoto.");
+        }
+        
+        // 1. Convertiamo l'anno da String a int (gestendo eventuali errori se l'admin scrive lettere)
+        int annoConvertito;
+        try {
+            annoConvertito = Integer.parseInt(anno);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("L'anno di uscita deve essere un numero valido.");
+        }
+        
+        // 2. Usiamo il costruttore ESATTO del tuo file Videogioco.java
+        Videogioco giocoModificato = new Videogioco(titolo, genere, annoConvertito, sviluppatore, descIt, descEn);
+        
+        // 3. Impostiamo l'ID del gioco da modificare usando il setter
+        giocoModificato.setId(idGioco); 
+        
+        // 4. Inviamo l'aggiornamento al database
+        boolean successo = videogiocoDAO.aggiornaGioco(giocoModificato);
+        
+        if (!successo) {
+            throw new SalvataggioFallitoException("Errore critico del database durante la sovrascrittura.");
+        }
+    }
 }

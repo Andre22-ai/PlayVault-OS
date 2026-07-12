@@ -68,7 +68,6 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
                 String descIt = rs.getString("descrizione_it");
                 String descEn = rs.getString("descrizione_en");
                 
-                // Creiamo l'oggetto usando direttamente i dati del DB, proteggendoci da eventuali null
                 Videogioco gioco = new Videogioco(
                     rs.getString("titolo"),
                     rs.getString("genere"),
@@ -105,7 +104,6 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
                 String descDb = rs.getString("descrizione");
                 String descSicura = descDb != null ? descDb : "";
                 
-                // Nel DB compatibile abbiamo una sola colonna, la usiamo per entrambe le lingue
                 Videogioco gioco = new Videogioco(
                     rs.getString("titolo"),
                     rs.getString("genere"),
@@ -137,6 +135,55 @@ public class VideogiocoDAOMySQL implements VideogiocoDAO {
             
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'operazione di rimozione logica (Soft Delete)", e);
+            return false;
+        }
+    }
+
+    // --- NUOVO METODO: AGGIORNAMENTO GIOCO ---
+    @Override
+    public boolean aggiornaGioco(Videogioco gioco) {
+        String query = "UPDATE videogiochi SET titolo = ?, genere = ?, anno_uscita = ?, sviluppatore = ?, descrizione_it = ?, descrizione_en = ? WHERE id_gioco = ?";
+        
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+             
+            stmt.setString(1, gioco.getTitolo());
+            stmt.setString(2, gioco.getGenere());
+            stmt.setInt(3, gioco.getAnnoUscita());
+            stmt.setString(4, gioco.getSviluppatore());
+            stmt.setString(5, gioco.getDescrizioneIt());
+            stmt.setString(6, gioco.getDescrizioneEn());
+            stmt.setInt(7, gioco.getId()); // WHERE id_gioco = ?
+            
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            if (colonnaMancante(e)) {
+                return aggiornaGiocoCompatibile(gioco);
+            }
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'aggiornamento del gioco", e);
+            return false;
+        }
+    }
+
+    // --- NUOVO METODO: AGGIORNAMENTO COMPATIBILE (Vecchio DB) ---
+    private boolean aggiornaGiocoCompatibile(Videogioco gioco) {
+        String query = "UPDATE videogiochi SET titolo = ?, genere = ?, anno_uscita = ?, sviluppatore = ?, descrizione = ? WHERE id_gioco = ?";
+        
+        try (Connection conn = GestoreConnessione.getConnessione();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+             
+            stmt.setString(1, gioco.getTitolo());
+            stmt.setString(2, gioco.getGenere());
+            stmt.setInt(3, gioco.getAnnoUscita());
+            stmt.setString(4, gioco.getSviluppatore());
+            stmt.setString(5, gioco.getDescrizioneLocale());
+            stmt.setInt(6, gioco.getId()); 
+            
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "[DAO] Errore durante l'aggiornamento compatibile", e);
             return false;
         }
     }

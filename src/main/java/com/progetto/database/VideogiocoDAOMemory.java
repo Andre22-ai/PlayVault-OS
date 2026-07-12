@@ -76,11 +76,35 @@ public class VideogiocoDAOMemory implements VideogiocoDAO {
         return true;
     }
 
-    // --- NUOVO METODO: Implementazione per l'interfaccia DAO ---
     @Override
     public boolean nascondiGiocoDalCatalogo(int idGioco) {
         // Rimuove l'oggetto dalla lista in memoria, simulando il soft-delete
         // (Il gioco non verrà più restituito da recuperaTutti)
         return catalogoInMemoria.removeIf(gioco -> gioco.getId() == idGioco);
+    }
+
+    // --- NUOVO METODO: Implementazione Update (Edit Mode) per il DB in Memoria ---
+    @Override
+    public boolean aggiornaGioco(Videogioco giocoAggiornato) {
+        if (giocoAggiornato == null) {
+            return false;
+        }
+        
+        // Cerca il gioco da modificare nella lista tramite l'ID
+        for (Videogioco giocoEsistente : catalogoInMemoria) {
+            if (giocoEsistente.getId() == giocoAggiornato.getId()) {
+                // Sovrascrive i campi con i nuovi dati
+                giocoEsistente.setTitolo(giocoAggiornato.getTitolo());
+                giocoEsistente.setGenere(giocoAggiornato.getGenere());
+                giocoEsistente.setAnnoUscita(giocoAggiornato.getAnnoUscita());
+                giocoEsistente.setSviluppatore(giocoAggiornato.getSviluppatore());
+                giocoEsistente.setDescrizioneIt(giocoAggiornato.getDescrizioneIt());
+                giocoEsistente.setDescrizioneEn(giocoAggiornato.getDescrizioneEn());
+                
+                return true; // Modifica avvenuta con successo
+            }
+        }
+        
+        return false; // Gioco non trovato
     }
 }

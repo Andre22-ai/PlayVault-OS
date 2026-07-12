@@ -2,6 +2,7 @@ package com.progetto;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 import com.progetto.database.LibreriaDAO;
@@ -20,10 +21,10 @@ public class App extends Application {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private static Scene scene;
 
-    // --- NUOVO: Variabili per la cronologia delle schermate ---
-    private static String schermataPrecedente = "";
+    // --- NUOVO SISTEMA DI MEMORIA A STACK (Infinita) ---
+    private static Stack<String> cronologia = new Stack<>();
     private static String schermataCorrente = "selettore_db";
-    // ----------------------------------------------------------
+    // ---------------------------------------------------
 
     private static UtenteDAO utenteDAOScelto;
     private static VideogiocoDAO videogiocoDAOScelto;
@@ -45,13 +46,12 @@ public class App extends Application {
     private static void inizializzaScena(Parent root) {
         scene = new Scene(root, 1000, 600);
         
-        // --- AGGANCIO DEL FOGLIO DI STILE GLOBALE (CSS) ---
         URL cssUrl = App.class.getResource("style.css");
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
             LOGGER.info("[SISTEMA] Foglio di stile globale (style.css) caricato con successo.");
         } else {
-            LOGGER.warning("[SISTEMA] Foglio di stile globale (style.css) NON TROVATO! Verifica che sia nella stessa cartella dei file FXML.");
+            LOGGER.warning("[SISTEMA] Foglio di stile globale (style.css) NON TROVATO!");
         }
     }
 
@@ -63,40 +63,51 @@ public class App extends Application {
         
         stage.setScene(scene);
         stage.setTitle("PLAYVAULT - Boot Sequence");
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 
+    /**
+     * Usa setRoot() per i cambi "brutali" senza ritorno (es. Logout, o fine Login).
+     * Svuota la memoria per impedire all'utente di tornare indietro.
+     */
     public static void setRoot(String fxml) throws IOException {
-        // --- NUOVO: Salviamo la storia prima di cambiare pagina ---
-        schermataPrecedente = schermataCorrente;
+        cronologia.clear(); // Azzera la memoria!
         schermataCorrente = fxml;
-        // ----------------------------------------------------------
-        
         scene.setRoot(loadFXML(fxml));
     }
 
-    // --- NUOVO: Metodo per tornare indietro in automatico ---
+    /**
+     * Usa cambiaSchermata() quando apri un menu e vuoi permettere 
+     * all'utente di tornare indietro con il tasto Back.
+     */
+    public static void cambiaSchermata(String fxml) throws IOException {
+        cronologia.push(schermataCorrente); // Salva la pagina in cui ci troviamo ora
+        schermataCorrente = fxml;           // Aggiorna la nuova destinazione
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    /**
+     * Metodo invocato dai tasti "Torna Indietro" nelle tue schermate.
+     */
     public static void tornaIndietro() throws IOException {
-        if (!schermataPrecedente.isEmpty()) {
-            // Cambiamo pagina senza aggiornare di nuovo la storia, 
-            // altrimenti rimaniamo bloccati in un loop infinito!
-            schermataCorrente = schermataPrecedente;
-            scene.setRoot(loadFXML(schermataPrecedente));
+        if (!cronologia.isEmpty()) {
+            String paginaPrecedente = cronologia.pop(); // Estrae l'ultima pagina salvata
+            schermataCorrente = paginaPrecedente;
+            scene.setRoot(loadFXML(paginaPrecedente));
         } else {
-            setRoot("dashboard"); // Fallback di sicurezza
+            // Se la memoria è vuota, usa un fallback d'emergenza
+            LOGGER.warning("Nessuna schermata in memoria, ricarico la dashboard.");
+            setRoot("dashboard"); // Assicurati che questo sia il nome corretto del tuo FXML principale
         }
     }
-    // --------------------------------------------------------
 
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         
-        // --- FIX LINGUA: Passiamo il ResourceBundle all'FXMLLoader ---
         java.util.Locale localeAttuale = com.progetto.utils.GestoreLingua.getIstanza().getLocaleCorrente();
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("messages", localeAttuale);
         fxmlLoader.setResources(bundle);
-        // -------------------------------------------------------------
         
         return fxmlLoader.load();
     }

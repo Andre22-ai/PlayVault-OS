@@ -210,6 +210,8 @@ public class DashboardController implements Initializable {
     @FXML
     @SuppressWarnings("unused")
     private void vaiAllaHallOfFame() throws IOException {
-        App.setRoot("hall_of_fame");
+        // Usa il metodo che aggiunge la schermata allo Stack di navigazione,
+        // invece del semplice setRoot!
+        App.cambiaSchermata("hall_of_fame"); 
     }
 }

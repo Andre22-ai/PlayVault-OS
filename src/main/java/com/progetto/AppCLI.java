@@ -2,7 +2,6 @@ package com.progetto;
 
 import java.util.Scanner;
 
-import com.progetto.boundary.CliEngine;
 import com.progetto.controllo.AcquistoControl;
 import com.progetto.controllo.AutenticazioneControl;
 import com.progetto.controllo.ClassificaControl;
@@ -25,6 +24,7 @@ import com.progetto.database.UtenteDAOcsv;
 import com.progetto.database.VideogiocoDAO;
 import com.progetto.database.VideogiocoDAOMemory;
 import com.progetto.database.VideogiocoDAOMySQL;
+import com.progetto.graphiccontrollercli.CliEngine;
 
 /**
  * PLAYVAULT Entry Point per il Terminale (CLI)

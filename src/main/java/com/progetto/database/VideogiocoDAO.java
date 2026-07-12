@@ -8,6 +8,9 @@ public interface VideogiocoDAO {
     boolean salvaGioco(Videogioco gioco);
     List<Videogioco> recuperaTutti();
     
-    // --- NUOVO METODO: Soft Delete ---
+    // --- METODO: Soft Delete ---
     boolean nascondiGiocoDalCatalogo(int idGioco);
+    
+    // --- NUOVO METODO: Update / Modifica ---
+    boolean aggiornaGioco(Videogioco gioco);
 }

@@ -102,12 +102,16 @@ public class HallOfFameController implements Initializable {
     }
 
     @FXML
-    @SuppressWarnings("unused")
     private void apriImpostazioni() {
         try {
-            App.setRoot("impostazioni");
+            // SBAGLIATO: Questo cancella la memoria e ti farà tornare sempre alla Dashboard!
+            // App.setRoot("impostazioni"); 
+            
+            // CORRETTO: Salva la schermata attuale (HOF o Card) e poi apre le impostazioni
+            App.cambiaSchermata("impostazioni"); 
+            
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Errore navigazione verso impostazioni", e);
+            e.printStackTrace();
         }
     }
 

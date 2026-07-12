@@ -6,48 +6,93 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.RegistrazioneController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #120121; -fx-border-color: #ff00ff; -fx-border-width: 4;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.RegistrazioneController">
    <children>
-      <VBox alignment="CENTER" layoutX="50.0" layoutY="50.0" prefHeight="500.0" spacing="20.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+   
+      <Label layoutX="20.0" layoutY="20.0" text="1UP: 00000" textFill="#00ffff" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font><Font name="Consolas Bold" size="18.0" /></font>
+      </Label>
+
+      <Label layoutX="600.0" layoutY="20.0" text="HI-SCORE: 999999" textFill="#ff00ff" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font><Font name="Consolas Bold" size="18.0" /></font>
+      </Label>
+
+      <!-- BOTTONE: Cambio Lingua -->
+      <Button fx:id="btnSwitchLang" layoutX="630.0" layoutY="50.0" mnemonicParsing="false" onAction="#cambiaLingua" styleClass="btn-lang-cyan" text="SWITCH LANG" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
+         <padding>
+            <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+         </padding>
+      </Button>
+
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="80.0" prefHeight="420.0" spacing="15.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="80.0">
          <children>
-            <Label text="NEW CHALLENGER" textFill="#ffea00">
-               <font><Font name="System Bold" size="64.0" /></font>
+         
+            <Label fx:id="lblTitle" text="NEW CHALLENGER" textFill="#ffea00">
+               <font><Font name="System Bold" size="56.0" /></font>
                <effect><DropShadow color="#e60067" offsetX="5.0" offsetY="5.0" radius="0.0" spread="1.0" /></effect>
             </Label>
             
-            <Label text="CREATE YOUR PLAYER PROFILE" textFill="#00ffff">
+            <Label fx:id="lblSubtitle" text="CREATE YOUR PLAYER PROFILE" textFill="#00ffff">
                <font><Font name="Consolas Bold" size="18.0" /></font>
-               <VBox.margin><Insets bottom="20.0" /></VBox.margin>
+               <VBox.margin><Insets bottom="10.0" /></VBox.margin>
             </Label>
             
-            <TextField fx:id="regUsernameField" maxWidth="400.0" prefHeight="40.0" promptText="Choose_Player_Name" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
-               <font><Font name="Consolas" size="16.0" /></font>
-            </TextField>
+            <VBox maxWidth="400.0" spacing="5.0">
+               <children>
+                  <Label fx:id="lblUsername" text="PLAYER_NAME" textFill="#ff00ff">
+                     <font><Font name="Consolas Bold" size="14.0" /></font>
+                  </Label>
+                  <TextField fx:id="regUsernameField" prefHeight="40.0" promptText="Choose_Player_Name" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+                     <font><Font name="Consolas" size="16.0" /></font>
+                  </TextField>
+               </children>
+            </VBox>
             
-            <PasswordField fx:id="regPasswordField" maxWidth="400.0" prefHeight="40.0" promptText="Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
-               <font><Font name="Consolas" size="16.0" /></font>
-            </PasswordField>
+            <VBox maxWidth="400.0" spacing="5.0">
+               <children>
+                  <Label fx:id="lblPassword" text="SECRET_CODE" textFill="#ff00ff">
+                     <font><Font name="Consolas Bold" size="14.0" /></font>
+                  </Label>
+                  <PasswordField fx:id="regPasswordField" prefHeight="40.0" promptText="Create_Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+                     <font><Font name="Consolas" size="16.0" /></font>
+                  </PasswordField>
+               </children>
+            </VBox>
             
-            <PasswordField fx:id="regConfirmField" maxWidth="400.0" prefHeight="40.0" promptText="Confirm_Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
-               <font><Font name="Consolas" size="16.0" /></font>
-            </PasswordField>
+            <VBox maxWidth="400.0" spacing="5.0">
+               <children>
+                  <Label fx:id="lblConfirm" text="CONFIRM_SECRET_CODE" textFill="#ff00ff">
+                     <font><Font name="Consolas Bold" size="14.0" /></font>
+                  </Label>
+                  <PasswordField fx:id="regConfirmField" prefHeight="40.0" promptText="Verify_Secret_Code" style="-fx-background-color: #000000; -fx-border-color: #ff00ff; -fx-border-width: 2; -fx-text-fill: #ff00ff; -fx-prompt-text-fill: #550055;">
+                     <font><Font name="Consolas" size="16.0" /></font>
+                  </PasswordField>
+               </children>
+            </VBox>
             
-            <Button maxWidth="400.0" mnemonicParsing="false" onAction="#eseguiRegistrazione" prefHeight="50.0" style="-fx-background-color: #ff00ff; -fx-text-fill: #000000; -fx-font-weight: bold; -fx-cursor: hand;" text="REGISTER PROFILE">
-               <font><Font name="Consolas Bold" size="20.0" /></font>
-               <VBox.margin><Insets top="10.0" /></VBox.margin>
-               <effect><InnerShadow color="#550055" offsetX="3.0" offsetY="3.0" radius="0.0" /></effect>
+            <!-- Bottoni con le nuove classi Arcade -->
+            <Button fx:id="btnRegister" maxWidth="400.0" mnemonicParsing="false" onAction="#eseguiRegistrazione" prefHeight="50.0" styleClass="btn-arcade-yellow" text="JOIN THE GAME">
+               <VBox.margin><Insets top="5.0" /></VBox.margin>
             </Button>
-
-            <Button mnemonicParsing="false" onAction="#tornaAlLogin" style="-fx-background-color: transparent; -fx-text-fill: #00ffff; -fx-underline: true; -fx-cursor: hand;" text="&lt;-- ABORT (BACK TO LOGIN)">
-               <font><Font name="Consolas" size="14.0" /></font>
-               <VBox.margin><Insets top="10.0" /></VBox.margin>
+            
+            <Button fx:id="btnBack" mnemonicParsing="false" onAction="#tornaAlLogin" styleClass="btn-arcade-link-cyan" text="&lt;-- ABORT (BACK TO TITLE)">
+               <VBox.margin><Insets top="5.0" /></VBox.margin>
             </Button>
+            
          </children>
       </VBox>
+
+      <Label text="CREDIT 0" textFill="#39ff14" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+         <font><Font name="Consolas Bold" size="18.0" /></font>
+      </Label>
+
+      <Label text="© 2026 PLAYVAULT SYSTEM LTD." textFill="#00ffff" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+         <font><Font name="Consolas" size="14.0" /></font>
+      </Label>
+
    </children>
 </AnchorPane>

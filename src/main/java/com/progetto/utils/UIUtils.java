@@ -1,6 +1,5 @@
 package com.progetto.utils;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +16,11 @@ public class UIUtils {
 
     // Centralizza il navigatore per le impostazioni e il suo try-catch
     public static void navigaAImpostazioni() {
-        LOGGER.info("[BOUNDARY] Richiesta navigazione verso Impostazioni...");
         try {
-            App.setRoot("impostazioni");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "ERRORE CRITICO: Non trovo il file impostazioni.fxml!", e);
+            App.cambiaSchermata("impostazioni"); 
+        } catch (Exception e) {
+            // Visto che abbiamo il LOGGER, usiamolo per tracciare l'errore!
+            LOGGER.log(Level.SEVERE, "Errore nell'apertura delle impostazioni", e);
         }
     }
 

@@ -15,32 +15,30 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 
 public class AdminDashboardController {
 
-    // Costanti per i colori di stato
-    private static final Color COLOR_SUCCESS = Color.web("#39ff14"); // Verde Hacker
-    private static final Color COLOR_ERROR = Color.RED;
-    private static final Color COLOR_INFO = Color.web("#00ffff"); // Ciano per l'attesa
+    // Variabile di stato per capire se stiamo modificando (se è null, stiamo inserendo)
+    private Integer idInModifica = null;
 
-    @FXML private Label mainTitleLabel; // NUOVO: Riferimento al titolo principale
+    @FXML private Label mainTitleLabel;
 
-    // Campi di input testuali
     @FXML private TextField titleField;
     @FXML private TextField genreField;
     @FXML private TextField yearField;
     @FXML private TextField devField;
     
-    // Aree di testo bilingue
     @FXML private TextArea descItArea;
     @FXML private TextArea descEnArea;
     
-    // Etichette di stato e selettore per la rimozione
     @FXML private Label statusLabel;
     @FXML private ComboBox<String> gameSelectorComboBox; 
+    
+    @FXML private ComboBox<String> editSelectorComboBox; 
+    @FXML private Label lblEditZone;
+    @FXML private Button btnLoad;
+    @FXML private Button btnCancelEdit;
 
-    // Elementi UI da tradurre dinamicamente
     @FXML private Button btnSwitchLang;
     @FXML private Button btnLogout;
     @FXML private Label lblTitle;
@@ -61,20 +59,81 @@ public class AdminDashboardController {
     public void initialize() {
         aggiornaListaGiochi();
         aggiornaTestiUI(); 
-        
-        // Imposta il messaggio di "AWAITING INPUT..." iniziale nella lingua corretta
-        statusLabel.setText(GestoreLingua.getIstanza().get("admin.status.awaiting"));
-        statusLabel.setTextFill(COLOR_INFO);
+        btnCancelEdit.setVisible(false); 
+        impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), "status-default");
     }
 
     private void aggiornaListaGiochi() {
-        if (gameSelectorComboBox != null) {
-            gameSelectorComboBox.getItems().clear();
-            List<Videogioco> giochi = App.getVideogiocoDAO().recuperaTutti();
-            for (Videogioco g : giochi) {
-                gameSelectorComboBox.getItems().add(g.getId() + " - " + g.getTitolo());
-            }
+        if (gameSelectorComboBox != null) gameSelectorComboBox.getItems().clear();
+        if (editSelectorComboBox != null) editSelectorComboBox.getItems().clear();
+        
+        List<Videogioco> giochi = App.getVideogiocoDAO().recuperaTutti();
+        for (Videogioco g : giochi) {
+            String voce = g.getId() + " - " + g.getTitolo();
+            if (gameSelectorComboBox != null) gameSelectorComboBox.getItems().add(voce);
+            if (editSelectorComboBox != null) editSelectorComboBox.getItems().add(voce);
         }
+    }
+
+    // --- METODO HELPER PER IL CSS ---
+    private void impostaStatoVisivo(String messaggio, String classeCssCss) {
+        statusLabel.setText(messaggio);
+        // Rimuove tutti i colori precedenti
+        statusLabel.getStyleClass().removeAll("status-default", "status-success", "status-error", "status-info");
+        // Aggiunge il nuovo colore
+        statusLabel.getStyleClass().add(classeCssCss);
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    private void caricaDatiPerModifica() {
+        String selezione = editSelectorComboBox != null ? editSelectorComboBox.getValue() : null;
+        if (selezione == null || selezione.trim().isEmpty()) return;
+
+        int idGioco = Integer.parseInt(selezione.split(" - ")[0]);
+
+        Videogioco giocoTrovato = App.getVideogiocoDAO().recuperaTutti().stream()
+                .filter(v -> v.getId() == idGioco)
+                .findFirst().orElse(null);
+
+        if (giocoTrovato != null) {
+            titleField.setText(giocoTrovato.getTitolo());
+            devField.setText(giocoTrovato.getSviluppatore());
+            genreField.setText(giocoTrovato.getGenere());
+            yearField.setText(String.valueOf(giocoTrovato.getAnnoUscita()));
+            descItArea.setText(giocoTrovato.getDescrizioneIt()); 
+            descEnArea.setText(giocoTrovato.getDescrizioneEn());
+
+            idInModifica = idGioco;
+            btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.update"));
+            
+            // Applica lo stile CSS Edit Mode (rimuovendo prima il Magenta base)
+            btnUpload.getStyleClass().remove("btn-admin-magenta");
+            if (!btnUpload.getStyleClass().contains("btn-admin-edit-mode")) {
+                btnUpload.getStyleClass().add("btn-admin-edit-mode");
+            }
+            
+            btnCancelEdit.setVisible(true);
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), "status-info");
+        }
+    }
+
+    @FXML
+    @SuppressWarnings("unused")
+    private void annullaModifica() {
+        svuotaCampi();
+        idInModifica = null;
+        btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.upload"));
+        
+        // Ripristina lo stile CSS Magenta rimuovendo quello giallo
+        btnUpload.getStyleClass().remove("btn-admin-edit-mode");
+        if (!btnUpload.getStyleClass().contains("btn-admin-magenta")) {
+            btnUpload.getStyleClass().add("btn-admin-magenta");
+        }
+        
+        btnCancelEdit.setVisible(false);
+        editSelectorComboBox.getSelectionModel().clearSelection();
+        impostaStatoVisivo("EDIT MODE ABORTED.", "status-error");
     }
 
     @FXML
@@ -84,24 +143,24 @@ public class AdminDashboardController {
         String genere = genreField.getText();
         String anno = yearField.getText();
         String dev = devField.getText();
-        
         String descIt = descItArea.getText();
         String descEn = descEnArea.getText();
 
         try {
-            catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, descIt, descEn);
+            if (idInModifica == null) {
+                catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, descIt, descEn);
+                impostaStatoVisivo("SYSTEM OVERRIDE: DATA UPLOADED.", "status-success");
+            } else {
+                catalogoControl.modificaGiocoEsistente(idInModifica, titolo, genere, anno, dev, descIt, descEn);
+                impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.update_ok"), "status-success");
+                annullaModifica(); 
+            }
             
-            statusLabel.setText("SYSTEM OVERRIDE: DATA UPLOADED.");
-            statusLabel.setTextFill(COLOR_SUCCESS);
-            
-            titleField.clear(); genreField.clear(); yearField.clear(); devField.clear(); 
-            descItArea.clear(); descEnArea.clear();
-            
+            svuotaCampi();
             aggiornaListaGiochi();
             
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
-            statusLabel.setText("ERROR: " + e.getMessage());
-            statusLabel.setTextFill(COLOR_ERROR);
+            impostaStatoVisivo("ERROR: " + e.getMessage(), "status-error");
         }
     }
 
@@ -109,54 +168,48 @@ public class AdminDashboardController {
     @SuppressWarnings("unused")
     private void eseguiRimozione() {
         String selezione = gameSelectorComboBox != null ? gameSelectorComboBox.getValue() : null;
-        
         if (selezione == null || selezione.trim().isEmpty()) {
-            statusLabel.setText("ERROR: SELEZIONARE UN GIOCO DALLA LISTA.");
-            statusLabel.setTextFill(COLOR_ERROR);
+            impostaStatoVisivo("ERROR: SELEZIONARE UN GIOCO DALLA LISTA.", "status-error");
             return;
         }
 
         try {
-            String idStr = selezione.split(" - ")[0];
-            int idGioco = Integer.parseInt(idStr);
+            int idGioco = Integer.parseInt(selezione.split(" - ")[0]);
             catalogoControl.rimuoviGioco(idGioco); 
             
-            statusLabel.setText("SYSTEM OVERRIDE: GAME DE-LISTED (SOFT DELETE).");
-            statusLabel.setTextFill(COLOR_SUCCESS);
-            aggiornaListaGiochi();
+            impostaStatoVisivo("SYSTEM OVERRIDE: GAME DE-LISTED.", "status-success");
             
+            if (idInModifica != null && idInModifica == idGioco) {
+                annullaModifica(); 
+            }
+            
+            aggiornaListaGiochi();
         } catch (Exception e) {
-            statusLabel.setText("ERROR: " + e.getMessage());
-            statusLabel.setTextFill(COLOR_ERROR);
+            impostaStatoVisivo("ERROR: " + e.getMessage(), "status-error");
         }
+    }
+
+    private void svuotaCampi() {
+        titleField.clear(); genreField.clear(); yearField.clear(); devField.clear(); 
+        descItArea.clear(); descEnArea.clear();
     }
 
     @FXML
     @SuppressWarnings("unused")
     private void cambiaLingua() {
-        String linguaAttuale = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
-        
-        if ("it".equalsIgnoreCase(linguaAttuale)) {
-            GestoreLingua.getIstanza().impostaLingua("en");
-        } else {
-            GestoreLingua.getIstanza().impostaLingua("it");
-        }
-        
+        String lang = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
+        GestoreLingua.getIstanza().impostaLingua("it".equalsIgnoreCase(lang) ? "en" : "it");
         aggiornaTestiUI();
-        
-        statusLabel.setText(GestoreLingua.getIstanza().get("admin.msg.lang_set"));
-        statusLabel.setTextFill(COLOR_SUCCESS);
     }
 
     private void aggiornaTestiUI() {
-        // Applica le traduzioni a tutte le label e i bottoni, incluso il titolo e la combobox
-        if (mainTitleLabel != null) {
-            mainTitleLabel.setText(GestoreLingua.getIstanza().get("admin.title"));
-        }
+        if (mainTitleLabel != null) mainTitleLabel.setText(GestoreLingua.getIstanza().get("admin.title"));
+        if (gameSelectorComboBox != null) gameSelectorComboBox.setPromptText(GestoreLingua.getIstanza().get("admin.combo.prompt"));
         
-        if (gameSelectorComboBox != null) {
-            gameSelectorComboBox.setPromptText(GestoreLingua.getIstanza().get("admin.combo.prompt"));
-        }
+        if (editSelectorComboBox != null) editSelectorComboBox.setPromptText(GestoreLingua.getIstanza().get("admin.combo.edit_prompt"));
+        if (lblEditZone != null) lblEditZone.setText(GestoreLingua.getIstanza().get("admin.lbl.edit_zone"));
+        if (btnLoad != null) btnLoad.setText(GestoreLingua.getIstanza().get("admin.btn.load"));
+        if (btnCancelEdit != null) btnCancelEdit.setText(GestoreLingua.getIstanza().get("admin.btn.cancel_edit"));
 
         btnSwitchLang.setText(GestoreLingua.getIstanza().get("admin.btn.switch"));
         btnLogout.setText(GestoreLingua.getIstanza().get("admin.btn.logout"));
@@ -164,9 +217,17 @@ public class AdminDashboardController {
         lblDev.setText(GestoreLingua.getIstanza().get("admin.lbl.dev"));
         lblGenre.setText(GestoreLingua.getIstanza().get("admin.lbl.genre"));
         lblYear.setText(GestoreLingua.getIstanza().get("admin.lbl.year"));
-        btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.upload"));
+        
         lblDanger.setText(GestoreLingua.getIstanza().get("admin.lbl.danger"));
         btnDelist.setText(GestoreLingua.getIstanza().get("admin.btn.delist"));
+        
+        if (idInModifica == null) {
+            btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.upload"));
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), "status-default");
+        } else {
+            btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.update"));
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), "status-info");
+        }
     }
 
     @FXML

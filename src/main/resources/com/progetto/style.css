@@ -295,3 +295,144 @@
     -fx-text-fill: #ffffff;
 }
 .btn-admin-red:hover { -fx-background-color: #cc0044; }
+
+/* =========================================
+   TEMA ARCADE (LOGIN E REGISTRAZIONE)
+   ========================================= */
+
+/* Bottone Verde (Login) */
+.btn-arcade-green {
+    -fx-background-color: #39ff14;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0; /* Previene il restringimento */
+    -fx-border-width: 0;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-effect: innershadow(gaussian, #1b5e0c, 3, 0, 3, 3); /* Effetto tasto premuto di base */
+}
+.btn-arcade-green:hover {
+    -fx-background-color: #39ff14;
+    /* Rimuove l'innershadow e aggiunge l'aura luminosa al passaggio del mouse */
+    -fx-effect: dropshadow(gaussian, #39ff14, 25, 0.6, 0, 0); 
+}
+
+/* Bottone Giallo (Registrazione) */
+.btn-arcade-yellow {
+    -fx-background-color: #ffea00;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0; /* Previene il restringimento */
+    -fx-border-width: 0;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-effect: innershadow(gaussian, #b3a300, 3, 0, 3, 3);
+}
+.btn-arcade-yellow:hover {
+    -fx-background-color: #ffea00;
+    -fx-effect: dropshadow(gaussian, #ffea00, 25, 0.6, 0, 0); 
+}
+
+/* Bottoni Link Trasparenti (Registrati / Torna al Login) */
+.btn-arcade-link-magenta {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff00ff;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+.btn-arcade-link-magenta:hover {
+    -fx-effect: dropshadow(gaussian, #ff00ff, 15, 0.5, 0, 0);
+}
+
+.btn-arcade-link-cyan {
+    -fx-background-color: transparent;
+    -fx-text-fill: #00ffff;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 14px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+.btn-arcade-link-cyan:hover {
+    -fx-effect: dropshadow(gaussian, #00ffff, 15, 0.5, 0, 0);
+}
+
+/* Bottone Cambio Lingua */
+.btn-lang-cyan {
+    -fx-background-color: #00ffff;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Consolas";
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+.btn-lang-cyan:hover {
+    -fx-effect: dropshadow(gaussian, #00ffff, 15, 0.6, 0, 0);
+}
+
+/* --- LABEL DI STATO ADMIN --- */
+.status-success { -fx-text-fill: #39ff14; }
+.status-error { -fx-text-fill: #ff0000; }
+.status-info { -fx-text-fill: #ffea00; }
+.status-default { -fx-text-fill: #00ffff; }
+
+/* --- BOTTONE IN MODALITÀ MODIFICA --- */
+.btn-admin-edit-mode {
+    -fx-background-color: #ffea00;
+    -fx-text-fill: #000000;
+}
+/* Aggiungiamo anche qui l'aura luminosa! */
+.btn-admin-edit-mode:hover {
+    -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
+}
+/* --- LABEL DI STATO ADMIN --- */
+.status-default { -fx-text-fill: #00ffff; }
+.status-success { -fx-text-fill: #39ff14; }
+.status-error   { -fx-text-fill: #ff0000; }
+.status-info    { -fx-text-fill: #ffea00; }
+
+/* --- ZONA MODIFICA E COLORI GIALLI --- */
+.admin-label-edit {
+    -fx-text-fill: #ffea00;
+}
+
+.admin-combo-edit {
+    -fx-background-color: #000000;
+    -fx-border-color: #ffea00;
+}
+
+/* Colore del testo dentro la tendina gialla */
+.admin-combo-edit .list-cell {
+    -fx-text-fill: #ffea00;
+}
+
+.btn-admin-yellow {
+    -fx-background-color: #ffea00;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.btn-admin-yellow:hover {
+    -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
+}
+
+/* BOTTONE UPLOAD QUANDO SI ENTRA IN EDIT MODE */
+.btn-admin-edit-mode {
+    -fx-background-color: #ffea00;
+    -fx-text-fill: #000000;
+}
+
+.btn-admin-edit-mode:hover {
+    -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
+}

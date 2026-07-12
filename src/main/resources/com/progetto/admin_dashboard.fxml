@@ -10,67 +10,80 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" styleClass="admin-root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.AdminDashboardController">
+<AnchorPane prefHeight="700.0" prefWidth="800.0" styleClass="admin-root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.progetto.boundary.AdminDashboardController">
    <children>
       <Label fx:id="mainTitleLabel" layoutX="30.0" layoutY="20.0" styleClass="admin-title" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0" />
       
-      <!-- Pulsante Switch Lingua -->
-      <Button fx:id="btnSwitchLang" layoutX="540.0" layoutY="20.0" mnemonicParsing="false" onAction="#cambiaLingua" styleClass="btn-admin-green" text="SWITCH LANG" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="20.0" />
-
-      <!-- Pulsante Logout -->
-      <Button fx:id="btnLogout" layoutX="680.0" layoutY="20.0" mnemonicParsing="false" onAction="#eseguiLogout" styleClass="btn-admin-red" text="LOGOUT" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0" />
-
-      <VBox layoutX="50.0" layoutY="80.0" prefWidth="700.0" spacing="15.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+      <HBox alignment="CENTER_RIGHT" spacing="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
          <children>
-            <!-- Questa label cambia colore dinamicamente da Java, non diamo classe colore specifica qui -->
-            <Label fx:id="statusLabel" text="AWAITING INPUT..." textFill="#00ffff">
+            <Button fx:id="btnSwitchLang" mnemonicParsing="false" onAction="#cambiaLingua" prefWidth="150.0" styleClass="btn-admin-green" />
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#eseguiLogout" prefWidth="100.0" styleClass="btn-admin-red" />
+         </children>
+      </HBox>
+
+      <VBox layoutX="50.0" layoutY="70.0" prefWidth="700.0" spacing="12.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+         <children>
+            <!-- Label di stato pulita, usa solo la classe CSS -->
+            <Label fx:id="statusLabel" styleClass="status-default">
                <font><Font name="Consolas" size="14.0" /></font>
             </Label>
             
             <HBox spacing="20.0">
                <VBox prefWidth="340.0" spacing="5.0">
-                  <Label fx:id="lblTitle" styleClass="admin-label" text="GAME TITLE" />
+                  <Label fx:id="lblTitle" styleClass="admin-label" />
                   <TextField fx:id="titleField" styleClass="admin-input" />
                </VBox>
                <VBox prefWidth="340.0" spacing="5.0">
-                  <Label fx:id="lblDev" styleClass="admin-label" text="DEVELOPER" />
+                  <Label fx:id="lblDev" styleClass="admin-label" />
                   <TextField fx:id="devField" styleClass="admin-input" />
                </VBox>
             </HBox>
 
             <HBox spacing="20.0">
                <VBox prefWidth="340.0" spacing="5.0">
-                  <Label fx:id="lblGenre" styleClass="admin-label" text="GENRE" />
+                  <Label fx:id="lblGenre" styleClass="admin-label" />
                   <TextField fx:id="genreField" styleClass="admin-input" />
                </VBox>
                <VBox prefWidth="340.0" spacing="5.0">
-                  <Label fx:id="lblYear" styleClass="admin-label" text="RELEASE YEAR" />
+                  <Label fx:id="lblYear" styleClass="admin-label" />
                   <TextField fx:id="yearField" styleClass="admin-input" />
                </VBox>
             </HBox>
 
-            <!-- Aree di testo bilingue. Lasciamo "(IT)" e "(EN)" fissi così l'admin sa in che box scrivere -->
             <HBox spacing="20.0">
                <VBox prefWidth="340.0" spacing="5.0">
                   <Label text="DESCRIPTION (IT)" styleClass="admin-label" />
-                  <TextArea fx:id="descItArea" prefHeight="120.0" styleClass="admin-input" wrapText="true" />
+                  <TextArea fx:id="descItArea" prefHeight="100.0" styleClass="admin-input" wrapText="true" />
                </VBox>
                <VBox prefWidth="340.0" spacing="5.0">
                   <Label text="DESCRIPTION (EN)" styleClass="admin-label" />
-                  <TextArea fx:id="descEnArea" prefHeight="120.0" styleClass="admin-input" wrapText="true" />
+                  <TextArea fx:id="descEnArea" prefHeight="100.0" styleClass="admin-input" wrapText="true" />
                </VBox>
             </HBox>
 
-            <Button fx:id="btnUpload" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eseguiUpload" prefHeight="40.0" styleClass="btn-admin-magenta" text="UPLOAD TO DATABASE">
-               <VBox.margin><Insets top="5.0" /></VBox.margin>
-            </Button>
+            <HBox spacing="10.0">
+               <Button fx:id="btnUpload" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eseguiUpload" prefHeight="40.0" styleClass="btn-admin-magenta" HBox.hgrow="ALWAYS" />
+               <Button fx:id="btnCancelEdit" mnemonicParsing="false" onAction="#annullaModifica" prefHeight="40.0" styleClass="btn-admin-red" />
+            </HBox>
 
+            <!-- ZONA MODIFICA RIPULITA DAI COLORI HARDCODED -->
             <VBox spacing="5.0">
-               <VBox.margin><Insets top="15.0" /></VBox.margin>
-               <Label fx:id="lblDanger" styleClass="admin-label-danger" text="DANGER ZONE // DELIST GAME" />
+               <VBox.margin><Insets top="10.0" /></VBox.margin>
+               <Label fx:id="lblEditZone" styleClass="admin-label-edit">
+                  <font><Font name="Consolas Bold" size="14.0" /></font>
+               </Label>
                <HBox spacing="15.0">
-                  <ComboBox fx:id="gameSelectorComboBox" prefWidth="250.0" promptText="SELECT GAME" styleClass="admin-input-danger" />
-                  <Button fx:id="btnDelist" mnemonicParsing="false" onAction="#eseguiRimozione" prefWidth="150.0" styleClass="btn-admin-red" text="DELIST GAME" />
+                  <ComboBox fx:id="editSelectorComboBox" prefWidth="250.0" styleClass="admin-combo-edit" />
+                  <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#caricaDatiPerModifica" prefWidth="150.0" styleClass="btn-admin-yellow" />
+               </HBox>
+            </VBox>
+
+            <!-- ZONA PERICOLO -->
+            <VBox spacing="5.0">
+               <Label fx:id="lblDanger" styleClass="admin-label-danger" />
+               <HBox spacing="15.0">
+                  <ComboBox fx:id="gameSelectorComboBox" prefWidth="250.0" styleClass="admin-input-danger" />
+                  <Button fx:id="btnDelist" mnemonicParsing="false" onAction="#eseguiRimozione" prefWidth="150.0" styleClass="btn-admin-red" />
                </HBox>
             </VBox>
 
