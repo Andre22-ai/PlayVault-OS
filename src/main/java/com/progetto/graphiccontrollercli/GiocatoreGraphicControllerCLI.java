@@ -18,6 +18,7 @@ import com.progetto.exceptions.SaldoInsufficienteException;
 import com.progetto.exceptions.SalvataggioFallitoException;
 import com.progetto.utils.GestoreLingua;
 
+@SuppressWarnings("java:S106") // S106: In una CLI UI, System.out è il canale di output corretto.
 public class GiocatoreGraphicControllerCLI {
 
     private final LibreriaControl libreriaControl;
@@ -28,6 +29,10 @@ public class GiocatoreGraphicControllerCLI {
 
     private static final String MSG_ERRORE = "[ERRORE] ";
     private static final String MSG_OK = "[OK] ";
+    
+    // Costanti per risolvere SonarQube S1192 (Stringhe duplicate)
+    private static final String MSG_INFO = "\n[INFO] ";
+    private static final String DECORATORE_TITOLO = "===";
 
     public GiocatoreGraphicControllerCLI(LibreriaControl libreriaControl, RecensioneControl recensioneControl,
                                          AcquistoControl acquistoControl, ClassificaControl classificaControl) {
@@ -44,43 +49,50 @@ public class GiocatoreGraphicControllerCLI {
             Utente u = Sessione.getIstanza().getUtenteCorrente();
             if (u == null) return; 
 
-            System.out.println("\n==============================");
-            System.out.println("        " + GestoreLingua.getIstanza().get("cli.menu.title") + "        ");
-            System.out.println("==============================");
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.catalog"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.library"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.details"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.buy"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.reviews"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.write_review"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.ranking"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.profile"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.settings"));
-            System.out.println(GestoreLingua.getIstanza().get("cli.menu.logout"));
-            
-            System.out.print("PlayVault [" + u.getUsername() + " | CR: " + u.getCrediti() + "]> ");
-
+            stampaMenuPrincipale(u);
             String scelta = scanner.nextLine().trim();
+            inMenu = elaboraSceltaPrincipale(scanner, scelta, u);
+        }
+    }
 
-            switch (scelta) {
-                case "1": visualizzaCatalogo(); attendiInvio(scanner); break;
-                case "2": visualizzaLibreriaPersonale(); attendiInvio(scanner); break;
-                case "3": gestisciAzioneConId(scanner, "dettagli"); attendiInvio(scanner); break;
-                case "4": gestisciAzioneConId(scanner, "compra"); attendiInvio(scanner); break;
-                case "5": gestisciAzioneConId(scanner, "leggi_recensioni"); attendiInvio(scanner); break;
-                case "6": gestisciAzioneConId(scanner, "scrivi_recensione"); attendiInvio(scanner); break;
-                case "7": visualizzaClassifica(); attendiInvio(scanner); break;
-                case "8": visualizzaProfilo(); attendiInvio(scanner); break;
-                case "9": inMenu = gestisciImpostazioni(scanner); break; 
-                case "0":
-                    System.out.println(GestoreLingua.getIstanza().get("cli.msg.logout") + " " + u.getUsername() + "!");
-                    Sessione.getIstanza().terminaSessione();
-                    inMenu = false;
-                    break;
-                default: 
-                    System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("cli.error.invalid"));
-                    attendiInvio(scanner);
-            }
+    private void stampaMenuPrincipale(Utente u) {
+        System.out.println("\n==============================");
+        System.out.println("        " + GestoreLingua.getIstanza().get("cli.menu.title") + "        ");
+        System.out.println("==============================");
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.catalog"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.library"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.details"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.buy"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.reviews"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.write_review"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.ranking"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.profile"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.settings"));
+        System.out.println(GestoreLingua.getIstanza().get("cli.menu.logout"));
+        
+        System.out.print("PlayVault [" + u.getUsername() + " | CR: " + u.getCrediti() + "]> ");
+    }
+
+    // Risoluzione Complessità Cognitiva S3776
+    private boolean elaboraSceltaPrincipale(Scanner scanner, String scelta, Utente u) {
+        switch (scelta) {
+            case "1": visualizzaCatalogo(); attendiInvio(scanner); return true;
+            case "2": visualizzaLibreriaPersonale(); attendiInvio(scanner); return true;
+            case "3": gestisciAzioneConId(scanner, "dettagli"); attendiInvio(scanner); return true;
+            case "4": gestisciAzioneConId(scanner, "compra"); attendiInvio(scanner); return true;
+            case "5": gestisciAzioneConId(scanner, "leggi_recensioni"); attendiInvio(scanner); return true;
+            case "6": gestisciAzioneConId(scanner, "scrivi_recensione"); attendiInvio(scanner); return true;
+            case "7": visualizzaClassifica(); attendiInvio(scanner); return true;
+            case "8": visualizzaProfilo(); attendiInvio(scanner); return true;
+            case "9": return gestisciImpostazioni(scanner); 
+            case "0":
+                System.out.println(GestoreLingua.getIstanza().get("cli.msg.logout") + " " + u.getUsername() + "!");
+                Sessione.getIstanza().terminaSessione();
+                return false;
+            default: 
+                System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("cli.error.invalid"));
+                attendiInvio(scanner);
+                return true;
         }
     }
 
@@ -98,6 +110,7 @@ public class GiocatoreGraphicControllerCLI {
                 case "compra": eseguiAcquisto(id); break;
                 case "leggi_recensioni": visualizzaRecensioniGioco(id); break;
                 case "scrivi_recensione": scriviRecensione(sc, id); break;
+                default: break; // Fix S131: Default in switch
             }
         } catch (NumberFormatException e) {
             System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("cli.error.invalid_id"));
@@ -118,46 +131,55 @@ public class GiocatoreGraphicControllerCLI {
             
             String scelta = scanner.nextLine().trim();
             switch (scelta) {
-                case "1":
-                    String langAttuale = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
-                    String nuovaLang = "it".equalsIgnoreCase(langAttuale) ? "en" : "it";
-                    GestoreLingua.getIstanza().impostaLingua(nuovaLang);
-                    System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.language.changed"));
-                    break;
-                case "2":
-                    System.out.print(GestoreLingua.getIstanza().get("cli.settings.new_password") + " ");
-                    String nuovaPassword = scanner.nextLine().trim();
-                    if (impostazioniControl.cambiaPassword(utenteCorrente, nuovaPassword)) {
-                        System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.password.changed"));
-                    } else {
-                        System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.password"));
-                    }
-                    break;
+                case "1": eseguiCambioLingua(); break;
+                case "2": eseguiCambioPassword(scanner, utenteCorrente); break;
                 case "3":
-                    System.out.print(GestoreLingua.getIstanza().get("settings.confirm.delete"));
-                    String conferma = scanner.nextLine().trim();
-                    if ("Y".equalsIgnoreCase(conferma)) {
-                        if (impostazioniControl.eliminaAccount(utenteCorrente)) {
-                            System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.account.deleted"));
-                            Sessione.getIstanza().terminaSessione();
-                            return false; 
-                        } else {
-                            System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.delete"));
-                        }
-                    }
+                    if (eseguiEliminaAccount(scanner, utenteCorrente)) return false; 
                     break;
-                case "4":
-                    inImpostazioni = false;
-                    break;
+                case "4": inImpostazioni = false; break;
+                default: break; // Fix S131
             }
         }
         return true; 
     }
 
+    // Estrazione metodi impostazioni per ridurre la Complessità (S3776)
+    private void eseguiCambioLingua() {
+        String langAttuale = GestoreLingua.getIstanza().getLocaleCorrente().getLanguage();
+        String nuovaLang = "it".equalsIgnoreCase(langAttuale) ? "en" : "it";
+        GestoreLingua.getIstanza().impostaLingua(nuovaLang);
+        System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.language.changed"));
+    }
+
+    private void eseguiCambioPassword(Scanner scanner, String utenteCorrente) {
+        System.out.print(GestoreLingua.getIstanza().get("cli.settings.new_password") + " ");
+        String nuovaPassword = scanner.nextLine().trim();
+        if (impostazioniControl.cambiaPassword(utenteCorrente, nuovaPassword)) {
+            System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.password.changed"));
+        } else {
+            System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.password"));
+        }
+    }
+
+    private boolean eseguiEliminaAccount(Scanner scanner, String utenteCorrente) {
+        System.out.print(GestoreLingua.getIstanza().get("settings.confirm.delete"));
+        String conferma = scanner.nextLine().trim();
+        if ("Y".equalsIgnoreCase(conferma)) {
+            if (impostazioniControl.eliminaAccount(utenteCorrente)) {
+                System.out.println(MSG_OK + GestoreLingua.getIstanza().get("settings.account.deleted"));
+                Sessione.getIstanza().terminaSessione();
+                return true; 
+            } else {
+                System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("settings.error.delete"));
+            }
+        }
+        return false;
+    }
+
     private void visualizzaCatalogo() {
         List<Videogioco> catalogo = libreriaControl.ottieniCatalogoCompleto();
         if (catalogo == null || catalogo.isEmpty()) {
-            System.out.println("\n[INFO] " + GestoreLingua.getIstanza().get("cli.catalog.empty") + "\n");
+            System.out.println(MSG_INFO + GestoreLingua.getIstanza().get("cli.catalog.empty") + "\n");
             return;
         }
         stampaTabellaGiochi(GestoreLingua.getIstanza().get("cli.catalog.title"), catalogo);
@@ -167,14 +189,14 @@ public class GiocatoreGraphicControllerCLI {
         String utenteCorrente = Sessione.getIstanza().getUtenteCorrente().getUsername();
         List<Videogioco> mieiGiochi = libreriaControl.ottieniMieiGiochi(utenteCorrente);
         if (mieiGiochi == null || mieiGiochi.isEmpty()) {
-            System.out.println("\n[INFO] " + GestoreLingua.getIstanza().get("cli.library.empty") + "\n");
+            System.out.println(MSG_INFO + GestoreLingua.getIstanza().get("cli.library.empty") + "\n");
             return;
         }
         stampaTabellaGiochi(GestoreLingua.getIstanza().get("cli.library.title"), mieiGiochi);
     }
 
     private void stampaTabellaGiochi(String titoloHeader, List<Videogioco> lista) {
-        System.out.println("\n=== " + titoloHeader + " ===");
+        System.out.println("\n" + DECORATORE_TITOLO + " " + titoloHeader + " " + DECORATORE_TITOLO);
         String headerTitle = GestoreLingua.getIstanza().get("cli.table.title");
         String headerGenre = GestoreLingua.getIstanza().get("cli.table.genre");
         String headerYear = GestoreLingua.getIstanza().get("cli.table.year");
@@ -195,7 +217,7 @@ public class GiocatoreGraphicControllerCLI {
             System.out.println(MSG_ERRORE + GestoreLingua.getIstanza().get("cli.error.game_not_found") + "\n");
             return;
         }
-        System.out.println("\n=== " + GestoreLingua.getIstanza().get("cli.details.header") + " ===");
+        System.out.println("\n" + DECORATORE_TITOLO + " " + GestoreLingua.getIstanza().get("cli.details.header") + " " + DECORATORE_TITOLO);
         System.out.println("ID: " + gioco.getId());
         System.out.println(GestoreLingua.getIstanza().get("cli.table.title") + ": " + gioco.getTitolo());
         System.out.println(GestoreLingua.getIstanza().get("cli.table.genre") + ": " + gioco.getGenere());
@@ -223,10 +245,10 @@ public class GiocatoreGraphicControllerCLI {
     private void visualizzaRecensioniGioco(int idGioco) {
         List<Recensione> recensioni = recensioneControl.ottieniRecensioniGioco(idGioco);
         if (recensioni == null || recensioni.isEmpty()) {
-            System.out.println("\n[INFO] " + GestoreLingua.getIstanza().get("cli.reviews.empty") + "\n");
+            System.out.println(MSG_INFO + GestoreLingua.getIstanza().get("cli.reviews.empty") + "\n");
             return;
         }
-        System.out.println("\n=== " + GestoreLingua.getIstanza().get("cli.reviews.header") + " ===");
+        System.out.println("\n" + DECORATORE_TITOLO + " " + GestoreLingua.getIstanza().get("cli.reviews.header") + " " + DECORATORE_TITOLO);
         for (Recensione r : recensioni) {
             System.out.println(String.format("[%s] %d/5 - %s", r.getUsername(), r.getVoto(), r.getCommento()));
         }
@@ -257,13 +279,8 @@ public class GiocatoreGraphicControllerCLI {
         }
     }
 
-    // Assicurati di avere questo import in alto nel file se non c'è già:
-    // import java.util.ArrayList;
-
     private void visualizzaClassifica() {
-        System.out.println("\n=== " + GestoreLingua.getIstanza().get("cli.ranking.header") + " ===");
-        
-        // 1. Prendiamo la lista dal file CSV (che potrebbe essere in sola-lettura)
+        System.out.println("\n" + DECORATORE_TITOLO + " " + GestoreLingua.getIstanza().get("cli.ranking.header") + " " + DECORATORE_TITOLO);
         List<Utente> listaDalFile = classificaControl.ottieniTopPlayers();
         
         if (listaDalFile == null || listaDalFile.isEmpty()) {
@@ -271,10 +288,7 @@ public class GiocatoreGraphicControllerCLI {
             return;
         }
         
-        // 2. CREIAMO UNA COPIA MODIFICABILE DELLA LISTA!
         List<Utente> topPlayers = new java.util.ArrayList<>(listaDalFile);
-        
-        // 3. Ora possiamo ordinarla in sicurezza senza crash
         topPlayers.sort((u1, u2) -> Integer.compare(u2.getCrediti(), u1.getCrediti()));
 
         int rank = 1;
@@ -292,7 +306,7 @@ public class GiocatoreGraphicControllerCLI {
 
     private void visualizzaProfilo() {
         Utente utente = Sessione.getIstanza().getUtenteCorrente();
-        System.out.println("\n=== " + GestoreLingua.getIstanza().get("cli.profile.header") + " ===");
+        System.out.println("\n" + DECORATORE_TITOLO + " " + GestoreLingua.getIstanza().get("cli.profile.header") + " " + DECORATORE_TITOLO);
         System.out.println(GestoreLingua.getIstanza().get("cli.profile.username") + ": " + utente.getUsername());
         System.out.println(GestoreLingua.getIstanza().get("cli.profile.role") + ": " + utente.getRuolo());
         System.out.println(GestoreLingua.getIstanza().get("cli.profile.credits") + ": " + utente.getCrediti());
