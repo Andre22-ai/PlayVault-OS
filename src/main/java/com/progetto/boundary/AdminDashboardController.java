@@ -18,11 +18,18 @@ import javafx.scene.control.TextField;
 
 public class AdminDashboardController {
 
+    // Costanti per le classi CSS (Risoluzione SonarQube S1192)
+    private static final String STYLE_STATUS_DEFAULT = "status-default";
+    private static final String STYLE_STATUS_ERROR = "status-error";
+    private static final String STYLE_STATUS_SUCCESS = "status-success";
+    private static final String STYLE_STATUS_INFO = "status-info";
+    private static final String STYLE_BTN_MAGENTA = "btn-admin-magenta";
+    private static final String STYLE_BTN_EDIT_MODE = "btn-admin-edit-mode";
+
     // Variabile di stato per capire se stiamo modificando (se è null, stiamo inserendo)
     private Integer idInModifica = null;
 
     @FXML private Label mainTitleLabel;
-
     @FXML private TextField titleField;
     @FXML private TextField genreField;
     @FXML private TextField yearField;
@@ -38,7 +45,6 @@ public class AdminDashboardController {
     @FXML private Label lblEditZone;
     @FXML private Button btnLoad;
     @FXML private Button btnCancelEdit;
-
     @FXML private Button btnSwitchLang;
     @FXML private Button btnLogout;
     @FXML private Label lblTitle;
@@ -60,7 +66,7 @@ public class AdminDashboardController {
         aggiornaListaGiochi();
         aggiornaTestiUI(); 
         btnCancelEdit.setVisible(false); 
-        impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), "status-default");
+        impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), STYLE_STATUS_DEFAULT);
     }
 
     private void aggiornaListaGiochi() {
@@ -79,7 +85,7 @@ public class AdminDashboardController {
     private void impostaStatoVisivo(String messaggio, String classeCssCss) {
         statusLabel.setText(messaggio);
         // Rimuove tutti i colori precedenti
-        statusLabel.getStyleClass().removeAll("status-default", "status-success", "status-error", "status-info");
+        statusLabel.getStyleClass().removeAll(STYLE_STATUS_DEFAULT, STYLE_STATUS_SUCCESS, STYLE_STATUS_ERROR, STYLE_STATUS_INFO);
         // Aggiunge il nuovo colore
         statusLabel.getStyleClass().add(classeCssCss);
     }
@@ -91,7 +97,6 @@ public class AdminDashboardController {
         if (selezione == null || selezione.trim().isEmpty()) return;
 
         int idGioco = Integer.parseInt(selezione.split(" - ")[0]);
-
         Videogioco giocoTrovato = App.getVideogiocoDAO().recuperaTutti().stream()
                 .filter(v -> v.getId() == idGioco)
                 .findFirst().orElse(null);
@@ -108,13 +113,13 @@ public class AdminDashboardController {
             btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.update"));
             
             // Applica lo stile CSS Edit Mode (rimuovendo prima il Magenta base)
-            btnUpload.getStyleClass().remove("btn-admin-magenta");
-            if (!btnUpload.getStyleClass().contains("btn-admin-edit-mode")) {
-                btnUpload.getStyleClass().add("btn-admin-edit-mode");
+            btnUpload.getStyleClass().remove(STYLE_BTN_MAGENTA);
+            if (!btnUpload.getStyleClass().contains(STYLE_BTN_EDIT_MODE)) {
+                btnUpload.getStyleClass().add(STYLE_BTN_EDIT_MODE);
             }
             
             btnCancelEdit.setVisible(true);
-            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), "status-info");
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), STYLE_STATUS_INFO);
         }
     }
 
@@ -126,14 +131,14 @@ public class AdminDashboardController {
         btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.upload"));
         
         // Ripristina lo stile CSS Magenta rimuovendo quello giallo
-        btnUpload.getStyleClass().remove("btn-admin-edit-mode");
-        if (!btnUpload.getStyleClass().contains("btn-admin-magenta")) {
-            btnUpload.getStyleClass().add("btn-admin-magenta");
+        btnUpload.getStyleClass().remove(STYLE_BTN_EDIT_MODE);
+        if (!btnUpload.getStyleClass().contains(STYLE_BTN_MAGENTA)) {
+            btnUpload.getStyleClass().add(STYLE_BTN_MAGENTA);
         }
         
         btnCancelEdit.setVisible(false);
         editSelectorComboBox.getSelectionModel().clearSelection();
-        impostaStatoVisivo("EDIT MODE ABORTED.", "status-error");
+        impostaStatoVisivo("EDIT MODE ABORTED.", STYLE_STATUS_ERROR);
     }
 
     @FXML
@@ -149,10 +154,10 @@ public class AdminDashboardController {
         try {
             if (idInModifica == null) {
                 catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, descIt, descEn);
-                impostaStatoVisivo("SYSTEM OVERRIDE: DATA UPLOADED.", "status-success");
+                impostaStatoVisivo("SYSTEM OVERRIDE: DATA UPLOADED.", STYLE_STATUS_SUCCESS);
             } else {
                 catalogoControl.modificaGiocoEsistente(idInModifica, titolo, genere, anno, dev, descIt, descEn);
-                impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.update_ok"), "status-success");
+                impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.update_ok"), STYLE_STATUS_SUCCESS);
                 annullaModifica(); 
             }
             
@@ -160,7 +165,7 @@ public class AdminDashboardController {
             aggiornaListaGiochi();
             
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
-            impostaStatoVisivo("ERROR: " + e.getMessage(), "status-error");
+            impostaStatoVisivo("ERROR: " + e.getMessage(), STYLE_STATUS_ERROR);
         }
     }
 
@@ -169,7 +174,7 @@ public class AdminDashboardController {
     private void eseguiRimozione() {
         String selezione = gameSelectorComboBox != null ? gameSelectorComboBox.getValue() : null;
         if (selezione == null || selezione.trim().isEmpty()) {
-            impostaStatoVisivo("ERROR: SELEZIONARE UN GIOCO DALLA LISTA.", "status-error");
+            impostaStatoVisivo("ERROR: SELEZIONARE UN GIOCO DALLA LISTA.", STYLE_STATUS_ERROR);
             return;
         }
 
@@ -177,7 +182,7 @@ public class AdminDashboardController {
             int idGioco = Integer.parseInt(selezione.split(" - ")[0]);
             catalogoControl.rimuoviGioco(idGioco); 
             
-            impostaStatoVisivo("SYSTEM OVERRIDE: GAME DE-LISTED.", "status-success");
+            impostaStatoVisivo("SYSTEM OVERRIDE: GAME DE-LISTED.", STYLE_STATUS_SUCCESS);
             
             if (idInModifica != null && idInModifica == idGioco) {
                 annullaModifica(); 
@@ -185,7 +190,7 @@ public class AdminDashboardController {
             
             aggiornaListaGiochi();
         } catch (Exception e) {
-            impostaStatoVisivo("ERROR: " + e.getMessage(), "status-error");
+            impostaStatoVisivo("ERROR: " + e.getMessage(), STYLE_STATUS_ERROR);
         }
     }
 
@@ -210,7 +215,6 @@ public class AdminDashboardController {
         if (lblEditZone != null) lblEditZone.setText(GestoreLingua.getIstanza().get("admin.lbl.edit_zone"));
         if (btnLoad != null) btnLoad.setText(GestoreLingua.getIstanza().get("admin.btn.load"));
         if (btnCancelEdit != null) btnCancelEdit.setText(GestoreLingua.getIstanza().get("admin.btn.cancel_edit"));
-
         btnSwitchLang.setText(GestoreLingua.getIstanza().get("admin.btn.switch"));
         btnLogout.setText(GestoreLingua.getIstanza().get("admin.btn.logout"));
         lblTitle.setText(GestoreLingua.getIstanza().get("admin.lbl.title"));
@@ -223,10 +227,10 @@ public class AdminDashboardController {
         
         if (idInModifica == null) {
             btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.upload"));
-            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), "status-default");
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.status.awaiting"), STYLE_STATUS_DEFAULT);
         } else {
             btnUpload.setText(GestoreLingua.getIstanza().get("admin.btn.update"));
-            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), "status-info");
+            impostaStatoVisivo(GestoreLingua.getIstanza().get("admin.msg.edit_mode"), STYLE_STATUS_INFO);
         }
     }
 

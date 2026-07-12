@@ -53,7 +53,7 @@ public class HallOfFameController implements Initializable {
             userNameLabel.setText(corrente.getUsername().toUpperCase());
             avatarLabel.setText(corrente.getUsername().substring(0, 1).toUpperCase());
             
-            // --- FIX LINGUA: Traduzione dinamica di Livello ed Esperienza ---
+            // Traduzione dinamica di Livello ed Esperienza
             String testoLivello = GestoreLingua.getIstanza().get("profilo.livello");
             String testoExp = GestoreLingua.getIstanza().get("profilo.esperienza");
             
@@ -77,7 +77,7 @@ public class HallOfFameController implements Initializable {
         List<Utente> topPlayers = utenteDAO.recuperaClassifica();
         int rank = 1;
 
-        // --- FIX LINGUA: Pre-carichiamo il bundle per le mini-card ---
+        // Pre-carichiamo il bundle per le mini-card
         Locale localeAttuale = GestoreLingua.getIstanza().getLocaleCorrente();
         ResourceBundle bundle = ResourceBundle.getBundle("messages", localeAttuale);
 
@@ -85,9 +85,8 @@ public class HallOfFameController implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("card_classifica.fxml"));
                 
-                // --- FIX LINGUA: Iniettiamo il bundle nel loader ---
+                // Iniettiamo il bundle nel loader
                 loader.setResources(bundle);
-                // ---------------------------------------------------
                 
                 VBox rankCard = loader.load();
                 
@@ -104,22 +103,16 @@ public class HallOfFameController implements Initializable {
     @FXML
     private void apriImpostazioni() {
         try {
-            // SBAGLIATO: Questo cancella la memoria e ti farà tornare sempre alla Dashboard!
-            // App.setRoot("impostazioni"); 
-            
-            // CORRETTO: Salva la schermata attuale (HOF o Card) e poi apre le impostazioni
             App.cambiaSchermata("impostazioni"); 
-            
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Errore durante l'apertura delle impostazioni", e);
         }
     }
 
     @FXML
     @SuppressWarnings("unused")
-    private void tornaAllaDashboard() { // Il nome rimane uguale per l'FXML
+    private void tornaAllaDashboard() { 
         try {
-            // Sostituiamo App.setRoot("dashboard") con la nostra nuova memoria:
             App.tornaIndietro(); 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Errore navigazione indietro", e);

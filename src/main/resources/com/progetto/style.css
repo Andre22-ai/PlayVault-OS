@@ -9,7 +9,6 @@
     -fx-font-weight: bold;
     -fx-font-size: 10px;
 }
-
 .testo-descrizione {
     -fx-font-family: "Consolas";
     -fx-font-size: 14px;
@@ -134,35 +133,30 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
 }
-
 /* 1° Posto: ORO */
 .rank-gold {
     -fx-border-color: #ffea00;
     -fx-effect: dropshadow(gaussian, #ffea00, 10, 0.1, 0, 0);
 }
 .testo-gold { -fx-text-fill: #ffea00; }
-
 /* 2° Posto: ARGENTO */
 .rank-silver {
     -fx-border-color: #c0c0c0;
     -fx-effect: dropshadow(gaussian, #c0c0c0, 10, 0.1, 0, 0);
 }
 .testo-silver { -fx-text-fill: #c0c0c0; }
-
 /* 3° Posto: BRONZO */
 .rank-bronze {
     -fx-border-color: #cd7f32;
     -fx-effect: dropshadow(gaussian, #cd7f32, 10, 0.1, 0, 0);
 }
 .testo-bronze { -fx-text-fill: #cd7f32; }
-
 /* 4° Posto in poi: STANDARD */
 .rank-standard {
     -fx-border-color: #00ffff;
     -fx-effect: dropshadow(gaussian, #00ffff, 10, 0.1, 0, 0);
 }
 .testo-standard { -fx-text-fill: #00ffff; }
-
 .testo-crediti {
     -fx-text-fill: #ffffff;
     -fx-font-family: "Consolas";
@@ -179,7 +173,6 @@
     -fx-border-width: 2;
     -fx-cursor: hand;
 }
-
 .btn-lang-unselected {
     -fx-background-color: #000000;
     -fx-text-fill: #00ffff;
@@ -203,7 +196,6 @@
     /* --- FIX EMOJI: Forza JavaFX a usare i font delle emoji di Windows/Mac --- */
     -fx-font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
 }
-
 /* Colori dinamici in base al genere */
 .cover-action { -fx-background-color: #ff3333; }
 .cover-rpg { -fx-background-color: #3333ff; }
@@ -217,33 +209,28 @@
 /* =========================================
    TEMA ADMIN TERMINAL (CYBERPUNK NEON)
    ========================================= */
-
 .admin-root {
     -fx-background-color: #0b0114;
     -fx-border-color: #ff00ff;
     -fx-border-width: 4;
 }
-
 .admin-title {
     -fx-text-fill: #ff00ff;
     -fx-font-family: "Consolas";
     -fx-font-weight: bold;
     -fx-font-size: 24px;
 }
-
 .admin-label {
     -fx-text-fill: #39ff14;
     -fx-font-family: "Consolas";
     -fx-font-size: 14px; /* Etichette un po' più grandi */
 }
-
 .admin-label-danger {
     -fx-text-fill: #ff0055;
     -fx-font-family: "Consolas";
     -fx-font-weight: bold;
     -fx-font-size: 14px;
 }
-
 /* Stile per TextField e TextArea verdi */
 .admin-input {
     -fx-background-color: #000000;
@@ -254,7 +241,6 @@
     -fx-font-size: 16px; /* Testo dell'input più grande */
     -fx-padding: 8px 10px; /* Alza e allarga i riquadri */
 }
-
 /* Stile per la ComboBox rossa */
 .admin-input-danger {
     -fx-background-color: #000000;
@@ -266,7 +252,6 @@
 }
 
 /* --- BOTTONI ADMIN --- */
-
 /* Applichiamo font e padding a TUTTI i bottoni admin per farli belli cicciotti */
 .btn-admin-green, .btn-admin-magenta, .btn-admin-red {
     -fx-font-family: "Consolas";
@@ -275,7 +260,6 @@
     -fx-padding: 10px 20px; /* Gonfia i bottoni */
     -fx-cursor: hand;
 }
-
 .btn-admin-green {
     -fx-background-color: #39ff14;
     -fx-text-fill: #000000;
@@ -299,7 +283,6 @@
 /* =========================================
    TEMA ARCADE (LOGIN E REGISTRAZIONE)
    ========================================= */
-
 /* Bottone Verde (Login) */
 .btn-arcade-green {
     -fx-background-color: #39ff14;
@@ -352,7 +335,6 @@
 .btn-arcade-link-magenta:hover {
     -fx-effect: dropshadow(gaussian, #ff00ff, 15, 0.5, 0, 0);
 }
-
 .btn-arcade-link-cyan {
     -fx-background-color: transparent;
     -fx-text-fill: #00ffff;
@@ -380,22 +362,7 @@
     -fx-effect: dropshadow(gaussian, #00ffff, 15, 0.6, 0, 0);
 }
 
-/* --- LABEL DI STATO ADMIN --- */
-.status-success { -fx-text-fill: #39ff14; }
-.status-error { -fx-text-fill: #ff0000; }
-.status-info { -fx-text-fill: #ffea00; }
-.status-default { -fx-text-fill: #00ffff; }
-
-/* --- BOTTONE IN MODALITÀ MODIFICA --- */
-.btn-admin-edit-mode {
-    -fx-background-color: #ffea00;
-    -fx-text-fill: #000000;
-}
-/* Aggiungiamo anche qui l'aura luminosa! */
-.btn-admin-edit-mode:hover {
-    -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
-}
-/* --- LABEL DI STATO ADMIN --- */
+/* --- LABEL DI STATO ADMIN E COLORI GENERICI --- */
 .status-default { -fx-text-fill: #00ffff; }
 .status-success { -fx-text-fill: #39ff14; }
 .status-error   { -fx-text-fill: #ff0000; }
@@ -405,34 +372,29 @@
 .admin-label-edit {
     -fx-text-fill: #ffea00;
 }
-
 .admin-combo-edit {
     -fx-background-color: #000000;
     -fx-border-color: #ffea00;
 }
-
 /* Colore del testo dentro la tendina gialla */
 .admin-combo-edit .list-cell {
     -fx-text-fill: #ffea00;
 }
-
 .btn-admin-yellow {
     -fx-background-color: #ffea00;
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
-
 .btn-admin-yellow:hover {
     -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
 }
 
-/* BOTTONE UPLOAD QUANDO SI ENTRA IN EDIT MODE */
+/* --- BOTTONE UPLOAD QUANDO SI ENTRA IN EDIT MODE --- */
 .btn-admin-edit-mode {
     -fx-background-color: #ffea00;
     -fx-text-fill: #000000;
 }
-
 .btn-admin-edit-mode:hover {
     -fx-effect: dropshadow(gaussian, #ffea00, 15, 0.6, 0, 0); 
 }
