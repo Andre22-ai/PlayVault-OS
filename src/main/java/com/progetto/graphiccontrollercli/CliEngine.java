@@ -14,6 +14,7 @@ import com.progetto.controllo.RegistrazioneControl;
 import com.progetto.entita.Sessione;
 import com.progetto.entita.Utente;
 
+@SuppressWarnings("java:S106") // S106: System.out è l'output corretto per l'interfaccia utente CLI
 public class CliEngine {
     private static final Logger LOGGER = Logger.getLogger(CliEngine.class.getName());
 

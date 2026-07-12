@@ -5,9 +5,14 @@ import java.util.Scanner;
 import com.progetto.controllo.GestioneCatalogoControl;
 import com.progetto.exceptions.SalvataggioFallitoException;
 
+@SuppressWarnings("java:S106") // S106: Nelle CLI, System.out è l'output standard per l'interfaccia utente
 public class AdminGraphicControllerCLI {
 
     private final GestioneCatalogoControl catalogoControl;
+
+    // Costanti per risolvere SonarQube S1192 (Stringhe duplicate)
+    private static final String MSG_ERRORE = "[ERRORE] ";
+    private static final String MSG_OK = "[OK] ";
 
     public AdminGraphicControllerCLI(GestioneCatalogoControl catalogoControl) {
         this.catalogoControl = catalogoControl;
@@ -44,7 +49,7 @@ public class AdminGraphicControllerCLI {
                     inMenu = false; // Esce da questo controller e torna al CliEngine
                     break;
                 default:
-                    System.out.println("[ERRORE] Scelta non valida.");
+                    System.out.println(MSG_ERRORE + "Scelta non valida.");
             }
         }
     }
@@ -66,9 +71,9 @@ public class AdminGraphicControllerCLI {
         
         try {
             catalogoControl.aggiungiNuovoGioco(titolo, genere, anno, dev, descIt, descEn);
-            System.out.println("[OK] Gioco aggiunto con successo al database!");
+            System.out.println(MSG_OK + "Gioco aggiunto con successo al database!");
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
@@ -92,11 +97,11 @@ public class AdminGraphicControllerCLI {
             String descEn = scanner.nextLine().trim();
             
             catalogoControl.modificaGiocoEsistente(id, titolo, genere, anno, dev, descIt, descEn);
-            System.out.println("[OK] Gioco modificato con successo!");
+            System.out.println(MSG_OK + "Gioco modificato con successo!");
         } catch (NumberFormatException e) {
-            System.out.println("[ERRORE] ID non valido. Deve essere un numero.");
+            System.out.println(MSG_ERRORE + "ID non valido. Deve essere un numero.");
         } catch (IllegalArgumentException | SalvataggioFallitoException e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 
@@ -106,11 +111,11 @@ public class AdminGraphicControllerCLI {
         try {
             int id = Integer.parseInt(scanner.nextLine().trim());
             catalogoControl.rimuoviGioco(id);
-            System.out.println("[OK] Gioco rimosso dal catalogo con successo!");
+            System.out.println(MSG_OK + "Gioco rimosso dal catalogo con successo!");
         } catch (NumberFormatException e) {
-            System.out.println("[ERRORE] ID non valido.");
+            System.out.println(MSG_ERRORE + "ID non valido.");
         } catch (Exception e) {
-            System.out.println("[ERRORE] " + e.getMessage());
+            System.out.println(MSG_ERRORE + e.getMessage());
         }
     }
 }

@@ -8,6 +8,7 @@ import com.progetto.exceptions.CredenzialiErrateException;
 import com.progetto.exceptions.UtenteGiaEsistenteException;
 import com.progetto.utils.GestoreLingua;
 
+@SuppressWarnings("java:S106") // S106: System.out è l'output corretto per l'interfaccia CLI
 public class LoginGraphicControllerCLI {
 
     private final AutenticazioneControl authControl;
@@ -43,6 +44,7 @@ public class LoginGraphicControllerCLI {
                 break;
             default:
                 System.out.println(GestoreLingua.getIstanza().get("cli.login.error.invalid_choice"));
+                break;
         }
     }
 
